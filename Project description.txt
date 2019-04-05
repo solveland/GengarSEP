@@ -1,0 +1,28 @@
+Pantad:
+
+En androidapplikation som kopplar samman personer som inte vill/orkar/kan panta sin egen pant med engagerade 
+upphämtare som vill tjäna en liten slant samt slå ett positivt slag för miljön. 
+
+Beskrivning:
+De användare som vill få sin pant upphämtad lägger upp en annons på plattformen där de anger en upphämtningsplats
+samt en uppskatad totalsumma över vad panten är värd. Därefter kan personer som är villiga att hämta panten 
+bege sig till upphämtningsplatsen, där de betalar en andel av det totala pantvärdet för att ta del av panten. 
+Genom att på plattformen utnyttja Google maps och Pantameras lista över pantplatser i Sverige kan upphämtare av 
+pant enkelt överblicka var de olika upphämtningsuppdragen befinner sig samt deras närhet till en potentiell 
+pantplats. 
+
+Genom att implementera ratingsystem för både upphämtare och de användare som ger ut pant kommer de användare som
+missköter sig på plattformen att identifieras. 
+
+Transaktioner kommer att ske genom swish, appen kommer att utnyttja swish:s app2app API för att sömlöst integrera
+transaktionerna. 
+
+Varför: Appen erbjuder ett enklare sätt för privatpersoner att göra sig av med sina pantburkar/glas
+och bidrar därför till att mindre burkar/glas slängs i soporna. Vinnaren i transaktionen är både utlämnaren
+och hämtaren då båda får ekonomisk ersättning samt miljön.
+
+Hur: Vi tänker oss ett system där ägaren av panten skapar en platsbaserad annons där värdet på panten anges.
+
+Kopplingen till hållbarhet erhålls då mer burkar/glas kommer att återvinnas på korrekt sätt.
+Kopplingen till rörlighet erhålls då plattformen orkestrerar transport av pant från upphämtningsplatser
+till pantplatser. 
