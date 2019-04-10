@@ -54,6 +54,8 @@ Handles the setup for the recyclerView
     @Override
     public void onResume() {
         super.onResume();
-        adapter.notifyDataSetChanged();
+        userModel.updateAds(adapter);
+        //adapter.notifyDataSetChanged(); //this happens in updateAds currently, might change
+
     }
 }

@@ -7,20 +7,25 @@ import java.util.ArrayList;
  */
 public class Annons {
     private String name;
-    private String adress;
+    private String address;
     private int value;
 
     public Annons(String name,String adress, int estimatedvalue) {
         this.name = name;
-        this.adress = adress;
+        this.address = adress;
         this.value=estimatedvalue;
+    }
+
+    //Constructor without arguments needed for firebase
+    public Annons(){
+
     }
 
     public String getName() {
         return name;
     }
-    public String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
     public int getValue() { return value; }
 

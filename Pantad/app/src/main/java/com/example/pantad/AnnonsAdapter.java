@@ -34,6 +34,7 @@ public class AnnonsAdapter extends RecyclerView.Adapter<AnnonsAdapter.ViewHolder
         return viewHolder;
     }
 
+
     /*
     Involves populating data into the item through holder
 
@@ -50,7 +51,7 @@ public class AnnonsAdapter extends RecyclerView.Adapter<AnnonsAdapter.ViewHolder
         nameView.setText("Namn: "+annons.getName());
 
         TextView adressView = viewHolder.adressTextView;
-        adressView.setText("Upphämtningsadress: "+annons.getAdress());
+        adressView.setText("Upphämtningsadress: "+annons.getAddress());
 
         TextView valueView = viewHolder.valueTextView;
         valueView.setText("Uppskattat pantvärde: "+ Integer.toString(annons.getValue())+"kr");
