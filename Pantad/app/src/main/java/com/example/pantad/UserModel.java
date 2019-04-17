@@ -44,9 +44,9 @@ public class UserModel extends ViewModel {
     @param adress The location where the trade will take place
     @param estimatedValue - The estimated value of the pant in whole SEK:s
     */
-    public void addAnnons(String name, String adress, int estimatedValue) {
+    public void addAnnons(String name, String adress, int estimatedValue, String message) {
         //annonser.add(new Annons(name, adress, estimatedValue));
-        db.collection("ads").add(new Annons(name,adress,estimatedValue));
+        db.collection("ads").add(new Annons(name, adress, estimatedValue, message));
     }
 
     public ArrayList getAnnonser() {

@@ -9,11 +9,13 @@ public class Annons {
     private String name;
     private String address;
     private int value;
+    private String message;
 
-    public Annons(String name,String adress, int estimatedvalue) {
+    public Annons(String name,String adress, int estimatedvalue, String message) {
         this.name = name;
         this.address = adress;
         this.value=estimatedvalue;
+        this.message = message;
     }
 
     //Constructor without arguments needed for firebase
@@ -28,6 +30,7 @@ public class Annons {
         return address;
     }
     public int getValue() { return value; }
+    public String getMessage(){ return message; }
 
 
     /* Test method, creates a dummy list of postings */
@@ -35,7 +38,7 @@ public class Annons {
         ArrayList<Annons> annonser = new ArrayList<Annons>();
 
         for (int i = 1; i <= numContacts; i++) {
-            annonser.add(new Annons("Person "+ i, "Framgången 238",i*20));
+            annonser.add(new Annons("Person "+ i, "Framgången 238",i*20, "Hi"));
         }
         return annonser;
     }

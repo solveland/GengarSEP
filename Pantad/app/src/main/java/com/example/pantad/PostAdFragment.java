@@ -21,6 +21,7 @@ public class PostAdFragment extends Fragment {
     private EditText name;
     private EditText adress;
     private EditText value;
+    private EditText message;
     private UserModel userModel;
 
     public PostAdFragment() {
@@ -49,6 +50,7 @@ public class PostAdFragment extends Fragment {
         name=root.findViewById(R.id.nameInput);
         adress=root.findViewById(R.id.adressInput);
         value=root.findViewById(R.id.valueInput);
+        message = root.findViewById(R.id.messageInput);
 
     }
 
@@ -65,16 +67,18 @@ public class PostAdFragment extends Fragment {
                 String nameInput=name.getText().toString();
                 String adressInput=adress.getText().toString();
                 String valueInput=value.getText().toString();
+                String messageInput=message.getText().toString();
 
                 if(nameInput.equals("") ||adressInput.equals("") || valueInput.equals("")){
                     Snackbar.make(submit, "You fucked up", Snackbar.LENGTH_SHORT).show();
                 }
                 else{
-                    addAnnons(nameInput,adressInput,Integer.parseInt(valueInput));
+                    addAnnons(nameInput, adressInput, Integer.parseInt(valueInput), messageInput);
                     Snackbar.make(submit, "AD was added", Snackbar.LENGTH_SHORT).show();
                     name.getText().clear();
                     adress.getText().clear();
                     value.getText().clear();
+                    message.getText().clear();
                 }
             }
         });
@@ -86,7 +90,7 @@ Adds another annons to the list of annonser
 @param adress The location where the trade will take place
 @param estimatedValue The estimated value of the pant in whole SEK:s
 */
-    public void addAnnons(String name,String adress,int value){
-    userModel.addAnnons(name,adress,value);
+    public void addAnnons(String name,String adress,int value, String message){
+    userModel.addAnnons(name, adress, value, message);
     }
 }

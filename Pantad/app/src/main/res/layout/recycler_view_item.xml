@@ -20,8 +20,11 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       tools:text="@tools:sample/lorem" />
-  <ImageView
-      android:layout_width="70dp"
-      android:layout_height="70dp"
-      tools:src="@tools:sample/avatars"/>
+
+  <TextView
+      android:id="@+id/annons_message"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/textview" />
+
 </LinearLayout>

@@ -55,6 +55,9 @@ public class AnnonsAdapter extends RecyclerView.Adapter<AnnonsAdapter.ViewHolder
 
         TextView valueView = viewHolder.valueTextView;
         valueView.setText("Uppskattat pantvärde: "+ Integer.toString(annons.getValue())+"kr");
+
+        TextView messageView = viewHolder.messageTextView;
+        messageView.setText("Meddelande:"+ annons.getMessage());
     }
 
     // Returns the total count of items in the list
@@ -72,6 +75,7 @@ public class AnnonsAdapter extends RecyclerView.Adapter<AnnonsAdapter.ViewHolder
         public TextView nameTextView;
         public TextView adressTextView;
         public TextView valueTextView;
+        public TextView messageTextView;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -82,6 +86,7 @@ public class AnnonsAdapter extends RecyclerView.Adapter<AnnonsAdapter.ViewHolder
             nameTextView = (TextView) itemView.findViewById(R.id.annons_namn);
             adressTextView = (TextView) itemView.findViewById(R.id.annons_adress);
             valueTextView = (TextView) itemView.findViewById(R.id.annons_value);
-        }
+            messageTextView = (TextView) itemView.findViewById(R.id.annons_message);
+         }
     }
     }
