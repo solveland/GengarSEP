@@ -10,12 +10,14 @@ public class Annons {
     private String address;
     private int value;
     private String message;
+    private boolean claimed;
 
     public Annons(String name,String adress, int estimatedvalue, String message) {
         this.name = name;
         this.address = adress;
         this.value=estimatedvalue;
         this.message = message;
+        claimed = false;
     }
 
     //Constructor without arguments needed for firebase
@@ -31,7 +33,10 @@ public class Annons {
     }
     public int getValue() { return value; }
     public String getMessage(){ return message; }
+    public boolean isClaimed() { return claimed; }
 
+    public void setMessage(String message) { this.message = message; }
+    public void setClaimed(boolean claimed) { this.claimed = claimed; }
 
     /* Test method, creates a dummy list of postings */
     public static ArrayList<Annons> createAnonnonsList(int numContacts) {
