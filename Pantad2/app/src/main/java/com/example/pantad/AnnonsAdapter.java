@@ -87,8 +87,9 @@ public class AnnonsAdapter extends RecyclerView.Adapter<AnnonsAdapter.ViewHolder
 
                 // Create and connect listener to claim button
                 itemDetails.claimButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
                     public void onClick(View v) {
-                        Snackbar.make(v, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(viewHolder.itemView, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();
                         annons.setClaimed(true);
                         itemDetails.dismiss();
                     }
@@ -96,6 +97,7 @@ public class AnnonsAdapter extends RecyclerView.Adapter<AnnonsAdapter.ViewHolder
 
                 // Create and connect listener to cancel button
                 itemDetails.cancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
                     public void onClick(View v) {
                         itemDetails.dismiss();
                     }
