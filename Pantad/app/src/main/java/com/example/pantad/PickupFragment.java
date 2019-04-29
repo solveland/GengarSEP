@@ -15,12 +15,12 @@ import android.view.ViewGroup;
  *
  * Contains the RecyleView (aka the list of postings)
  */
-public class HomeFragment extends Fragment {
+public class PickupFragment extends Fragment {
     private RecyclerView rvAnnonser;
     private UserModel userModel;
     private AnnonsAdapter adapter;
 
-    public HomeFragment() {
+    public PickupFragment() {
         // Required empty public constructor
     }
 
@@ -31,7 +31,7 @@ Handles the setup for the recyclerView
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_pickup, container, false);
         userModel= ViewModelProviders.of(getActivity()).get(UserModel.class);
 
         rvAnnonser = rootView.findViewById(R.id.recyclerView);
