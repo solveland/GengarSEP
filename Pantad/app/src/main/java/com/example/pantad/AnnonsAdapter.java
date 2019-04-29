@@ -102,7 +102,7 @@ public class AnnonsAdapter extends RecyclerView.Adapter<AnnonsAdapter.ViewHolder
                 // Create and connect listener to claim button
                 itemDetails.claimButton.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        Snackbar.make(v, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(viewHolder.itemView, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();
 
                         db.collection("ads").document(annons.getadID()).update("claimed", true);
 
