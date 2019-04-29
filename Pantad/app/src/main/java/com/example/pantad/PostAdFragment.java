@@ -2,12 +2,16 @@ package com.example.pantad;
 
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -21,6 +25,7 @@ public class PostAdFragment extends Fragment {
     private EditText name;
     private EditText adress;
     private EditText value;
+    private EditText message;
     private UserModel userModel;
 
     public PostAdFragment() {
@@ -35,6 +40,7 @@ public class PostAdFragment extends Fragment {
 
         initiatepostInputView(rootView);
         // Inflate the layout for this fragment
+
         return rootView;
     }
 
@@ -45,11 +51,42 @@ public class PostAdFragment extends Fragment {
         initInputfields(root);
         initSubmit(root);
     }
-    private void initInputfields(View root ){
-        name=root.findViewById(R.id.nameInput);
-        adress=root.findViewById(R.id.adressInput);
-        value=root.findViewById(R.id.valueInput);
+    private void initInputfields(View root) {
+        name = root.findViewById(R.id.nameInput);
+        adress = root.findViewById(R.id.adressInput);
+        value = root.findViewById(R.id.valueInput);
+        message = root.findViewById(R.id.messageInput);
 
+        // Makes it possible to scroll in the text editor (instead of scrolling the scrollview)
+        message.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                if (message.hasFocus()) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    switch (event.getAction() & MotionEvent.ACTION_MASK){
+                        case MotionEvent.ACTION_SCROLL:
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                            return true;
+                    }
+                }
+                return false;
+
+            }
+        });
+
+        View.OnFocusChangeListener focusListener = new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        };
+
+        name.setOnFocusChangeListener(focusListener);
+        adress.setOnFocusChangeListener(focusListener);
+        value.setOnFocusChangeListener(focusListener);
+        message.setOnFocusChangeListener(focusListener);
     }
 
     /*
@@ -65,16 +102,17 @@ public class PostAdFragment extends Fragment {
                 String nameInput=name.getText().toString();
                 String adressInput=adress.getText().toString();
                 String valueInput=value.getText().toString();
-
+                String messageInput=message.getText().toString();
                 if(nameInput.equals("") ||adressInput.equals("") || valueInput.equals("")){
                     Snackbar.make(submit, "You fucked up", Snackbar.LENGTH_SHORT).show();
                 }
                 else{
-                    addAnnons(nameInput,adressInput,Integer.parseInt(valueInput));
+                    addAnnons(nameInput, adressInput, Integer.parseInt(valueInput), messageInput);
                     Snackbar.make(submit, "AD was added", Snackbar.LENGTH_SHORT).show();
                     name.getText().clear();
                     adress.getText().clear();
                     value.getText().clear();
+                    message.getText().clear();
                 }
             }
         });
@@ -86,7 +124,12 @@ Adds another annons to the list of annonser
 @param adress The location where the trade will take place
 @param estimatedValue The estimated value of the pant in whole SEK:s
 */
-    public void addAnnons(String name,String adress,int value){
-    userModel.addAnnons(name,adress,value);
+    public void addAnnons(String name,String adress,int value, String message){
+        userModel.addAnnons(name, adress, value, message);
+    }
+
+    private void hideKeyboard(View view){
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

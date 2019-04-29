@@ -36,8 +36,6 @@ public class DonatorFragment extends Fragment {
         // Set layout manager to position the items
         donatorRVAnnonser.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        // Create adapter passing in the sample user data
-        adapter = new AnnonsAdapter(Annons.createAnonnonsList(6));
         // Attach the adapter to the recyclerview to populate items
         donatorRVAnnonser.setAdapter(adapter);
         // That's all!
