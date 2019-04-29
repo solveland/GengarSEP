@@ -1,5 +1,6 @@
 package com.example.pantad;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,10 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.List;
 
 /* This class is needed for the recyleview. It connects the textfields in the pos_ad xml file to a list of postings.
@@ -23,6 +28,9 @@ import java.util.List;
 public class AnnonsAdapter extends RecyclerView.Adapter<AnnonsAdapter.ViewHolder> {
 
     private List<Annons> anonnser;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
 
     public AnnonsAdapter(List<Annons> anonnser) {
         this.anonnser = anonnser;
@@ -34,6 +42,7 @@ public class AnnonsAdapter extends RecyclerView.Adapter<AnnonsAdapter.ViewHolder
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
+
         // Inflate the custom layout
         final View contactView = inflater.inflate(R.layout.recycler_view_item, parent, false);
 
@@ -43,6 +52,10 @@ public class AnnonsAdapter extends RecyclerView.Adapter<AnnonsAdapter.ViewHolder
         return viewHolder;
 
     }
+
+
+
+
 
 
     /*
@@ -89,8 +102,10 @@ public class AnnonsAdapter extends RecyclerView.Adapter<AnnonsAdapter.ViewHolder
                 // Create and connect listener to claim button
                 itemDetails.claimButton.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        Snackbar.make(v, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();
-                        annons.setClaimed(true);
+                        Snackbar.make(viewHolder.itemView, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();
+
+                        db.collection("ads").document(annons.getadID()).update("claimed", true);
+
                         itemDetails.dismiss();
                     }
                 });
