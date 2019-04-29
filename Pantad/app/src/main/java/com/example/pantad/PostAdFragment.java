@@ -1,11 +1,15 @@
 package com.example.pantad;
 
 
+import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,41 +20,36 @@ import android.widget.Button;
 import android.widget.EditText;
 
 
-/**
- * Handles the submitting of ads.
- */
-public class PostAdFragment extends Fragment {
-    //Relaterar till IV
-    private Button submit;
+public class PostAdFragment extends DialogFragment {
     private EditText name;
     private EditText adress;
     private EditText value;
     private EditText message;
     private UserModel userModel;
-
-    public PostAdFragment() {
-        // Required empty public constructor
-    }
+    private Button submit;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView =inflater.inflate(R.layout.fragment_post_ad, container, false);
-        userModel= ViewModelProviders.of(getActivity()).get(UserModel.class);
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        userModel= ViewModelProviders.of(getActivity()).get(UserModel.class);   //The usermodel is a shared object between the framgments, it handles the communication between them
 
-        initiatepostInputView(rootView);
-        // Inflate the layout for this fragment
+        // Use the Builder class for convenient dialog construction
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+       View postAdView = inflater.inflate(R.layout.fragment_post_ad, null);
 
-        return rootView;
+        initInputfields(postAdView);
+        initSubmit(postAdView);
+
+        builder.setView(postAdView)
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dismiss();
+                    }
+                });
+        // Create the AlertDialog object and return it
+        return builder.create();
     }
 
-    /*
-    Refrences the Editext fields and the submit button where all the user input comes from.
-     */
-    private void initiatepostInputView(View root){
-        initInputfields(root);
-        initSubmit(root);
-    }
     private void initInputfields(View root) {
         name = root.findViewById(R.id.nameInput);
         adress = root.findViewById(R.id.adressInput);
@@ -108,15 +107,13 @@ public class PostAdFragment extends Fragment {
                 }
                 else{
                     addAnnons(nameInput, adressInput, Integer.parseInt(valueInput), messageInput);
-                    Snackbar.make(submit, "AD was added", Snackbar.LENGTH_SHORT).show();
-                    name.getText().clear();
-                    adress.getText().clear();
-                    value.getText().clear();
-                    message.getText().clear();
+                    Snackbar.make(getActivity().findViewById(R.id.navigation), "AD was added", Snackbar.LENGTH_SHORT).show();
+                    dismiss();
                 }
             }
         });
     }
+
 
     /*
 Adds another annons to the list of annonser

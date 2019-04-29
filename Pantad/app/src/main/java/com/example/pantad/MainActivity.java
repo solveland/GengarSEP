@@ -51,11 +51,11 @@ public class MainActivity extends AppCompatActivity {
         mapFrag = new MapFragment();
         donatorFrag = new DonatorFragment();
         createFragments();
-        setFragment(mapFrag);
 
         setContentView(R.layout.activity_main);
         // initiateRecycleView();
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setSelectedItemId(R.id.navigation_map);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
     /*
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     */
     public void createFragments(){
         setFragment(donatorFrag);
-        setFragment(mapFrag);
         setFragment(pickupFrag);
+        setFragment(mapFrag);
     }
 }
