@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -29,6 +30,7 @@ public class UserModel extends ViewModel {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+
     public UserModel() {
         // trigger user load.
     }
@@ -45,13 +47,20 @@ public class UserModel extends ViewModel {
     @param estimatedValue - The estimated value of the pant in whole SEK:s
     */
     public void addAnnons(String name, String adress, int estimatedValue, String message) {
-        //annonser.add(new Annons(name, adress, estimatedValue));
-        db.collection("ads").add(new Annons(name, adress, estimatedValue, message));
+        DocumentReference adsRef = db.collection("ads").document();
+        Annons ad = new Annons(name, adress, estimatedValue, message, adsRef.getId());
+        adsRef.set(ad).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+            }
+        });
     }
 
     public ArrayList getAnnonser() {
         return annonser;
     }
+
 
     public void updateAds(final AnnonsAdapter adap){
         db.collection("ads").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -59,9 +68,11 @@ public class UserModel extends ViewModel {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
                     annonser.clear();
-                    for(QueryDocumentSnapshot document : task.getResult()){
-                        annonser.add(document.toObject(Annons.class));
-                    }
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Annons annons = document.toObject(Annons.class);
+                                annonser.add(annons);
+
+                        }
                     //There is probably a better way of doing this, just want to update the adapter once the task is done
                     adap.notifyDataSetChanged();
                 }
