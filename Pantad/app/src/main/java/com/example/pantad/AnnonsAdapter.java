@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.provider.Settings.Secure;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -108,7 +109,11 @@ public class AnnonsAdapter extends RecyclerView.Adapter<AnnonsAdapter.ViewHolder
                     public void onClick(View v) {
                         Snackbar.make(viewHolder.itemView, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();
 
+                        String recyclerID = Secure.getString(v.getContext().getContentResolver(),
+                                Secure.ANDROID_ID);
+
                         db.collection("ads").document(annons.getAdID()).update("claimed", true);
+                        db.collection("ads").document(annons.getAdID()).update("recyclerID", recyclerID);
 
                         itemDetails.dismiss();
                     }
