@@ -71,10 +71,11 @@ public class AnnonsAdapter extends RecyclerView.Adapter<AnnonsAdapter.ViewHolder
         final String name = annons.getName();
         final String address = annons.getAddress();
         final int value = annons.getValue();
-
+        final String message = annons.getMessage();
+        final String elapsedTime = TimeUtil.getDifference(annons.getStartTime());
         // Set item views based on your views and data model
         TextView nameView = viewHolder.nameTextView;
-        nameView.setText("Namn: "+annons.getName());
+        nameView.setText("Namn: "+annons.getName()+"                  "+elapsedTime);
 
         TextView adressView = viewHolder.adressTextView;
         adressView.setText("Upphämtningsadress: "+annons.getAddress());
@@ -82,11 +83,14 @@ public class AnnonsAdapter extends RecyclerView.Adapter<AnnonsAdapter.ViewHolder
         TextView valueView = viewHolder.valueTextView;
         valueView.setText("Uppskattat pantvärde: "+ Integer.toString(annons.getValue())+"kr");
 
+
+
+
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
                 // Create the item details window
-                final ItemDetailsWindow itemDetails = new ItemDetailsWindow(v, name, address, value, 4.5, "insert text here");
+                final ItemDetailsWindow itemDetails = new ItemDetailsWindow(v, name, address, value, 4.5, message);
                 itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
 
                 // Dim the background
@@ -104,7 +108,7 @@ public class AnnonsAdapter extends RecyclerView.Adapter<AnnonsAdapter.ViewHolder
                     public void onClick(View v) {
                         Snackbar.make(viewHolder.itemView, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();
 
-                        db.collection("ads").document(annons.getadID()).update("claimed", true);
+                        db.collection("ads").document(annons.getAdID()).update("claimed", true);
 
                         itemDetails.dismiss();
                     }

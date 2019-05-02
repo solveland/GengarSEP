@@ -19,6 +19,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.firebase.Timestamp;
+
+
+
 
 public class PostAdFragment extends DialogFragment {
     private EditText name;
@@ -35,7 +39,7 @@ public class PostAdFragment extends DialogFragment {
         // Use the Builder class for convenient dialog construction
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-       View postAdView = inflater.inflate(R.layout.fragment_post_ad, null);
+        View postAdView = inflater.inflate(R.layout.fragment_post_ad, null);
 
         initInputfields(postAdView);
         initSubmit(postAdView);
@@ -102,11 +106,12 @@ public class PostAdFragment extends DialogFragment {
                 String adressInput=adress.getText().toString();
                 String valueInput=value.getText().toString();
                 String messageInput=message.getText().toString();
+                Timestamp startTime = Timestamp.now();
                 if(nameInput.equals("") ||adressInput.equals("") || valueInput.equals("")){
                     Snackbar.make(submit, "You fucked up", Snackbar.LENGTH_SHORT).show();
                 }
                 else{
-                    addAnnons(nameInput, adressInput, Integer.parseInt(valueInput), messageInput);
+                    addAnnons(nameInput, adressInput, Integer.parseInt(valueInput), messageInput, startTime);
                     Snackbar.make(getActivity().findViewById(R.id.navigation), "AD was added", Snackbar.LENGTH_SHORT).show();
                     dismiss();
                 }
@@ -121,8 +126,8 @@ Adds another annons to the list of annonser
 @param adress The location where the trade will take place
 @param estimatedValue The estimated value of the pant in whole SEK:s
 */
-    public void addAnnons(String name,String adress,int value, String message){
-        userModel.addAnnons(name, adress, value, message);
+    public void addAnnons(String name, String adress, int value, String message, Timestamp startTime){
+        userModel.addAnnons(name, adress, value, message, startTime);
     }
 
     private void hideKeyboard(View view){
