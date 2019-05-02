@@ -52,12 +52,9 @@ public class UserModel extends ViewModel {
     public void addAnnons(String name, String adress, int estimatedValue, String message, String donatorID, Timestamp startTime) {
         DocumentReference adsRef = db.collection("ads").document();
         Annons ad = new Annons(name, adress, estimatedValue, message, adsRef.getId(), donatorID, startTime);
-        adsRef.set(ad).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
+        adsRef.set(ad);
 
-            }
-        });
+
     }
 
     public ArrayList getAnnonser() {
