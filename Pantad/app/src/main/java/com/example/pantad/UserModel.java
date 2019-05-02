@@ -8,10 +8,12 @@ import android.support.v7.widget.RecyclerView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
 
 import java.util.ArrayList;
 
@@ -46,10 +48,11 @@ public class UserModel extends ViewModel {
     @param adress The location where the trade will take place
     @param estimatedValue - The estimated value of the pant in whole SEK:s
     */
-    public void addAnnons(String name, String adress, int estimatedValue, String message) {
+    public void addAnnons(String name, String adress, int estimatedValue, String message, Timestamp startTime) {
         DocumentReference adsRef = db.collection("ads").document();
-        Annons ad = new Annons(name, adress, estimatedValue, message, adsRef.getId());
+        Annons ad = new Annons(name, adress, estimatedValue, message, adsRef.getId(), startTime);
         adsRef.set(ad);
+
     }
 
     public ArrayList getAnnonser() {
