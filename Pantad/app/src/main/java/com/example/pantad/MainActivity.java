@@ -1,7 +1,9 @@
 package com.example.pantad;
 
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -17,6 +19,7 @@ Most of the processes should be handled by the fragments themselves, this activi
 initiates them and handles the menu navigation
  */
 public class MainActivity extends AppCompatActivity {
+
 
     PickupFragment pickupFrag;
     MapFragment mapFrag;
@@ -51,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
         mapFrag = new MapFragment();
         donatorFrag = new DonatorFragment();
         createFragments();
+        ViewModelProviders.of(MainActivity.this).get(UserModel.class).setDeviceID(Settings.Secure.getString(getApplicationContext().getContentResolver(),
+                Settings.Secure.ANDROID_ID));
 
         setContentView(R.layout.activity_main);
         // initiateRecycleView();

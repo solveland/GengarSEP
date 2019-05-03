@@ -2,6 +2,7 @@ package com.example.pantad;
 
 import android.arch.lifecycle.ViewModel;
 import android.location.Geocoder;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 
@@ -16,16 +17,35 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 /*An object of this class is shared between the different fragments, all communication between
     them is handled by this object */
 public class UserModel extends ViewModel {
     /* Our list of ads. There might be a more suitable container for this */
-    public final ArrayList<Annons> annonser = new ArrayList<>();
+    //public final ArrayList<Annons> annonser = new ArrayList<>();
+
+    public final List<Annons> claimedAds = new ArrayList<>();
+    public final List<Annons> availableAds = new ArrayList<>();
+    public final List<Annons> postedAds = new ArrayList<>();
+
+    public List<Annons> getClaimedAds() {
+        return claimedAds;
+    }
+
+    public List<Annons> getAvailableAds() {
+        return availableAds;
+    }
+
+    public List<Annons> getPostedAds() {
+        return postedAds;
+    }
 
     /*The GoogleMap object from our mapFragment. We use this object to set markers or otherwise modify the map
      */
     private GoogleMap mMap;
+
+    private String deviceID;
 
     /* A geocoder object. A geocoder is supposed to be able to convert an address to a LatLng, not used yet though */
     private Geocoder geocoder;
@@ -57,9 +77,7 @@ public class UserModel extends ViewModel {
 
     }
 
-    public ArrayList getAnnonser() {
-        return annonser;
-    }
+
 
 
     public void updateAds(final AnnonsAdapter adap){
@@ -67,10 +85,20 @@ public class UserModel extends ViewModel {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
-                    annonser.clear();
+                    claimedAds.clear();
+                    availableAds.clear();
+                    postedAds.clear();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Annons annons = document.toObject(Annons.class);
-                                annonser.add(annons);
+                            if (annons.getRecyclerID() != null && annons.getRecyclerID().equals(deviceID)){
+                                claimedAds.add(annons);
+                            }
+                            if (!annons.isClaimed() && !annons.getDonatorID().equals(deviceID)){
+                                availableAds.add(annons);
+                            }
+                            if (annons.getDonatorID().equals(deviceID)){
+                                postedAds.add(annons);
+                            }
 
                         }
                     //There is probably a better way of doing this, just want to update the adapter once the task is done
@@ -86,6 +114,10 @@ public class UserModel extends ViewModel {
 
     public void setMap(GoogleMap mMap) {
         this.mMap = mMap;
+    }
+
+    public void setDeviceID(String deviceID){
+        this.deviceID = deviceID;
     }
 
     public Geocoder getGeocoder() {

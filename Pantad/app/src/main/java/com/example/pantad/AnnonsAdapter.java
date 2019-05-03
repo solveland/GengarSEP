@@ -1,6 +1,5 @@
 package com.example.pantad;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -10,48 +9,65 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.provider.Settings.Secure;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
+import com.example.pantad.AdListUtils.SectionedAdListContainer;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.List;
 
 /* This class is needed for the recyleview. It connects the textfields in the pos_ad xml file to a list of postings.
     Is used in HomeFragment to create and inflate the Recyclerview.
 */
-public class AnnonsAdapter extends RecyclerView.Adapter<AnnonsAdapter.ViewHolder> {
+public class AnnonsAdapter extends RecyclerView.Adapter {
 
-    private List<Annons> anonnser;
+    private SectionedAdListContainer adContainer;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
 
-    public AnnonsAdapter(List<Annons> anonnser) {
-        this.anonnser = anonnser;
+    public AnnonsAdapter(SectionedAdListContainer adContainer) {
+        this.adContainer = adContainer;
     }
 
     // Usually involves inflating a layout from XML and returning the holder
     @Override
-    public AnnonsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
 
-        // Inflate the custom layout
-        final View contactView = inflater.inflate(R.layout.recycler_view_item, parent, false);
+        RecyclerView.ViewHolder viewHolder;
 
-        // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
+        if(viewType == 0) {
+            // Normal list item
+            // Inflate the custom layout
+            final View contactView = inflater.inflate(R.layout.recycler_view_item, parent, false);
+
+            // Return a new holder instance
+            viewHolder = new AdItemViewHolder(contactView);
+        } else {
+            // Header
+            final View contactView = inflater.inflate(R.layout.recycler_segment_header_item, parent, false);
+
+            // Return a new holder instance
+            viewHolder = new SegmentHeaderViewHolder(contactView);
+        }
 
         return viewHolder;
 
+    }
+
+    /**
+     * Returns which itemviewtype goes in the specified position of the recyclerview
+     * @param pos Position in the recyclerview
+     * @return 0 for regular item view, 1 for section header
+     */
+    @Override
+    public int getItemViewType(int pos){
+        return (adContainer.isSegment(pos))? 1:0;
     }
 
 
@@ -66,79 +82,83 @@ public class AnnonsAdapter extends RecyclerView.Adapter<AnnonsAdapter.ViewHolder
      */
 
     @Override
-    public void onBindViewHolder(final AnnonsAdapter.ViewHolder viewHolder, int position) {
-        // Get the data model based on position
-        final Annons annons = anonnser.get(position);
-        final String name = annons.getName();
-        final String address = annons.getAddress();
-        final int value = annons.getValue();
-        final String message = annons.getMessage();
-        final String elapsedTime = TimeUtil.getDifference(annons.getStartTime());
-        // Set item views based on your views and data model
-        TextView nameView = viewHolder.nameTextView;
-        nameView.setText("Namn: "+annons.getName()+"                  "+elapsedTime);
+    public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, int position) {
+        if (getItemViewType(position) == 0) {
+            // Normal ad view item
+            // Get the data model based on position
+            final Annons annons = adContainer.getAd(position);
+            final String name = annons.getName();
+            final String address = annons.getAddress();
+            final int value = annons.getValue();
+            final String message = annons.getMessage();
+            final String elapsedTime = TimeUtil.getDifference(annons.getStartTime());
+            // Set item views based on your views and data model
+            TextView nameView = ((AdItemViewHolder)viewHolder).nameTextView;
+            nameView.setText("Namn: " + annons.getName() + "                  " + elapsedTime);
 
-        TextView adressView = viewHolder.adressTextView;
-        adressView.setText("Upphämtningsadress: "+annons.getAddress());
+            TextView adressView = ((AdItemViewHolder)viewHolder).adressTextView;
+            adressView.setText("Upphämtningsadress: " + annons.getAddress());
 
-        TextView valueView = viewHolder.valueTextView;
-        valueView.setText("Uppskattat pantvärde: "+ Integer.toString(annons.getValue())+"kr");
+            TextView valueView = ((AdItemViewHolder)viewHolder).valueTextView;
+            valueView.setText("Uppskattat pantvärde: " + Integer.toString(annons.getValue()) + "kr");
 
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
 
+                public void onClick(View v) {
+                    // Create the item details window
+                    final ItemDetailsWindow itemDetails = new ItemDetailsWindow(v, name, address, value, 4.5, message);
+                    itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
 
+                    // Dim the background
+                    View container = itemDetails.getContentView().getRootView();
+                    Context context = itemDetails.getContentView().getContext();
 
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                    WindowManager.LayoutParams params = (WindowManager.LayoutParams) container.getLayoutParams();
+                    params.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+                    params.dimAmount = 0.4f;
+                    wm.updateViewLayout(container, params);
 
-            public void onClick(View v) {
-                // Create the item details window
-                final ItemDetailsWindow itemDetails = new ItemDetailsWindow(v, name, address, value, 4.5, message);
-                itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
+                    // Create and connect listener to claim button
+                    itemDetails.claimButton.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Snackbar.make(viewHolder.itemView, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();
 
-                // Dim the background
-                View container = itemDetails.getContentView().getRootView();
-                Context context = itemDetails.getContentView().getContext();
+                            String recyclerID = Secure.getString(v.getContext().getContentResolver(),
+                                    Secure.ANDROID_ID);
 
-                WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-                WindowManager.LayoutParams params = (WindowManager.LayoutParams) container.getLayoutParams();
-                params.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-                params.dimAmount = 0.4f;
-                wm.updateViewLayout(container, params);
+                            db.collection("ads").document(annons.getAdID()).update("claimed", true);
+                            db.collection("ads").document(annons.getAdID()).update("recyclerID", recyclerID);
 
-                // Create and connect listener to claim button
-                itemDetails.claimButton.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        Snackbar.make(viewHolder.itemView, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();
+                            itemDetails.dismiss();
+                        }
+                    });
 
-                        String recyclerID = Secure.getString(v.getContext().getContentResolver(),
-                                Secure.ANDROID_ID);
+                    // Create and connect listener to cancel button
+                    itemDetails.cancelButton.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            itemDetails.dismiss();
+                        }
+                    });
+                }
 
-                        db.collection("ads").document(annons.getAdID()).update("claimed", true);
-                        db.collection("ads").document(annons.getAdID()).update("recyclerID", recyclerID);
-
-                        itemDetails.dismiss();
-                    }
-                });
-
-                // Create and connect listener to cancel button
-                itemDetails.cancelButton.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        itemDetails.dismiss();
-                    }
-                });
-            }
-
-        });
+            });
+        } else {
+            // Segment header item
+            TextView headerText = ((SegmentHeaderViewHolder)viewHolder).headerText;
+            headerText.setText(adContainer.getHeaderText(position));
+        }
     }
 
     // Returns the total count of items in the list
     @Override
     public int getItemCount() {
-        return anonnser.size();
+        return adContainer.size();
     }
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class AdItemViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView nameTextView;
@@ -147,14 +167,23 @@ public class AnnonsAdapter extends RecyclerView.Adapter<AnnonsAdapter.ViewHolder
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
-        public ViewHolder(View itemView) {
+        public AdItemViewHolder(View itemView) {
             // Stores the itemView in a public final member variable that can be used
-            // to access the context from any ViewHolder instance.
+            // to access the context from any AdItemViewHolder instance.
             super(itemView);
             nameTextView = (TextView) itemView.findViewById(R.id.annons_namn);
             adressTextView = (TextView) itemView.findViewById(R.id.annons_adress);
             valueTextView = (TextView) itemView.findViewById(R.id.annons_value);
          }
+    }
+
+    public class SegmentHeaderViewHolder extends RecyclerView.ViewHolder {
+        public TextView headerText;
+
+        public SegmentHeaderViewHolder(View itemView) {
+            super(itemView);
+            headerText = itemView.findViewById(R.id.header_text);
+        }
     }
 
     private class ItemDetailsWindow extends PopupWindow {

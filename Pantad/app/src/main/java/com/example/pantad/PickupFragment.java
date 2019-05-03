@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.pantad.AdListUtils.AdListWithSectionHeader;
+import com.example.pantad.AdListUtils.SectionedAdListContainer;
+
 
 /**
  *
@@ -40,7 +43,8 @@ Handles the setup for the recyclerView
         rvAnnonser.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         // Create adapter passing in the sample user data
-        adapter = new AnnonsAdapter(userModel.getAnnonser());
+        AdListWithSectionHeader[] adsToShow = {new AdListWithSectionHeader(userModel.getClaimedAds(),"Your claimed ads"),new AdListWithSectionHeader(userModel.getAvailableAds(),"Available ads")};
+        adapter = new AnnonsAdapter(new SectionedAdListContainer(adsToShow));
         // Attach the adapter to the recyclerview to populate items
         rvAnnonser.setAdapter(adapter);
         // That's all!

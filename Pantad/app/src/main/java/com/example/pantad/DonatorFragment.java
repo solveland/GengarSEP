@@ -26,6 +26,9 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.example.pantad.AdListUtils.AdListWithSectionHeader;
+import com.example.pantad.AdListUtils.SectionedAdListContainer;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -63,7 +66,8 @@ public class DonatorFragment extends Fragment {
         donatorRVAnnonser.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         //We will probably need to make a new adapter for this list eventually
-        adapter = new AnnonsAdapter(userModel.getAnnonser());
+        AdListWithSectionHeader[] adsToShow = {new AdListWithSectionHeader(userModel.getPostedAds(),"Your posted ads")};
+        adapter = new AnnonsAdapter(new SectionedAdListContainer(adsToShow));
         // Attach the adapter to the recyclerview to populate items
         donatorRVAnnonser.setAdapter(adapter);
         // That's all!
