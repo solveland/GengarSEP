@@ -1,30 +1,16 @@
 package com.example.pantad;
 
 
-import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 
 import com.example.pantad.AdListUtils.AdListWithSectionHeader;
 import com.example.pantad.AdListUtils.SectionedAdListContainer;
@@ -35,7 +21,7 @@ import com.example.pantad.AdListUtils.SectionedAdListContainer;
 public class DonatorFragment extends Fragment {
 
     private UserModel userModel;
-    private RecyclerView donatorRVAnnonser;
+    private RecyclerView donatorRVAds;
     private MyPostingsAdapter adapter;
     private FloatingActionButton postAdButton;
 
@@ -60,16 +46,16 @@ public class DonatorFragment extends Fragment {
             }
         });
 
-        donatorRVAnnonser = rootView.findViewById(R.id.donator_recycler_view);
+        donatorRVAds = rootView.findViewById(R.id.donator_recycler_view);
 
         // Set layout manager to position the items
-        donatorRVAnnonser.setLayoutManager(new LinearLayoutManager(getActivity()));
+        donatorRVAds.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         //We will probably need to make a new adapter for this list eventually
         AdListWithSectionHeader[] adsToShow = {new AdListWithSectionHeader(userModel.getPostedAds(),"Your posted ads")};
         adapter = new MyPostingsAdapter(new SectionedAdListContainer(adsToShow),userModel);
-        // Attach the adapter to the recyclerview to populate items
-        donatorRVAnnonser.setAdapter(adapter);
+        // Attach the adapter to the recyclerView to populate items
+        donatorRVAds.setAdapter(adapter);
         // That's all!
         return rootView;
     }

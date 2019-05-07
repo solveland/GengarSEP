@@ -16,12 +16,12 @@ import com.example.pantad.AdListUtils.SectionedAdListContainer;
 
 /**
  *
- * Contains the RecyleView (aka the list of postings)
+ * Contains the RecycleView (aka the list of postings)
  */
 public class PickupFragment extends Fragment {
-    private RecyclerView rvAnnonser;
+    private RecyclerView rvAds;
     private UserModel userModel;
-    private AnnonsAdapter adapter;
+    private AdAdapter adapter;
 
     public PickupFragment() {
         // Required empty public constructor
@@ -37,22 +37,22 @@ Handles the setup for the recyclerView
         View rootView = inflater.inflate(R.layout.fragment_pickup, container, false);
         userModel= ViewModelProviders.of(getActivity()).get(UserModel.class);
 
-        rvAnnonser = rootView.findViewById(R.id.recyclerView);
+        rvAds = rootView.findViewById(R.id.recyclerView);
 
         // Set layout manager to position the items
-        rvAnnonser.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvAds.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         // Create adapter passing in the sample user data
         AdListWithSectionHeader[] adsToShow = {new AdListWithSectionHeader(userModel.getClaimedAds(),"Your claimed ads"),new AdListWithSectionHeader(userModel.getAvailableAds(),"Available ads")};
-        adapter = new AnnonsAdapter(new SectionedAdListContainer(adsToShow));
-        // Attach the adapter to the recyclerview to populate items
-        rvAnnonser.setAdapter(adapter);
+        adapter = new AdAdapter(new SectionedAdListContainer(adsToShow));
+        // Attach the adapter to the recyclerView to populate items
+        rvAds.setAdapter(adapter);
         // That's all!
         return rootView;
     }
 
     /*
-    Updates the list of postings in recyleView when the home-tab is switched to.
+    Updates the list of postings in recycleView when the home-tab is switched to.
     Might be a better way to do this
      */
     @Override

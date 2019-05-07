@@ -34,8 +34,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private CameraPosition lastPosition = new CameraPosition(first, 10.0f, 0.0f, 0.0f);
     private UserModel userModel;
 
-    /* A geocoder object. A geocoder is supposed to be able to convert an address to a LatLng, not used yet though
-     Is created here but sent to the usermodel
+    /* A geocode object. A geocode is supposed to be able to convert an address to a LatLng, not used yet though
+     Is created here but sent to the userModel
      */
     private Geocoder geocoder;
 
@@ -49,13 +49,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
-        geocoder = new Geocoder(getActivity(), Locale.getDefault()); //Geocoders are used to get position from an address
-        userModel= ViewModelProviders.of(getActivity()).get(UserModel.class);   //The usermodel is a shared object between the framgments, it handles the communication between them
+        geocoder = new Geocoder(getActivity(), Locale.getDefault()); //Geocoder are used to get position from an address
+        userModel= ViewModelProviders.of(getActivity()).get(UserModel.class);   //The userModel is a shared object between the fragments, it handles the communication between them
         userModel.setGeocoder(geocoder);
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg);  //use SuppoprtMapFragment for using in fragment instead of activity  MapFragment = activity   SupportMapFragment = fragment
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg);  //use SupportMapFragment for using in fragment instead of activity  MapFragment = activity   SupportMapFragment = fragment
 
         mapFragment.getMapAsync(this);
 

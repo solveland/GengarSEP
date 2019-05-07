@@ -8,13 +8,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,7 +24,7 @@ import com.google.firebase.Timestamp;
 
 public class PostAdFragment extends DialogFragment {
     private EditText name;
-    private EditText adress;
+    private EditText address;
     private EditText value;
     private EditText message;
     private UserModel userModel;
@@ -36,14 +33,14 @@ public class PostAdFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        userModel= ViewModelProviders.of(getActivity()).get(UserModel.class);   //The usermodel is a shared object between the framgments, it handles the communication between them
+        userModel= ViewModelProviders.of(getActivity()).get(UserModel.class);   //The userModel is a shared object between the fragments, it handles the communication between them
 
         // Use the Builder class for convenient dialog construction
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View postAdView = inflater.inflate(R.layout.fragment_post_ad, null);
 
-        initInputfields(postAdView);
+        initInputFields(postAdView);
         initSubmit(postAdView);
 
         builder.setView(postAdView)
@@ -56,9 +53,9 @@ public class PostAdFragment extends DialogFragment {
         return builder.create();
     }
 
-    private void initInputfields(View root) {
+    private void initInputFields(View root) {
         name = root.findViewById(R.id.nameInput);
-        adress = root.findViewById(R.id.adressInput);
+        address = root.findViewById(R.id.adressInput);
         value = root.findViewById(R.id.valueInput);
         message = root.findViewById(R.id.messageInput);
 
@@ -89,7 +86,7 @@ public class PostAdFragment extends DialogFragment {
         };
 
         name.setOnFocusChangeListener(focusListener);
-        adress.setOnFocusChangeListener(focusListener);
+        address.setOnFocusChangeListener(focusListener);
         value.setOnFocusChangeListener(focusListener);
         message.setOnFocusChangeListener(focusListener);
     }
@@ -107,18 +104,18 @@ public class PostAdFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 String nameInput=name.getText().toString();
-                String adressInput=adress.getText().toString();
+                String addressInput=address.getText().toString();
                 String valueInput=value.getText().toString();
                 String messageInput=message.getText().toString();
                 Timestamp startTime = Timestamp.now();
-                if(nameInput.equals("") ||adressInput.equals("") || valueInput.equals("")){
+                if(nameInput.equals("") ||addressInput.equals("") || valueInput.equals("")){
                     Snackbar.make(submit, "You fucked up", Snackbar.LENGTH_SHORT).show();
                 }
                 else{
-                    addAnnons(nameInput, adressInput, Integer.parseInt(valueInput), messageInput, donatorID, startTime);
+                    addAds(nameInput, addressInput, Integer.parseInt(valueInput), messageInput, donatorID, startTime);
                     Snackbar.make(getActivity().findViewById(R.id.navigation), "AD was added", Snackbar.LENGTH_SHORT).show();
                     name.getText().clear();
-                    adress.getText().clear();
+                    address.getText().clear();
                     value.getText().clear();
                     message.getText().clear();
                     dismiss();
@@ -129,14 +126,14 @@ public class PostAdFragment extends DialogFragment {
 
 
     /*
-Adds another annons to the list of annonser
+Adds another ad to the list of ads
 @param name  The name of the person posting the ad
-@param adress The location where the trade will take place
+@param address The location where the trade will take place
 @param estimatedValue The estimated value of the pant in whole SEK:s
 */
 
-    public void addAnnons(String name,String adress,int value, String message, String donatorID, Timestamp startTime){
-        userModel.addAnnons(name, adress, value, message, donatorID, startTime);
+    public void addAds(String name, String adress, int value, String message, String donatorID, Timestamp startTime){
+        userModel.addAd(name, adress, value, message, donatorID, startTime);
     }
 
     private void hideKeyboard(View view){

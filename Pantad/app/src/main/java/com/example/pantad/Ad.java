@@ -5,11 +5,11 @@ import com.google.firebase.Timestamp;
 
 
 
-/*The type of object we want the RecyleView (in the home fragment) to show. All of the
+/*The type of object we want the RecycleView (in the home fragment) to show. All of the
     ad-attributes we want to be shown should be listed here
  */
 @Keep
-public class Annons {
+public class Ad {
     private String name;
     private String address;
     private int value;
@@ -20,11 +20,11 @@ public class Annons {
     private String donatorID;
     private String recyclerID;
 
-    public Annons(String name,String adress, int estimatedvalue, String message, String adID, String donatorID, Timestamp startTime) {
+    public Ad(String name, String address, int estimatedValue, String message, String adID, String donatorID, Timestamp startTime) {
 
         this.name = name;
-        this.address = adress;
-        this.value=estimatedvalue;
+        this.address = address;
+        this.value=estimatedValue;
         this.message = message;
         claimed = false;
         this.adID = adID;
@@ -33,8 +33,8 @@ public class Annons {
 
     }
 
-    //Constructor without arguments needed for firebase
-    public Annons(){
+    //Constructor without arguments needed for fireBase
+    public Ad(){
 
     }
 

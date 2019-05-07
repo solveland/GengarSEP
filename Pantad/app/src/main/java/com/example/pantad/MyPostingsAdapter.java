@@ -1,9 +1,7 @@
 package com.example.pantad;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
-import android.provider.Settings.Secure;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -18,10 +16,9 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.example.pantad.AdListUtils.SectionedAdListContainer;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-/* This class is needed for the recyleview. It connects the textfields in the pos_ad xml file to a list of postings.
-    Is used in HomeFragment to create and inflate the Recyclerview.
+/* This class is needed for the recycleView. It connects the textFields in the pos_ad xml file to a list of postings.
+    Is used in HomeFragment to create and inflate the RecyclerView.
 */
 public class MyPostingsAdapter extends RecyclerView.Adapter {
 
@@ -87,21 +84,21 @@ public class MyPostingsAdapter extends RecyclerView.Adapter {
         if (getItemViewType(position) == 0) {
             // Normal ad view item
             // Get the data model based on position
-            final Annons annons = adContainer.getAd(position);
-            final String name = annons.getName();
-            final String address = annons.getAddress();
-            final int value = annons.getValue();
-            final String message = annons.getMessage();
-            final String elapsedTime = TimeUtil.getDifference(annons.getStartTime());
+            final Ad ad = adContainer.getAd(position);
+            final String name = ad.getName();
+            final String address = ad.getAddress();
+            final int value = ad.getValue();
+            final String message = ad.getMessage();
+            final String elapsedTime = TimeUtil.getDifference(ad.getStartTime());
             // Set item views based on your views and data model
             TextView nameView = ((AdItemViewHolder)viewHolder).nameTextView;
-            nameView.setText("Namn: " + annons.getName() + "                  " + elapsedTime);
+            nameView.setText("Namn: " + ad.getName() + "                  " + elapsedTime);
 
-            TextView adressView = ((AdItemViewHolder)viewHolder).adressTextView;
-            adressView.setText("Upphämtningsadress: " + annons.getAddress());
+            TextView addressView = ((AdItemViewHolder)viewHolder).adressTextView;
+            addressView.setText("Upphämtningsadress: " + ad.getAddress());
 
             TextView valueView = ((AdItemViewHolder)viewHolder).valueTextView;
-            valueView.setText("Uppskattat pantvärde: " + Integer.toString(annons.getValue()) + "kr");
+            valueView.setText("Uppskattat pantvärde: " + Integer.toString(ad.getValue()) + "kr");
 
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -123,7 +120,7 @@ public class MyPostingsAdapter extends RecyclerView.Adapter {
                     // Create and connect listener to claim button
                     itemDetails.deleteButton.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
-                            removeAd(annons);
+                            removeAd(ad);
                             Snackbar.make(viewHolder.itemView, "Ad has been deleted!", Snackbar.LENGTH_SHORT).show();
                             itemDetails.dismiss();
                         }
@@ -226,8 +223,8 @@ public class MyPostingsAdapter extends RecyclerView.Adapter {
 
 
     }
-    public void removeAd(Annons annons) {
-        userModel.removeAd(annons);
+    public void removeAd(Ad ad) {
+        userModel.removeAd(ad);
         this.notifyDataSetChanged();
     }
 }

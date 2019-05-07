@@ -2,10 +2,7 @@ package com.example.pantad;
 
 import android.arch.lifecycle.ViewModel;
 import android.location.Geocoder;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.RecyclerView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,21 +21,21 @@ import java.util.List;
     them is handled by this object */
 public class UserModel extends ViewModel {
     /* Our list of ads. There might be a more suitable container for this */
-    //public final ArrayList<Annons> annonser = new ArrayList<>();
+    //public final ArrayList<Ad> ads = new ArrayList<>();
 
-    public final List<Annons> claimedAds = new ArrayList<>();
-    public final List<Annons> availableAds = new ArrayList<>();
-    public final List<Annons> postedAds = new ArrayList<>();
+    public final List<Ad> claimedAds = new ArrayList<>();
+    public final List<Ad> availableAds = new ArrayList<>();
+    public final List<Ad> postedAds = new ArrayList<>();
 
-    public List<Annons> getClaimedAds() {
+    public List<Ad> getClaimedAds() {
         return claimedAds;
     }
 
-    public List<Annons> getAvailableAds() {
+    public List<Ad> getAvailableAds() {
         return availableAds;
     }
 
-    public List<Annons> getPostedAds() {
+    public List<Ad> getPostedAds() {
         return postedAds;
     }
 
@@ -64,14 +61,14 @@ public class UserModel extends ViewModel {
     }
 
     /*
-    Adds another annons to the list of annonser
+    Adds another ad to the list of ads
     @param name  The name of the person posting the ad
-    @param adress The location where the trade will take place
+    @param address The location where the trade will take place
     @param estimatedValue - The estimated value of the pant in whole SEK:s
     */
-    public void addAnnons(String name, String adress, int estimatedValue, String message, String donatorID, Timestamp startTime) {
+    public void addAd(String name, String address, int estimatedValue, String message, String donatorID, Timestamp startTime) {
         DocumentReference adsRef = db.collection("ads").document();
-        Annons ad = new Annons(name, adress, estimatedValue, message, adsRef.getId(), donatorID, startTime);
+        Ad ad = new Ad(name, address, estimatedValue, message, adsRef.getId(), donatorID, startTime);
         adsRef.set(ad);
 
         if (ad.getRecyclerID() != null && ad.getRecyclerID().equals(deviceID)){
@@ -88,7 +85,7 @@ public class UserModel extends ViewModel {
 
 
 
-    public void updateAds(final AnnonsAdapter adap){
+    public void updateAds(final AdAdapter adapter){
         db.collection("ads").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -97,30 +94,30 @@ public class UserModel extends ViewModel {
                     availableAds.clear();
                     postedAds.clear();
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            Annons annons = document.toObject(Annons.class);
-                            if (annons.getRecyclerID() != null && annons.getRecyclerID().equals(deviceID)){
-                                claimedAds.add(annons);
+                            Ad ad = document.toObject(Ad.class);
+                            if (ad.getRecyclerID() != null && ad.getRecyclerID().equals(deviceID)){
+                                claimedAds.add(ad);
                             }
-                            if (!annons.isClaimed() && !annons.getDonatorID().equals(deviceID)){
-                                availableAds.add(annons);
+                            if (!ad.isClaimed() && !ad.getDonatorID().equals(deviceID)){
+                                availableAds.add(ad);
                             }
-                            if (annons.getDonatorID().equals(deviceID)){
-                                postedAds.add(annons);
+                            if (ad.getDonatorID().equals(deviceID)){
+                                postedAds.add(ad);
                             }
 
                         }
                     //There is probably a better way of doing this, just want to update the adapter once the task is done
-                    adap.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
                 }
             }
         });
     }
-    //Vi borde antagligen ändra så att Adapter och Usermodel kopplas ihop med observer-pattern
-    public void removeAd(Annons annons){
-        db.collection("ads").document(annons.getAdID()).delete();
-        claimedAds.remove(annons);
-        availableAds.remove(annons);
-        postedAds.remove(annons);
+    //We should change it so that Adapter and userModel connects with observer-pattern
+    public void removeAd(Ad ad){
+        db.collection("ads").document(ad.getAdID()).delete();
+        claimedAds.remove(ad);
+        availableAds.remove(ad);
+        postedAds.remove(ad);
     }
 
 

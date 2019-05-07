@@ -18,17 +18,17 @@ import android.provider.Settings.Secure;
 import com.example.pantad.AdListUtils.SectionedAdListContainer;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-/* This class is needed for the recyleview. It connects the textfields in the pos_ad xml file to a list of postings.
-    Is used in HomeFragment to create and inflate the Recyclerview.
+/* This class is needed for the recycleView. It connects the textFields in the pos_ad xml file to a list of postings.
+    Is used in HomeFragment to create and inflate the RecyclerView.
 */
-public class AnnonsAdapter extends RecyclerView.Adapter {
+public class AdAdapter extends RecyclerView.Adapter {
 
     private SectionedAdListContainer adContainer;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
 
-    public AnnonsAdapter(SectionedAdListContainer adContainer) {
+    public AdAdapter(SectionedAdListContainer adContainer) {
         this.adContainer = adContainer;
     }
 
@@ -86,21 +86,21 @@ public class AnnonsAdapter extends RecyclerView.Adapter {
         if (getItemViewType(position) == 0) {
             // Normal ad view item
             // Get the data model based on position
-            final Annons annons = adContainer.getAd(position);
-            final String name = annons.getName();
-            final String address = annons.getAddress();
-            final int value = annons.getValue();
-            final String message = annons.getMessage();
-            final String elapsedTime = TimeUtil.getDifference(annons.getStartTime());
+            final Ad ad = adContainer.getAd(position);
+            final String name = ad.getName();
+            final String address = ad.getAddress();
+            final int value = ad.getValue();
+            final String message = ad.getMessage();
+            final String elapsedTime = TimeUtil.getDifference(ad.getStartTime());
             // Set item views based on your views and data model
             TextView nameView = ((AdItemViewHolder)viewHolder).nameTextView;
-            nameView.setText("Namn: " + annons.getName() + "                  " + elapsedTime);
+            nameView.setText("Namn: " + ad.getName() + "                  " + elapsedTime);
 
-            TextView adressView = ((AdItemViewHolder)viewHolder).adressTextView;
-            adressView.setText("Upphämtningsadress: " + annons.getAddress());
+            TextView addressView = ((AdItemViewHolder)viewHolder).addressTextView;
+            addressView.setText("Upphämtningsadress: " + ad.getAddress());
 
             TextView valueView = ((AdItemViewHolder)viewHolder).valueTextView;
-            valueView.setText("Uppskattat pantvärde: " + Integer.toString(annons.getValue()) + "kr");
+            valueView.setText("Uppskattat pantvärde: " + Integer.toString(ad.getValue()) + "kr");
 
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -127,8 +127,8 @@ public class AnnonsAdapter extends RecyclerView.Adapter {
                             String recyclerID = Secure.getString(v.getContext().getContentResolver(),
                                     Secure.ANDROID_ID);
 
-                            db.collection("ads").document(annons.getAdID()).update("claimed", true);
-                            db.collection("ads").document(annons.getAdID()).update("recyclerID", recyclerID);
+                            db.collection("ads").document(ad.getAdID()).update("claimed", true);
+                            db.collection("ads").document(ad.getAdID()).update("recyclerID", recyclerID);
 
                             itemDetails.dismiss();
                         }
@@ -162,7 +162,7 @@ public class AnnonsAdapter extends RecyclerView.Adapter {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView nameTextView;
-        public TextView adressTextView;
+        public TextView addressTextView;
         public TextView valueTextView;
 
         // We also create a constructor that accepts the entire item row
@@ -172,7 +172,7 @@ public class AnnonsAdapter extends RecyclerView.Adapter {
             // to access the context from any AdItemViewHolder instance.
             super(itemView);
             nameTextView = (TextView) itemView.findViewById(R.id.annons_namn);
-            adressTextView = (TextView) itemView.findViewById(R.id.annons_adress);
+            addressTextView = (TextView) itemView.findViewById(R.id.annons_adress);
             valueTextView = (TextView) itemView.findViewById(R.id.annons_value);
          }
     }

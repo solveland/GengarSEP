@@ -1,20 +1,20 @@
 package com.example.pantad.AdListUtils;
 
-import com.example.pantad.Annons;
+import com.example.pantad.Ad;
 
 import java.util.List;
 
 public class AdListWithSectionHeader {
 
-    private List<Annons> adList;
+    private List<Ad> adList;
     private String headerText;
 
-    public AdListWithSectionHeader(List<Annons> adList, String headerText) {
+    public AdListWithSectionHeader(List<Ad> adList, String headerText) {
         this.adList = adList;
         this.headerText = headerText;
     }
 
-    public List<Annons> getAdList() {
+    public List<Ad> getAdList() {
         return adList;
     }
 

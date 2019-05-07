@@ -1,7 +1,7 @@
 package com.example.pantad.AdListUtils;
 
 
-import com.example.pantad.Annons;
+import com.example.pantad.Ad;
 
 public class SectionedAdListContainer {
 
@@ -27,7 +27,7 @@ public class SectionedAdListContainer {
         return false;
     }
 
-    public Annons getAd(int pos){
+    public Ad getAd(int pos){
         if(pos == 0){
             return null;
         }
