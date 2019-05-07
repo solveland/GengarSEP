@@ -36,7 +36,7 @@ public class DonatorFragment extends Fragment {
 
     private UserModel userModel;
     private RecyclerView donatorRVAnnonser;
-    private AnnonsAdapter adapter;
+    private MyPostingsAdapter adapter;
     private FloatingActionButton postAdButton;
 
     public DonatorFragment() {
@@ -56,7 +56,7 @@ public class DonatorFragment extends Fragment {
             @Override
             public void onClick(final View v) {
                 DialogFragment postAdFragment = new PostAdFragment();
-                postAdFragment.show(getFragmentManager(), "missiles");
+                postAdFragment.show(getFragmentManager(), "");
             }
         });
 
@@ -67,7 +67,7 @@ public class DonatorFragment extends Fragment {
 
         //We will probably need to make a new adapter for this list eventually
         AdListWithSectionHeader[] adsToShow = {new AdListWithSectionHeader(userModel.getPostedAds(),"Your posted ads")};
-        adapter = new AnnonsAdapter(new SectionedAdListContainer(adsToShow));
+        adapter = new MyPostingsAdapter(new SectionedAdListContainer(adsToShow),userModel);
         // Attach the adapter to the recyclerview to populate items
         donatorRVAnnonser.setAdapter(adapter);
         // That's all!

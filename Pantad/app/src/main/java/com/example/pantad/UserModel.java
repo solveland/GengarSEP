@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel;
 import android.location.Geocoder;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -68,13 +69,20 @@ public class UserModel extends ViewModel {
     @param adress The location where the trade will take place
     @param estimatedValue - The estimated value of the pant in whole SEK:s
     */
-
     public void addAnnons(String name, String adress, int estimatedValue, String message, String donatorID, Timestamp startTime) {
         DocumentReference adsRef = db.collection("ads").document();
         Annons ad = new Annons(name, adress, estimatedValue, message, adsRef.getId(), donatorID, startTime);
         adsRef.set(ad);
 
-
+        if (ad.getRecyclerID() != null && ad.getRecyclerID().equals(deviceID)){
+            claimedAds.add(ad);
+        }
+        if (!ad.isClaimed() && !ad.getDonatorID().equals(deviceID)){
+            availableAds.add(ad);
+        }
+        if (ad.getDonatorID().equals(deviceID)){
+            postedAds.add(ad);
+        }
     }
 
 
@@ -107,6 +115,16 @@ public class UserModel extends ViewModel {
             }
         });
     }
+    //Vi borde antagligen ändra så att Adapter och Usermodel kopplas ihop med observer-pattern
+    public void removeAd(Annons annons){
+        db.collection("ads").document(annons.getAdID()).delete();
+        claimedAds.remove(annons);
+        availableAds.remove(annons);
+        postedAds.remove(annons);
+    }
+
+
+
 
     public GoogleMap getmMap() {
         return mMap;
