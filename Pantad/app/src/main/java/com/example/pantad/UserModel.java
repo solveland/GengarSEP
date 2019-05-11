@@ -4,6 +4,8 @@ import android.arch.lifecycle.ViewModel;
 import android.location.Geocoder;
 import android.support.annotation.NonNull;
 
+import com.example.pantad.AdListUtils.AbstractAdapter;
+import com.example.pantad.AdListUtils.AdAdapter;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -14,6 +16,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +29,9 @@ public class UserModel extends ViewModel {
     public final List<Ad> claimedAds = new ArrayList<>();
     public final List<Ad> availableAds = new ArrayList<>();
     public final List<Ad> postedAds = new ArrayList<>();
+
+    public PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+
 
     public List<Ad> getClaimedAds() {
         return claimedAds;
@@ -52,6 +58,7 @@ public class UserModel extends ViewModel {
 
 
     public UserModel() {
+        updateAds();
         // trigger user load.
     }
 
@@ -80,12 +87,13 @@ public class UserModel extends ViewModel {
         if (ad.getDonatorID().equals(deviceID)){
             postedAds.add(ad);
         }
+        pcs.firePropertyChange(null,true,false);
     }
 
 
 
 
-    public void updateAds(final AdAdapter adapter){
+    public void updateAds(){
         db.collection("ads").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -107,7 +115,7 @@ public class UserModel extends ViewModel {
 
                         }
                     //There is probably a better way of doing this, just want to update the adapter once the task is done
-                    adapter.notifyDataSetChanged();
+                    pcs.firePropertyChange(null,true,false);
                 }
             }
         });
@@ -118,6 +126,7 @@ public class UserModel extends ViewModel {
         claimedAds.remove(ad);
         availableAds.remove(ad);
         postedAds.remove(ad);
+        pcs.firePropertyChange(null,true,false);
     }
 
 
@@ -141,5 +150,27 @@ public class UserModel extends ViewModel {
 
     public void setGeocoder(Geocoder geocoder) {
         this.geocoder = geocoder;
+    }
+
+    public void setObserver(AbstractAdapter adapter){
+        pcs.addPropertyChangeListener(adapter);
+    }
+
+    public void claimAd(Ad ad, String recyclerID){
+        db.collection("ads").document(ad.getAdID()).update("claimed", true);
+        db.collection("ads").document(ad.getAdID()).update("recyclerID", recyclerID);
+        ad.setClaimed(true);
+        availableAds.remove(ad);
+        claimedAds.add(ad);
+        pcs.firePropertyChange(null,true,false);
+    }
+
+    public void unClaimAd(Ad ad){
+        db.collection("ads").document(ad.getAdID()).update("claimed", false);
+        db.collection("ads").document(ad.getAdID()).update("recyclerID", null);
+        ad.setClaimed(false);
+        availableAds.add(ad);
+        claimedAds.remove(ad);
+        pcs.firePropertyChange(null,true,false);
     }
 }

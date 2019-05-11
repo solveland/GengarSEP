@@ -1,4 +1,4 @@
-package com.example.pantad;
+package com.example.pantad.AdListUtils;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -14,20 +14,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.provider.Settings.Secure;
 
+import com.example.pantad.Ad;
 import com.example.pantad.AdListUtils.SectionedAdListContainer;
+import com.example.pantad.R;
+import com.example.pantad.TimeUtil;
+import com.example.pantad.UserModel;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 /* This class is needed for the recycleView. It connects the textFields in the pos_ad xml file to a list of postings.
     Is used in HomeFragment to create and inflate the RecyclerView.
 */
-public class MyPostingsAdapter extends RecyclerView.Adapter {
+public class AdAdapter extends AbstractAdapter {
 
-    private SectionedAdListContainer adContainer;
-    private UserModel userModel;
-
-    public MyPostingsAdapter(SectionedAdListContainer adContainer, UserModel userModel) {
-        this.adContainer = adContainer;
-        this.userModel=userModel;
+    public AdAdapter(SectionedAdListContainer adContainer, UserModel userModel) {
+        super( adContainer,  userModel);
     }
 
     // Usually involves inflating a layout from XML and returning the holder
@@ -58,20 +60,6 @@ public class MyPostingsAdapter extends RecyclerView.Adapter {
 
     }
 
-    /**
-     * Returns which itemviewtype goes in the specified position of the recyclerview
-     * @param pos Position in the recyclerview
-     * @return 0 for regular item view, 1 for section header
-     */
-    @Override
-    public int getItemViewType(int pos){
-        return (adContainer.isSegment(pos))? 1:0;
-    }
-
-
-
-
-
 
     /*
     Involves populating data into the item through holder
@@ -94,7 +82,7 @@ public class MyPostingsAdapter extends RecyclerView.Adapter {
             TextView nameView = ((AdItemViewHolder)viewHolder).nameTextView;
             nameView.setText("Namn: " + ad.getName() + "                  " + elapsedTime);
 
-            TextView addressView = ((AdItemViewHolder)viewHolder).adressTextView;
+            TextView addressView = ((AdItemViewHolder)viewHolder).addressTextView;
             addressView.setText("Upphämtningsadress: " + ad.getAddress());
 
             TextView valueView = ((AdItemViewHolder)viewHolder).valueTextView;
@@ -107,6 +95,12 @@ public class MyPostingsAdapter extends RecyclerView.Adapter {
                     final ItemDetailsWindow itemDetails = new ItemDetailsWindow(v, name, address, value, 4.5, message);
                     itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
 
+                    //Riktigt ful lösning, måste gå att göra bättre:
+                    if(ad.isClaimed()){
+                        itemDetails.claimButton.setBackgroundColor(Color.RED);
+                        itemDetails.claimButton.setText("Unclaim");
+                    }
+
                     // Dim the background
                     View container = itemDetails.getContentView().getRootView();
                     Context context = itemDetails.getContentView().getContext();
@@ -118,10 +112,20 @@ public class MyPostingsAdapter extends RecyclerView.Adapter {
                     wm.updateViewLayout(container, params);
 
                     // Create and connect listener to claim button
-                    itemDetails.deleteButton.setOnClickListener(new View.OnClickListener() {
+                    itemDetails.claimButton.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
-                            removeAd(ad);
-                            Snackbar.make(viewHolder.itemView, "Ad has been deleted!", Snackbar.LENGTH_SHORT).show();
+
+                            if(!ad.isClaimed()) {
+                                Snackbar.make(viewHolder.itemView, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();
+                                String recyclerID = Secure.getString(v.getContext().getContentResolver(),
+                                        Secure.ANDROID_ID);
+                                userModel.claimAd(ad, recyclerID);
+                            }
+
+                            else{
+                                Snackbar.make(viewHolder.itemView, "Ad has been unclaimed!", Snackbar.LENGTH_SHORT).show();
+                                userModel.unClaimAd(ad);
+                            }
                             itemDetails.dismiss();
                         }
                     });
@@ -142,19 +146,13 @@ public class MyPostingsAdapter extends RecyclerView.Adapter {
         }
     }
 
-    // Returns the total count of items in the list
-    @Override
-    public int getItemCount() {
-        return adContainer.size();
-    }
-
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
     public class AdItemViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView nameTextView;
-        public TextView adressTextView;
+        public TextView addressTextView;
         public TextView valueTextView;
 
         // We also create a constructor that accepts the entire item row
@@ -164,18 +162,9 @@ public class MyPostingsAdapter extends RecyclerView.Adapter {
             // to access the context from any AdItemViewHolder instance.
             super(itemView);
             nameTextView = (TextView) itemView.findViewById(R.id.annons_namn);
-            adressTextView = (TextView) itemView.findViewById(R.id.annons_adress);
+            addressTextView = (TextView) itemView.findViewById(R.id.annons_adress);
             valueTextView = (TextView) itemView.findViewById(R.id.annons_value);
          }
-    }
-
-    public class SegmentHeaderViewHolder extends RecyclerView.ViewHolder {
-        public TextView headerText;
-
-        public SegmentHeaderViewHolder(View itemView) {
-            super(itemView);
-            headerText = itemView.findViewById(R.id.header_text);
-        }
     }
 
     private class ItemDetailsWindow extends PopupWindow {
@@ -184,7 +173,7 @@ public class MyPostingsAdapter extends RecyclerView.Adapter {
         public TextView value;
         public TextView rating;
         public TextView description;
-        public Button deleteButton;
+        public Button claimButton;
         public Button cancelButton;
         public ImageView userAvatar;
 
@@ -201,10 +190,7 @@ public class MyPostingsAdapter extends RecyclerView.Adapter {
             this.value = (TextView) popupView.findViewById(R.id.details_value);
             this.description = (TextView) popupView.findViewById(R.id.details_description);
             this.rating = (TextView) popupView.findViewById(R.id.user_rating);
-            deleteButton = (Button) popupView.findViewById(R.id.claim_details);
-            deleteButton.setText("Delete");
-            deleteButton.setBackgroundColor(Color.RED);
-
+            claimButton = (Button) popupView.findViewById(R.id.claim_details);
             cancelButton = (Button) popupView.findViewById(R.id.cancel_details);
             userAvatar = (ImageView) popupView.findViewById(R.id.user_avatar_details);
 
@@ -220,11 +206,5 @@ public class MyPostingsAdapter extends RecyclerView.Adapter {
             setHeight(height);
             setFocusable(true);
         }
-
-
-    }
-    public void removeAd(Ad ad) {
-        userModel.removeAd(ad);
-        this.notifyDataSetChanged();
     }
 }

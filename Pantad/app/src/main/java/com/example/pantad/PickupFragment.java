@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.pantad.AdListUtils.AdAdapter;
 import com.example.pantad.AdListUtils.AdListWithSectionHeader;
 import com.example.pantad.AdListUtils.SectionedAdListContainer;
 
@@ -44,22 +45,25 @@ Handles the setup for the recyclerView
 
         // Create adapter passing in the sample user data
         AdListWithSectionHeader[] adsToShow = {new AdListWithSectionHeader(userModel.getClaimedAds(),"Your claimed ads"),new AdListWithSectionHeader(userModel.getAvailableAds(),"Available ads")};
-        adapter = new AdAdapter(new SectionedAdListContainer(adsToShow));
+        adapter = new AdAdapter(new SectionedAdListContainer(adsToShow),userModel);
         // Attach the adapter to the recyclerView to populate items
         rvAds.setAdapter(adapter);
         // That's all!
         return rootView;
+
     }
 
     /*
     Updates the list of postings in recycleView when the home-tab is switched to.
     Might be a better way to do this
      */
+   /*
+    removed for now
     @Override
     public void onResume() {
         super.onResume();
-        userModel.updateAds(adapter);
+        userModel.updateAds();
         //adapter.notifyDataSetChanged(); //this happens in updateAds currently, might change
 
-    }
+    } */
 }
