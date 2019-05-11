@@ -120,7 +120,7 @@ public class UserModel extends ViewModel {
             }
         });
     }
-    //We should change it so that Adapter and userModel connects with observer-pattern
+
     public void removeAd(Ad ad){
         db.collection("ads").document(ad.getAdID()).delete();
         claimedAds.remove(ad);
@@ -152,6 +152,8 @@ public class UserModel extends ViewModel {
         this.geocoder = geocoder;
     }
 
+    //Made it so the adapters listen to the usermodel. Makes sure the lists are updated whenever a change is made. Don´t know what this means for
+    //our dependencies though, they might be real bad atm.
     public void setObserver(AbstractAdapter adapter){
         pcs.addPropertyChangeListener(adapter);
     }

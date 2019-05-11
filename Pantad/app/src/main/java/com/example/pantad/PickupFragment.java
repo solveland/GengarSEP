@@ -58,7 +58,7 @@ Handles the setup for the recyclerView
     Might be a better way to do this
      */
    /*
-    removed for now
+    removed for now, we call upon updateAds() when creating the userModel instead.
     @Override
     public void onResume() {
         super.onResume();
