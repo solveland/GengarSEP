@@ -4,6 +4,7 @@ package com.example.pantad;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,15 +15,19 @@ import com.example.pantad.AdListUtils.AdAdapter;
 import com.example.pantad.AdListUtils.AdListWithSectionHeader;
 import com.example.pantad.AdListUtils.SectionedAdListContainer;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 
 /**
  *
  * Contains the RecycleView (aka the list of postings)
  */
-public class PickupFragment extends Fragment {
+public class PickupFragment extends Fragment implements PropertyChangeListener {
     private RecyclerView rvAds;
     private UserModel userModel;
     private AdAdapter adapter;
+    private SwipeRefreshLayout refreshLayout;
 
     public PickupFragment() {
         // Required empty public constructor
@@ -39,6 +44,15 @@ Handles the setup for the recyclerView
         userModel= ViewModelProviders.of(getActivity()).get(UserModel.class);
 
         rvAds = rootView.findViewById(R.id.recyclerView);
+        refreshLayout = rootView.findViewById(R.id.swipe_refresh);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                userModel.updateAds();
+            }
+        });
+
+        userModel.setObserver(this);
 
         // Set layout manager to position the items
         rvAds.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -51,6 +65,11 @@ Handles the setup for the recyclerView
         // That's all!
         return rootView;
 
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        refreshLayout.setRefreshing(false);
     }
 
     /*

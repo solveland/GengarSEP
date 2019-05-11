@@ -16,6 +16,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
@@ -154,8 +155,8 @@ public class UserModel extends ViewModel {
 
     //Made it so the adapters listen to the usermodel. Makes sure the lists are updated whenever a change is made. Don´t know what this means for
     //our dependencies though, they might be real bad atm.
-    public void setObserver(AbstractAdapter adapter){
-        pcs.addPropertyChangeListener(adapter);
+    public void setObserver(PropertyChangeListener listener){
+        pcs.addPropertyChangeListener(listener);
     }
 
     public void claimAd(Ad ad, String recyclerID){
