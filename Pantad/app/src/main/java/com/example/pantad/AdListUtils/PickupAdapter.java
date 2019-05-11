@@ -16,9 +16,9 @@ import com.example.pantad.UserModel;
 /* This class is needed for the recycleView. It connects the textFields in the pos_ad xml file to a list of postings.
     Is used in HomeFragment to create and inflate the RecyclerView.
 */
-public class AdAdapter extends AbstractAdapter {
+public class PickupAdapter extends AbstractAdapter {
 
-    public AdAdapter(SectionedAdListContainer adContainer, UserModel userModel) {
+    public PickupAdapter(SectionedAdListContainer adContainer, UserModel userModel) {
         super( adContainer,  userModel);
     }
 
