@@ -5,7 +5,6 @@ import android.location.Geocoder;
 import android.support.annotation.NonNull;
 
 import com.example.pantad.AdListUtils.AbstractAdapter;
-import com.example.pantad.AdListUtils.AdAdapter;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

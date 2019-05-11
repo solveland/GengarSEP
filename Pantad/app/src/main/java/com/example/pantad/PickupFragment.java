@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.pantad.AdListUtils.AdAdapter;
+import com.example.pantad.AdListUtils.PickupAdapter;
 import com.example.pantad.AdListUtils.AdListWithSectionHeader;
 import com.example.pantad.AdListUtils.SectionedAdListContainer;
 
@@ -26,8 +26,9 @@ import java.beans.PropertyChangeListener;
 public class PickupFragment extends Fragment implements PropertyChangeListener {
     private RecyclerView rvAds;
     private UserModel userModel;
-    private AdAdapter adapter;
     private SwipeRefreshLayout refreshLayout;
+    private PickupAdapter adapter;
+
 
     public PickupFragment() {
         // Required empty public constructor
@@ -59,7 +60,7 @@ Handles the setup for the recyclerView
 
         // Create adapter passing in the sample user data
         AdListWithSectionHeader[] adsToShow = {new AdListWithSectionHeader(userModel.getClaimedAds(),"Your claimed ads"),new AdListWithSectionHeader(userModel.getAvailableAds(),"Available ads")};
-        adapter = new AdAdapter(new SectionedAdListContainer(adsToShow),userModel);
+        adapter = new PickupAdapter(new SectionedAdListContainer(adsToShow),userModel);
         // Attach the adapter to the recyclerView to populate items
         rvAds.setAdapter(adapter);
         // That's all!

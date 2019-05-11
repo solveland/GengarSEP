@@ -2,12 +2,16 @@ package com.example.pantad.AdListUtils;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.example.pantad.Ad;
 import com.example.pantad.R;
+import com.example.pantad.TimeUtil;
 import com.example.pantad.UserModel;
 
 import java.beans.PropertyChangeEvent;
@@ -15,8 +19,8 @@ import java.beans.PropertyChangeListener;
 
 public abstract class AbstractAdapter extends RecyclerView.Adapter implements PropertyChangeListener {
 
-    public SectionedAdListContainer adContainer;
-    public UserModel userModel;
+    protected SectionedAdListContainer adContainer;
+    protected UserModel userModel;
 
     public AbstractAdapter(SectionedAdListContainer adContainer, UserModel userModel) {
         this.adContainer = adContainer;
@@ -24,9 +28,6 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
         userModel.setObserver(this);
     }
 
-    // Usually involves inflating a layout from XML and returning the holder
-    @Override
-    public abstract RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType);
 
     public void propertyChange(PropertyChangeEvent event){
         notifyDataSetChanged();
@@ -54,6 +55,114 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
         public SegmentHeaderViewHolder(View itemView) {
             super(itemView);
             headerText = itemView.findViewById(R.id.header_text);
+        }
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+
+
+        RecyclerView.ViewHolder viewHolder;
+
+        if(viewType == 0) {
+            // Normal list item
+            // Inflate the custom layout
+            final View contactView = inflater.inflate(R.layout.recycler_view_item, parent, false);
+
+            // Return a new holder instance
+            viewHolder = new AdItemViewHolder(contactView);
+        } else {
+            // Header
+            final View contactView = inflater.inflate(R.layout.recycler_segment_header_item, parent, false);
+
+            // Return a new holder instance
+            viewHolder = new SegmentHeaderViewHolder(contactView);
+        }
+
+        return viewHolder;
+
+    }
+
+
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, int position) {
+        if (getItemViewType(position) == 0) {
+            // Normal ad view item
+            // Get the data model based on position
+            final Ad ad = adContainer.getAd(position);
+            final String name = ad.getName();
+            final String address = ad.getAddress();
+            final int value = ad.getValue();
+            final String message = ad.getMessage();
+            final String elapsedTime = TimeUtil.getDifference(ad.getStartTime());
+            // Set item views based on your views and data model
+            TextView nameView = ((PickupAdapter.AdItemViewHolder)viewHolder).nameTextView;
+            nameView.setText("Namn: " + ad.getName() + "                  " + elapsedTime);
+
+            TextView addressView = ((PickupAdapter.AdItemViewHolder)viewHolder).addressTextView;
+            addressView.setText("Upphämtningsadress: " + ad.getAddress());
+
+            TextView valueView = ((PickupAdapter.AdItemViewHolder)viewHolder).valueTextView;
+            valueView.setText("Uppskattat pantvärde: " + Integer.toString(ad.getValue()) + "kr");
+
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+
+                public void onClick(View v) {
+                    // Create the item details window
+                    final ItemDetailsWindow itemDetails = new ItemDetailsWindow(v, name, address, value, 4.5, message);
+                    itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
+                    modifyItemListener(itemDetails, ad, viewHolder);
+
+
+                    // Dim the background
+                    View container = itemDetails.getContentView().getRootView();
+                    Context context = itemDetails.getContentView().getContext();
+
+                    WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                    WindowManager.LayoutParams params = (WindowManager.LayoutParams) container.getLayoutParams();
+                    params.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+                    params.dimAmount = 0.4f;
+                    wm.updateViewLayout(container, params);
+
+
+                    // Create and connect listener to cancel button
+                    itemDetails.cancelButton.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            itemDetails.dismiss();
+                        }
+                    });
+
+                }
+
+            });
+        } else {
+            // Segment header item
+            TextView headerText = ((SegmentHeaderViewHolder)viewHolder).headerText;
+            headerText.setText(adContainer.getHeaderText(position));
+        }
+    }
+    protected abstract void modifyItemListener(final ItemDetailsWindow itemDetails,final Ad ad, final RecyclerView.ViewHolder viewHolder);
+
+    // Provide a direct reference to each of the views within a data item
+    // Used to cache the views within the item layout for fast access
+    public class AdItemViewHolder extends RecyclerView.ViewHolder {
+        // Your holder should contain a member variable
+        // for any view that will be set as you render a row
+        public TextView nameTextView;
+        public TextView addressTextView;
+        public TextView valueTextView;
+
+        // We also create a constructor that accepts the entire item row
+        // and does the view lookups to find each subview
+        public AdItemViewHolder(View itemView) {
+            // Stores the itemView in a public final member variable that can be used
+            // to access the context from any AdItemViewHolder instance.
+            super(itemView);
+            nameTextView = (TextView) itemView.findViewById(R.id.annons_namn);
+            addressTextView = (TextView) itemView.findViewById(R.id.annons_adress);
+            valueTextView = (TextView) itemView.findViewById(R.id.annons_value);
         }
     }
 }
