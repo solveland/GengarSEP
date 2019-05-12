@@ -25,7 +25,7 @@ public class DonatorFragment extends Fragment {
     private RecyclerView donatorRVAds;
     private MyPostingsAdapter adapter;
     private FloatingActionButton postAdButton;
-
+    private String regID;
     public DonatorFragment() {
         // Required empty public constructor
     }
@@ -43,6 +43,7 @@ public class DonatorFragment extends Fragment {
             @Override
             public void onClick(final View v) {
                 DialogFragment postAdFragment = new PostAdFragment();
+                ((PostAdFragment) postAdFragment).setRegID(regID);
                 postAdFragment.show(getFragmentManager(), "");
             }
         });
@@ -61,5 +62,7 @@ public class DonatorFragment extends Fragment {
         return rootView;
     }
 
-
+    public void setRegID(String regID) {
+        this.regID = regID;
+    }
 }//DonatorFragment Class

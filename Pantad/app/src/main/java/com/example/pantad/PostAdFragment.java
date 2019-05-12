@@ -1,10 +1,12 @@
 package com.example.pantad;
 
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
@@ -16,10 +18,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.provider.Settings;
-
+import com.example.pantad.MainActivity;
+import com.example.pantad.firebaseUtil.Config;
 import com.google.firebase.Timestamp;
-
-
+import com.google.firebase.messaging.FirebaseMessaging;
 
 
 public class PostAdFragment extends DialogFragment {
@@ -29,6 +31,7 @@ public class PostAdFragment extends DialogFragment {
     private EditText message;
     private UserModel userModel;
     private Button submit;
+    private String regID;
 
 
     @Override
@@ -124,8 +127,11 @@ public class PostAdFragment extends DialogFragment {
         });
     }
 
+    public void setRegID(String regID) {
+        this.regID = regID;
+    }
 
-    /*
+/*
 Adds another ad to the list of ads
 @param name  The name of the person posting the ad
 @param address The location where the trade will take place
@@ -133,7 +139,8 @@ Adds another ad to the list of ads
 */
 
     public void addAds(String name, String adress, int value, String message, String donatorID, Timestamp startTime){
-        userModel.addAd(name, adress, value, message, donatorID, startTime);
+
+        userModel.addAd(name, adress, value, message, donatorID, startTime, regID);
     }
 
     private void hideKeyboard(View view){
