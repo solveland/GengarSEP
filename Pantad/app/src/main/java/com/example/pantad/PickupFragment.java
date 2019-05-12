@@ -68,6 +68,9 @@ Handles the setup for the recyclerView
 
     }
 
+    /*
+     Gets called when the local list of ads has been updated.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         refreshLayout.setRefreshing(false);
