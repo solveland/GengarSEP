@@ -19,8 +19,9 @@ public class Ad {
     private Timestamp startTime;
     private String donatorID;
     private String recyclerID;
+    private String firebaseToken;
 
-    public Ad(String name, String address, int estimatedValue, String message, String adID, String donatorID, Timestamp startTime) {
+    public Ad(String name, String address, int estimatedValue, String message, String adID, String donatorID, Timestamp startTime, String firebaseToken) {
 
         this.name = name;
         this.address = address;
@@ -30,7 +31,7 @@ public class Ad {
         this.adID = adID;
         this.startTime = startTime;
         this.donatorID = donatorID;
-
+        this.firebaseToken = firebaseToken;
     }
 
     //Constructor without arguments needed for fireBase
@@ -38,6 +39,7 @@ public class Ad {
 
     }
 
+    public String getFirebaseToken() { return firebaseToken; }
 
     public String getName() {
         return name;

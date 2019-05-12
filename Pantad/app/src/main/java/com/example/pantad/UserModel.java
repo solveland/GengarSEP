@@ -3,8 +3,11 @@ package com.example.pantad;
 import android.arch.lifecycle.ViewModel;
 import android.location.Geocoder;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.example.pantad.AdListUtils.AbstractAdapter;
+import com.example.pantad.firebaseUtil.Data;
+import com.example.pantad.firebaseUtil.PostRequestData;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -13,12 +16,25 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /*An object of this class is shared between the different fragments, all communication between
     them is handled by this object */
@@ -73,9 +89,9 @@ public class UserModel extends ViewModel {
     @param address The location where the trade will take place
     @param estimatedValue - The estimated value of the pant in whole SEK:s
     */
-    public void addAd(String name, String address, int estimatedValue, String message, String donatorID, Timestamp startTime) {
-        DocumentReference adsRef = db.collection("ads").document();
-        Ad ad = new Ad(name, address, estimatedValue, message, adsRef.getId(), donatorID, startTime);
+    public void addAd(String name, String address, int estimatedValue, String message, String donatorID, Timestamp startTime, String regID) {
+        DocumentReference adsRef = db.collection("ads2").document();
+        Ad ad = new Ad(name, address, estimatedValue, message, adsRef.getId(), donatorID, startTime, regID);
         adsRef.set(ad);
 
         if (ad.getRecyclerID() != null && ad.getRecyclerID().equals(deviceID)){
@@ -94,7 +110,7 @@ public class UserModel extends ViewModel {
 
 
     public void updateAds(){
-        db.collection("ads").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("ads2").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
@@ -122,7 +138,7 @@ public class UserModel extends ViewModel {
     }
 
     public void removeAd(Ad ad){
-        db.collection("ads").document(ad.getAdID()).delete();
+        db.collection("ads2").document(ad.getAdID()).delete();
         claimedAds.remove(ad);
         availableAds.remove(ad);
         postedAds.remove(ad);
@@ -148,6 +164,7 @@ public class UserModel extends ViewModel {
         return geocoder;
     }
 
+
     public void setGeocoder(Geocoder geocoder) {
         this.geocoder = geocoder;
     }
@@ -159,20 +176,61 @@ public class UserModel extends ViewModel {
     }
 
     public void claimAd(Ad ad, String recyclerID){
-        db.collection("ads").document(ad.getAdID()).update("claimed", true);
-        db.collection("ads").document(ad.getAdID()).update("recyclerID", recyclerID);
+        db.collection("ads2").document(ad.getAdID()).update("claimed", true);
+        db.collection("ads2").document(ad.getAdID()).update("recyclerID", recyclerID);
         ad.setClaimed(true);
         availableAds.remove(ad);
         claimedAds.add(ad);
         pcs.firePropertyChange(null,true,false);
+        sendNotification(ad);
     }
 
     public void unClaimAd(Ad ad){
-        db.collection("ads").document(ad.getAdID()).update("claimed", false);
-        db.collection("ads").document(ad.getAdID()).update("recyclerID", null);
+        db.collection("ads2").document(ad.getAdID()).update("claimed", false);
+        db.collection("ads2").document(ad.getAdID()).update("recyclerID", null);
         ad.setClaimed(false);
         availableAds.add(ad);
         claimedAds.remove(ad);
         pcs.firePropertyChange(null,true,false);
+    }
+
+    private void sendNotification(Ad ad) {
+
+        Gson gson = new Gson();
+        Data data = new Data();
+        data.setTitle("Your ad has been claimed");
+        PostRequestData postRequestData = new PostRequestData();
+        postRequestData.setTo(ad.getFirebaseToken());
+        postRequestData.setData(data);
+        String json = gson.toJson(postRequestData);
+        String url = "https://fcm.googleapis.com/fcm/send";
+        System.out.println(json);
+
+        final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder()
+                .url(url)
+                .header("Authorization", "key=AAAAkNlQVNc:APA91bHHE6Dkyj9fn0bopSkAx0ruyIOU0dDjf6cGaUeqPyGRkf6HF47hCAiWrAmLtSoEHJEyytjGTLjS8Ry67-vyeB3_tOcRY2MSatG3axYdiGadD3dRkrF0T7RGTo3wlQzyYwEKkEqR")
+                .post(body)
+                .build();
+
+
+        Callback responseCallBack = new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.v("Fail Message", "fail");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.v("response", response.toString());
+            }
+
+
+        };
+        okhttp3.Call call = client.newCall(request);
+        call.enqueue(responseCallBack);
     }
 }
