@@ -1,0 +1,28 @@
+Reflection sprint2{
+
+what do I want to learn or understand better
+This sprint i learned even more about firebase, specifically FCM. This is because i worked on push notices. I also started 
+to learn about geocoding and this is what i want to learn and understand better during the next sprint. Something i did 
+not think much about in the previous reflections is that i mainly focus on the technical aspect. I've figured out that I
+need to further understand the importance and effect of our process. This sprint both myself and my team have decided to
+really try to improve on planning and structuring our work. This hopefully leads to better results and a more effective work
+process.
+
+
+how can I help someone else, or the entire team, to learn something new?
+This week i helped Daniel restructure our adapters and offered a more abstract solution which removed duplicate code.
+Technically i now have the ability to help my team further build on the push notice system and improve that. Hopefully I can
+also contribute by pushing them to be thorough in their approach to the work process. That includes properly using Trello,
+being flexible with their assigned work, making use of pull requests and more.
+
+what is my contribution towards the team’s use of Scrum?
+This week I did my first pull request which further made sure that there was a broader consensus that a task was done. This is
+something we've been struggling with and our rules for when something qualifies for the next step of a sprint iteration has 
+been unclear. By improving this it's much easier to complete a task and less work will be half done when delivered.
+
+what is my contribution towards the team’s deliveries?
+I've contributed by delivering a push notice system, integrating FCM and restructured parts of the code. I have also tried
+to help with what we decided at the supervised meeting at the start of the week. Although we got a bad start and had 
+sick members which made it so that we didn't improve as much as we could have. I definitely can help improve our chances
+to solve our structural problems much more for next week and will try to do so. 
+}
