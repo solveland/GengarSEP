@@ -74,6 +74,7 @@ public class UserModel extends ViewModel {
 
 
     public UserModel() {
+
         updateAds();
         // trigger user load.
     }
