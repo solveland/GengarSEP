@@ -13,6 +13,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -77,8 +78,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         userModel.setMap(googleMap);
         userModel.getmMap().moveCamera(CameraUpdateFactory.newCameraPosition(lastPosition));
-        userModel.getmMap().addMarker(new MarkerOptions().position(first).title("Hej").snippet("Välkommen till GBG"));
-
+        MapDecorator.addPantStations(googleMap, getActivity().getApplicationContext());
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
     }
 
     /* Saves the last viewed location */
