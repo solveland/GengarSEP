@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.example.pantad.firebaseUtil.Config;
 import com.example.pantad.firebaseUtil.NotificationUtils;
+import com.example.pantad.pantMapUtil.AddressDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 /*
@@ -91,7 +92,8 @@ public class MainActivity extends AppCompatActivity {
         donatorFrag = new DonatorFragment();
         createFragments();
         txtMessage = (TextView) findViewById(R.id.txt_push_message);
-        ViewModelProviders.of(MainActivity.this).get(UserModel.class).setDeviceID(Settings.Secure.getString(getApplicationContext().getContentResolver(),
+        UserModel userModel = ViewModelProviders.of(MainActivity.this).get(UserModel.class);
+        userModel.setDeviceID(Settings.Secure.getString(getApplicationContext().getContentResolver(),
                 Settings.Secure.ANDROID_ID));
 
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
@@ -127,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setSelectedItemId(R.id.navigation_map);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        userModel.dbHelper = new AddressDatabase(this);
     }
 
     @Override

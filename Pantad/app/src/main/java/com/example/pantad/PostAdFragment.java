@@ -18,10 +18,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.provider.Settings;
+import android.widget.FilterQueryProvider;
 
 import com.example.pantad.pantMapUtil.AddressAutocompleteAdapter;
 import com.example.pantad.pantMapUtil.AddressDatabase;
@@ -96,29 +99,23 @@ public class PostAdFragment extends DialogFragment {
         final AddressAutocompleteAdapter addressAutocompleteAdapter = new AddressAutocompleteAdapter(getContext(),null,0);
         address.setAdapter(addressAutocompleteAdapter);
 
-        address.addTextChangedListener(new TextWatcher() {
+        addressAutocompleteAdapter.setFilterQueryProvider(new FilterQueryProvider() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public Cursor runQuery(CharSequence constraint) {
+                return userModel.dbHelper.Autocomplete(constraint);
+            }
+        });
 
+        address.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Cursor c = ((CursorAdapter)address.getAdapter()).getCursor();
+                c.moveToPosition(position);
+                //TODO: Extract the coordinates here
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                SQLiteDatabase db = new AddressDatabase(getContext()).getReadableDatabase();
-                String text = s.toString();
-                int lastDivider = text.lastIndexOf(' ');
-                String addressPart = (lastDivider >= 0)? text.substring(0,lastDivider): text;
-                String numberPart = (lastDivider >= 0)? text.substring(lastDivider+1): "";
-                Cursor c = db.rawQuery("SELECT * FROM addresses WHERE street LIKE '" + text + "%' or (street like '" + addressPart + "%' and housenumber like '" + numberPart + "%') limit 5",null);
-
-                //DatabaseUtils.dumpCursor(c);
-                c.moveToFirst();
-
-                addressAutocompleteAdapter.changeCursor(c);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });

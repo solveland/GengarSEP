@@ -62,6 +62,8 @@ public class UserModel extends ViewModel {
         return postedAds;
     }
 
+    public AddressDatabase dbHelper;
+
     /*The GoogleMap object from our mapFragment. We use this object to set markers or otherwise modify the map
      */
     private GoogleMap mMap;
