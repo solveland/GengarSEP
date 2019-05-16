@@ -35,9 +35,9 @@ public class MyPostingsAdapter extends AbstractAdapter {
 
 
     @Override
-    protected void modifyItemListener(final ItemDetailsWindow itemDetails,final Ad ad, final RecyclerView.ViewHolder viewHolder) {
-        itemDetails.functionButton.setText("Delete");
-        itemDetails.functionButton.setBackgroundColor(Color.RED);
+    protected ItemDetailsWindow createItemListener(final Ad ad, final RecyclerView.ViewHolder viewHolder, final View v) {
+        final ItemDetailsWindow itemDetails = new MyPostingsDetailsWindow(v, ad);
+        itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
 
         itemDetails.functionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -46,6 +46,7 @@ public class MyPostingsAdapter extends AbstractAdapter {
                 itemDetails.dismiss();
             }
         });
+        return itemDetails;
     }
 
 
