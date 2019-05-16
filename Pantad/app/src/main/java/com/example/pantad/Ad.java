@@ -2,7 +2,7 @@ package com.example.pantad;
 import android.support.annotation.Keep;
 
 import com.google.firebase.Timestamp;
-
+import com.google.firebase.firestore.GeoPoint;
 
 
 /*The type of object we want the RecycleView (in the home fragment) to show. All of the
@@ -20,8 +20,9 @@ public class Ad {
     private String donatorID;
     private String recyclerID;
     private String firebaseToken;
+    private GeoPoint location;
 
-    public Ad(String name, String address, int estimatedValue, String message, String adID, String donatorID, Timestamp startTime, String firebaseToken) {
+    public Ad(String name, String address, int estimatedValue, String message, String adID, String donatorID, Timestamp startTime, String firebaseToken,GeoPoint location) {
 
         this.name = name;
         this.address = address;
@@ -32,6 +33,7 @@ public class Ad {
         this.startTime = startTime;
         this.donatorID = donatorID;
         this.firebaseToken = firebaseToken;
+        this.location = location;
     }
 
     //Constructor without arguments needed for fireBase
@@ -57,6 +59,10 @@ public class Ad {
     public Timestamp getStartTime() { return startTime; }
 
     public boolean isClaimed() { return claimed; }
+
+    public GeoPoint getLocation() {
+        return location;
+    }
 
     public void setStartTime(Timestamp startTime) { this.startTime = startTime; }
 

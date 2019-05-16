@@ -61,4 +61,14 @@ public final class MapDecorator {
         return bitmap;
     }
 
+    public static void addAdsToMap(GoogleMap map,UserModel userModel){
+        List<Ad> adsToRender = new ArrayList<>();
+        adsToRender.addAll(userModel.getPostedAds());
+        adsToRender.addAll(userModel.getAvailableAds());
+        adsToRender.addAll(userModel.getClaimedAds());
+        for(Ad a : adsToRender){
+            map.addMarker(new MarkerOptions().position(new LatLng(a.getLocation().getLatitude(),a.getLocation().getLongitude())).title(a.getName()));
+        }
+    }
+
 }

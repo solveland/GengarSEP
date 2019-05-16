@@ -5,7 +5,6 @@ import android.location.Geocoder;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.example.pantad.AdListUtils.AbstractAdapter;
 import com.example.pantad.firebaseUtil.Data;
 import com.example.pantad.firebaseUtil.PostRequestData;
 import com.google.android.gms.maps.GoogleMap;
@@ -14,12 +13,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 
 import java.beans.PropertyChangeListener;
@@ -45,6 +42,8 @@ public class UserModel extends ViewModel {
     public final List<Ad> claimedAds = new ArrayList<>();
     public final List<Ad> availableAds = new ArrayList<>();
     public final List<Ad> postedAds = new ArrayList<>();
+
+    private static final String adCollectionString = "ads";
 
     public PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
@@ -90,9 +89,9 @@ public class UserModel extends ViewModel {
     @param address The location where the trade will take place
     @param estimatedValue - The estimated value of the pant in whole SEK:s
     */
-    public void addAd(String name, String address, int estimatedValue, String message, String donatorID, Timestamp startTime, String regID) {
-        DocumentReference adsRef = db.collection("ads2").document();
-        Ad ad = new Ad(name, address, estimatedValue, message, adsRef.getId(), donatorID, startTime, regID);
+    public void addAd(String name, String address, int estimatedValue, String message, String donatorID, Timestamp startTime, String regID, GeoPoint location) {
+        DocumentReference adsRef = db.collection(adCollectionString).document();
+        Ad ad = new Ad(name, address, estimatedValue, message, adsRef.getId(), donatorID, startTime, regID,location);
         adsRef.set(ad);
 
         if (ad.getRecyclerID() != null && ad.getRecyclerID().equals(deviceID)){
@@ -111,7 +110,7 @@ public class UserModel extends ViewModel {
 
 
     public void updateAds(){
-        db.collection("ads2").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection(adCollectionString).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
@@ -139,7 +138,7 @@ public class UserModel extends ViewModel {
     }
 
     public void removeAd(Ad ad){
-        db.collection("ads2").document(ad.getAdID()).delete();
+        db.collection(adCollectionString).document(ad.getAdID()).delete();
         claimedAds.remove(ad);
         availableAds.remove(ad);
         postedAds.remove(ad);
@@ -177,8 +176,8 @@ public class UserModel extends ViewModel {
     }
 
     public void claimAd(Ad ad, String recyclerID){
-        db.collection("ads2").document(ad.getAdID()).update("claimed", true);
-        db.collection("ads2").document(ad.getAdID()).update("recyclerID", recyclerID);
+        db.collection(adCollectionString).document(ad.getAdID()).update("claimed", true);
+        db.collection(adCollectionString).document(ad.getAdID()).update("recyclerID", recyclerID);
         ad.setClaimed(true);
         availableAds.remove(ad);
         claimedAds.add(ad);
@@ -187,8 +186,8 @@ public class UserModel extends ViewModel {
     }
 
     public void unClaimAd(Ad ad){
-        db.collection("ads2").document(ad.getAdID()).update("claimed", false);
-        db.collection("ads2").document(ad.getAdID()).update("recyclerID", null);
+        db.collection(adCollectionString).document(ad.getAdID()).update("claimed", false);
+        db.collection(adCollectionString).document(ad.getAdID()).update("recyclerID", null);
         ad.setClaimed(false);
         availableAds.add(ad);
         claimedAds.remove(ad);

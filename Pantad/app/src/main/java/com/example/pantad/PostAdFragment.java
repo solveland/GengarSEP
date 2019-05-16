@@ -1,37 +1,45 @@
 package com.example.pantad;
 
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.provider.Settings;
-import com.example.pantad.MainActivity;
-import com.example.pantad.firebaseUtil.Config;
+import android.widget.FilterQueryProvider;
+
+import com.example.pantad.addresses.AddressAutocompleteAdapter;
+import com.example.pantad.addresses.AddressDatabaseHelper;
 import com.google.firebase.Timestamp;
-import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.firestore.GeoPoint;
 
 
 public class PostAdFragment extends DialogFragment {
     private EditText name;
-    private EditText address;
+    private AutoCompleteTextView address;
     private EditText value;
     private EditText message;
     private UserModel userModel;
     private Button submit;
     private String regID;
+    private GeoPoint location;
+    private boolean locationUpdated = false;
 
 
     @Override
@@ -62,6 +70,38 @@ public class PostAdFragment extends DialogFragment {
         value = root.findViewById(R.id.valueInput);
         message = root.findViewById(R.id.messageInput);
 
+
+
+        // If you select an item from the dropdownbox we save the location of the selected address and mark it as updated.
+        address.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor c = (Cursor) parent.getItemAtPosition(position);
+                location = new GeoPoint(c.getDouble(7),c.getDouble(6));
+                locationUpdated = true;
+                c.close();
+            }
+        });
+
+        // If you freetype without selecting from the dropdown box we mark the location as not updated.
+        address.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                locationUpdated = false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
         // Makes it possible to scroll in the text editor (instead of scrolling the scrollview)
         message.setOnTouchListener(new View.OnTouchListener() {
 
@@ -88,6 +128,21 @@ public class PostAdFragment extends DialogFragment {
             }
         };
 
+
+        final AddressAutocompleteAdapter addressAutocompleteAdapter = new AddressAutocompleteAdapter(getContext(),null,0);
+        address.setAdapter(addressAutocompleteAdapter);
+
+        addressAutocompleteAdapter.setFilterQueryProvider(new FilterQueryProvider() {
+            @Override
+            public Cursor runQuery(CharSequence constraint) {
+                return AddressDatabaseHelper.getInstance(getContext()).Autocomplete(constraint);
+            }
+        });
+
+
+
+
+
         name.setOnFocusChangeListener(focusListener);
         address.setOnFocusChangeListener(focusListener);
         value.setOnFocusChangeListener(focusListener);
@@ -111,11 +166,11 @@ public class PostAdFragment extends DialogFragment {
                 String valueInput=value.getText().toString();
                 String messageInput=message.getText().toString();
                 Timestamp startTime = Timestamp.now();
-                if(nameInput.equals("") ||addressInput.equals("") || valueInput.equals("")){
+                if(nameInput.equals("") ||addressInput.equals("") || valueInput.equals("") || !locationUpdated){
                     Snackbar.make(submit, "You fucked up", Snackbar.LENGTH_SHORT).show();
                 }
                 else{
-                    addAds(nameInput, addressInput, Integer.parseInt(valueInput), messageInput, donatorID, startTime);
+                    addAds(nameInput, addressInput, Integer.parseInt(valueInput), messageInput, donatorID, startTime,location);
                     Snackbar.make(getActivity().findViewById(R.id.navigation), "AD was added", Snackbar.LENGTH_SHORT).show();
                     name.getText().clear();
                     address.getText().clear();
@@ -138,9 +193,9 @@ Adds another ad to the list of ads
 @param estimatedValue The estimated value of the pant in whole SEK:s
 */
 
-    public void addAds(String name, String adress, int value, String message, String donatorID, Timestamp startTime){
+    public void addAds(String name, String adress, int value, String message, String donatorID, Timestamp startTime,GeoPoint location){
 
-        userModel.addAd(name, adress, value, message, donatorID, startTime, regID);
+        userModel.addAd(name, adress, value, message, donatorID, startTime, regID,location);
     }
 
     private void hideKeyboard(View view){
