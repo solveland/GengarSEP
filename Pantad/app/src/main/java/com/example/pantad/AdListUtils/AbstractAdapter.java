@@ -95,26 +95,22 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
             final String name = ad.getName();
             final String address = ad.getAddress();
             final int value = ad.getValue();
-            final String message = ad.getMessage();
             final String elapsedTime = TimeUtil.getDifference(ad.getStartTime());
             // Set item views based on your views and data model
-            TextView nameView = ((PickupAdapter.AdItemViewHolder)viewHolder).nameTextView;
+            TextView nameView = ((AdItemViewHolder)viewHolder).nameTextView;
             nameView.setText("Namn: " + ad.getName() + "                  " + elapsedTime);
 
-            TextView addressView = ((PickupAdapter.AdItemViewHolder)viewHolder).addressTextView;
+            TextView addressView = ((AdItemViewHolder)viewHolder).addressTextView;
             addressView.setText("Upphämtningsadress: " + ad.getAddress());
 
-            TextView valueView = ((PickupAdapter.AdItemViewHolder)viewHolder).valueTextView;
+            TextView valueView = ((AdItemViewHolder)viewHolder).valueTextView;
             valueView.setText("Uppskattat pantvärde: " + Integer.toString(ad.getValue()) + "kr");
 
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View v) {
                     // Create the item details window
-                    final ItemDetailsWindow itemDetails = new ItemDetailsWindow(v, name, address, value, 4.5, message);
-                    itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
-                    modifyItemListener(itemDetails, ad, viewHolder);
-
+                    final ItemDetailsWindow itemDetails=createItemListener(ad, viewHolder,v);
 
                     // Dim the background
                     View container = itemDetails.getContentView().getRootView();
@@ -143,7 +139,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
             headerText.setText(adContainer.getHeaderText(position));
         }
     }
-    protected abstract void modifyItemListener(final ItemDetailsWindow itemDetails,final Ad ad, final RecyclerView.ViewHolder viewHolder);
+    protected abstract ItemDetailsWindow createItemListener(final Ad ad, final RecyclerView.ViewHolder viewHolder, final View v);
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
