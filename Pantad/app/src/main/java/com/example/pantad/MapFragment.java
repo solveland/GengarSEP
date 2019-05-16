@@ -100,6 +100,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Propert
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        if (!isAdded()){
+            return;
+        }
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg);
         mapFragment.getMapAsync(this);
     }
