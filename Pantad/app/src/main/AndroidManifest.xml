@@ -35,6 +35,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.example.pantad.LoginActivity"
+            android:label="Login">
+        </activity>
         <service
             android:name=".firebaseService.MyFirebaseMessagingService"
             android:exported="false">
