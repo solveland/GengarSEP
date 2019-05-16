@@ -1,32 +1,36 @@
 package com.example.pantad;
 
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.provider.Settings;
-import com.example.pantad.MainActivity;
-import com.example.pantad.firebaseUtil.Config;
+
+import com.example.pantad.pantMapUtil.AddressAutocompleteAdapter;
+import com.example.pantad.pantMapUtil.AddressDatabase;
 import com.google.firebase.Timestamp;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 
 public class PostAdFragment extends DialogFragment {
     private EditText name;
-    private EditText address;
+    private AutoCompleteTextView address;
     private EditText value;
     private EditText message;
     private UserModel userModel;
@@ -87,6 +91,39 @@ public class PostAdFragment extends DialogFragment {
                 }
             }
         };
+
+
+        final AddressAutocompleteAdapter addressAutocompleteAdapter = new AddressAutocompleteAdapter(getContext(),null,0);
+        address.setAdapter(addressAutocompleteAdapter);
+
+        address.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                SQLiteDatabase db = new AddressDatabase(getContext()).getReadableDatabase();
+                String text = s.toString();
+                int lastDivider = text.lastIndexOf(' ');
+                String addressPart = (lastDivider >= 0)? text.substring(0,lastDivider): text;
+                String numberPart = (lastDivider >= 0)? text.substring(lastDivider+1): "";
+                Cursor c = db.rawQuery("SELECT * FROM addresses WHERE street LIKE '" + text + "%' or (street like '" + addressPart + "%' and housenumber like '" + numberPart + "%') limit 5",null);
+
+                //DatabaseUtils.dumpCursor(c);
+                c.moveToFirst();
+
+                addressAutocompleteAdapter.changeCursor(c);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
 
         name.setOnFocusChangeListener(focusListener);
         address.setOnFocusChangeListener(focusListener);
