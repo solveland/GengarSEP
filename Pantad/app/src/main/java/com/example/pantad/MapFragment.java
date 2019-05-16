@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,10 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -27,7 +32,7 @@ import java.util.Locale;
  * Currently a massive Google map initialized in Gothenburg
  *
  */
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment implements OnMapReadyCallback, PropertyChangeListener {
     /*
     The coordinates for Gothenburg
      */
@@ -41,7 +46,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private Geocoder geocoder;
 
     public MapFragment() {
-        // Required empty public constructor
+
     }
 
 /* Creates a refrence to the usermodel and sets up the map */
@@ -50,16 +55,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
-        geocoder = new Geocoder(getActivity(), Locale.getDefault()); //Geocoder are used to get position from an address
+        /*geocoder = new Geocoder(getActivity(), Locale.getDefault()); //Geocoder are used to get position from an address
+        userModel.setGeocoder(geocoder);*/
         userModel= ViewModelProviders.of(getActivity()).get(UserModel.class);   //The userModel is a shared object between the fragments, it handles the communication between them
-        userModel.setGeocoder(geocoder);
+        userModel.setObserver(this);
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg);  //use SupportMapFragment for using in fragment instead of activity  MapFragment = activity   SupportMapFragment = fragment
 
         mapFragment.getMapAsync(this);
-
         // Inflate the layout for this fragment
         return rootView;
     }
@@ -78,8 +83,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         userModel.setMap(googleMap);
         userModel.getmMap().moveCamera(CameraUpdateFactory.newCameraPosition(lastPosition));
+        googleMap.clear();
         MapDecorator.addPantStations(googleMap, getActivity().getApplicationContext());
         googleMap.getUiSettings().setZoomControlsEnabled(true);
+        MapDecorator.addAdsToMap(googleMap,userModel);
+
     }
 
     /* Saves the last viewed location */
@@ -88,5 +96,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onPause();
         if(userModel.getmMap()!=null)
         lastPosition = userModel.getmMap().getCameraPosition();
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg);
+        mapFragment.getMapAsync(this);
     }
 }

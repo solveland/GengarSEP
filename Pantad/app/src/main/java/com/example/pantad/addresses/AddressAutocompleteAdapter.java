@@ -1,4 +1,4 @@
-package com.example.pantad.pantMapUtil;
+package com.example.pantad.addresses;
 
 import android.content.Context;
 import android.database.Cursor;

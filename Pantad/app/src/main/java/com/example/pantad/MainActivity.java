@@ -1,6 +1,5 @@
 package com.example.pantad;
 
-import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.arch.lifecycle.ViewModelProviders;
@@ -20,14 +19,11 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pantad.firebaseUtil.Config;
 import com.example.pantad.firebaseUtil.NotificationUtils;
-import com.example.pantad.pantMapUtil.AddressDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 /*
@@ -93,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         createFragments();
         txtMessage = (TextView) findViewById(R.id.txt_push_message);
         UserModel userModel = ViewModelProviders.of(MainActivity.this).get(UserModel.class);
+        userModel.updateAds();
         userModel.setDeviceID(Settings.Secure.getString(getApplicationContext().getContentResolver(),
                 Settings.Secure.ANDROID_ID));
 
@@ -129,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setSelectedItemId(R.id.navigation_map);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        userModel.dbHelper = new AddressDatabase(this);
     }
 
     @Override
