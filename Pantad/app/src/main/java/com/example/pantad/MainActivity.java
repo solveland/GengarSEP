@@ -20,12 +20,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.example.pantad.firebaseUtil.Config;
 import com.example.pantad.firebaseUtil.NotificationUtils;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 /*
@@ -34,7 +36,6 @@ Most of the processes should be handled by the fragments themselves, this activi
 initiates them and handles the menu navigation
  */
 public class MainActivity extends AppCompatActivity {
-
 
     PickupFragment pickupFrag;
     MapFragment mapFrag;
@@ -87,10 +88,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         createNotificationChannel();
         super.onCreate(savedInstanceState);
+
+        // Start login activity
+        //launchLoginActivity();
+
         pickupFrag = new PickupFragment();
         mapFrag = new MapFragment();
         donatorFrag = new DonatorFragment();
-        profileFrag = new userProfileFragment();
         createFragments();
         txtMessage = (TextView) findViewById(R.id.txt_push_message);
         UserModel userModel = ViewModelProviders.of(MainActivity.this).get(UserModel.class);
@@ -133,6 +137,13 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        findViewById(R.id.sign_out_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //signOut();
+            }
+        });
+
     }
 
     @Override
@@ -176,5 +187,15 @@ public class MainActivity extends AppCompatActivity {
         setFragment(donatorFrag);
         setFragment(pickupFrag);
         setFragment(mapFrag);
+    }
+
+    private void launchLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    private void signOut() {
+        FirebaseAuth.getInstance().signOut();
+        launchLoginActivity();
     }
 }
