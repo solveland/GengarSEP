@@ -19,6 +19,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // Start login activity
-        launchLoginActivity();
+        //launchLoginActivity();
 
         pickupFrag = new PickupFragment();
         mapFrag = new MapFragment();
@@ -133,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.sign_out_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signOut();
+                //signOut();
             }
         });
     }
