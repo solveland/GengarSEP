@@ -1,6 +1,5 @@
 package com.example.pantad;
 
-import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.arch.lifecycle.ViewModelProviders;
@@ -20,8 +19,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,7 +92,9 @@ public class MainActivity extends AppCompatActivity {
         donatorFrag = new DonatorFragment();
         createFragments();
         txtMessage = (TextView) findViewById(R.id.txt_push_message);
-        ViewModelProviders.of(MainActivity.this).get(UserModel.class).setDeviceID(Settings.Secure.getString(getApplicationContext().getContentResolver(),
+        UserModel userModel = ViewModelProviders.of(MainActivity.this).get(UserModel.class);
+        userModel.updateAds();
+        userModel.setDeviceID(Settings.Secure.getString(getApplicationContext().getContentResolver(),
                 Settings.Secure.ANDROID_ID));
 
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {

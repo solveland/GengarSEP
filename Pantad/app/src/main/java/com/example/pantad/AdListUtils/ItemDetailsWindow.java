@@ -9,27 +9,27 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.example.pantad.Ad;
 import com.example.pantad.R;
 
-public class ItemDetailsWindow extends PopupWindow {
-    public TextView name;
-    public TextView address;
-    public TextView value;
-    public TextView rating;
-    public TextView description;
+public abstract class ItemDetailsWindow extends PopupWindow {
+
+public Ad ad;
     public Button functionButton;
     public Button cancelButton;
-    public ImageView userAvatar;
 
-    public ItemDetailsWindow(View parent, String name, String address, int value, double rating, String description) {
+    public ItemDetailsWindow(View parent, Ad ad) {
+        this.ad=ad;
         Context context = parent.getContext();
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         LayoutInflater inflater = LayoutInflater.from(context);
-        View popupView = inflater.inflate(R.layout.item_details, null);
+        View popupView;
+
+        setValues(inflater);
 
         // Find reference to each element in the layout
-        this.name = (TextView) popupView.findViewById(R.id.details_name);
+        /*this.name = (TextView) popupView.findViewById(R.id.details_name);
         this.address = (TextView) popupView.findViewById(R.id.details_address);
         this.value = (TextView) popupView.findViewById(R.id.details_value);
         this.description = (TextView) popupView.findViewById(R.id.details_description);
@@ -44,10 +44,11 @@ public class ItemDetailsWindow extends PopupWindow {
         this.value.setText("Uppskattat pantvärde: " + value + "kr");
         this.description.setText(description);
         this.rating.setText("" + rating + "/5.0 user rating");
+*/
+            setWidth(width);
+            setHeight(height);
+            setFocusable(true);
 
-        setContentView(popupView);
-        setWidth(width);
-        setHeight(height);
-        setFocusable(true);
     }
+    public abstract void setValues(LayoutInflater inflater);
 }

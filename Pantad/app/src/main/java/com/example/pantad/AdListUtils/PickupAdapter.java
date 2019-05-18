@@ -6,6 +6,7 @@ import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 
+import android.view.Gravity;
 import android.view.View;
 
 import com.example.pantad.Ad;
@@ -26,8 +27,10 @@ public class PickupAdapter extends AbstractAdapter {
 
 
     @Override
-    protected void modifyItemListener(final ItemDetailsWindow itemDetails,final Ad ad, final RecyclerView.ViewHolder viewHolder) {
+    protected ItemDetailsWindow createItemListener(final Ad ad, final RecyclerView.ViewHolder viewHolder,View v) {
 
+        final ItemDetailsWindow itemDetails = new PickupDetailsWindow(v, ad);
+        itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
 
         //Riktigt ful lösning, måste gå att göra bättre:
         if(ad.isClaimed()){
@@ -51,6 +54,7 @@ public class PickupAdapter extends AbstractAdapter {
                 itemDetails.dismiss();
             }
         });
+        return itemDetails;
     }
 /*
     Involves populating data into the item through holder
