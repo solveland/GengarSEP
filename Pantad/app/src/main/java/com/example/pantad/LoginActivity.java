@@ -166,4 +166,11 @@ public class LoginActivity extends AppCompatActivity {
         DocumentReference profileRef = db.collection("userProfile").document(user.getUid());
         profileRef.set(userProfile);
     }
+
+    @Override
+    public void onBackPressed() {
+        if (mAuth.getCurrentUser() != null) {
+            finish();
+        }
+    }
 }
