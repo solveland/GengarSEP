@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.example.pantad.AdListUtils.AdListWithSectionHeader;
 import com.example.pantad.AdListUtils.MyPostingsAdapter;
 import com.example.pantad.AdListUtils.SectionedAdListContainer;
+import com.example.pantad.addresses.AddressDatabaseHelper;
 
 /**
  * A simple {@link Fragment} subclass.

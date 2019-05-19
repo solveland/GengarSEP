@@ -202,4 +202,10 @@ Adds another ad to the list of ads
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
+
+    @Override
+    public void onDestroy() {
+        AddressDatabaseHelper.getInstance(getContext()).close();
+        super.onDestroy();
+    }
 }
