@@ -17,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.example.pantad.firebaseUtil.Config;
 import com.example.pantad.firebaseUtil.NotificationUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessaging;
+
 
 /*
 Our main activity, which handles the different fragments and the navigationBar
@@ -92,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         mapFrag = new MapFragment();
         donatorFrag = new DonatorFragment();
         createFragments();
+
         txtMessage = (TextView) findViewById(R.id.txt_push_message);
         UserModel userModel = ViewModelProviders.of(MainActivity.this).get(UserModel.class);
         userModel.updateAds();
@@ -127,6 +130,8 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, "Firebase reg id: " + regId);
         donatorFrag.setRegID(regId);
         setContentView(R.layout.activity_main);
+        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
         // initiateRecycleView();
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setSelectedItemId(R.id.navigation_map);
