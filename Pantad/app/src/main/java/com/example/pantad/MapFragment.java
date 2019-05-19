@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
+import android.widget.ToggleButton;
 
 import com.example.pantad.AdListUtils.ItemDetailsWindow;
 import com.example.pantad.AdListUtils.PickupDetailsWindow;
@@ -55,9 +57,35 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Propert
      */
     private Geocoder geocoder;
 
+    private ToggleButton claimedToggle;
+    private ToggleButton availableToggle;
+    private ToggleButton stationsToggle;
+
     public MapFragment() {
 
     }
+
+    private class ToggleButtonListener implements CompoundButton.OnCheckedChangeListener {
+
+        private MapFragment parent;
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked) {
+                buttonView.setAlpha(1.0f);
+            } else {
+                buttonView.setAlpha(0.3f);
+            }
+            SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg);
+            mapFragment.getMapAsync(parent);
+        }
+
+        public ToggleButtonListener(MapFragment parent){
+            this.parent = parent;
+        }
+    }
+
+
 
 /* Creates a refrence to the usermodel and sets up the map */
     @Override
@@ -69,6 +97,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Propert
         userModel.setGeocoder(geocoder);*/
         userModel= ViewModelProviders.of(getActivity()).get(UserModel.class);   //The userModel is a shared object between the fragments, it handles the communication between them
         userModel.setObserver(this);
+
+        stationsToggle = rootView.findViewById(R.id.stationsToggle);
+        availableToggle = rootView.findViewById(R.id.availableToggle);
+        claimedToggle = rootView.findViewById(R.id.claimedToggle);
+        ToggleButtonListener listener = new ToggleButtonListener(this);
+        for(ToggleButton button : new ToggleButton[]{stationsToggle,availableToggle,claimedToggle}){
+            button.setOnCheckedChangeListener(listener);
+            if (!button.isChecked()){
+                button.setAlpha(0.3f);
+            }
+        }
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -91,12 +130,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Propert
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        if (userModel.getmMap() == null){
+            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(lastPosition));
+        } else {
+            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(userModel.getmMap().getCameraPosition()));
+        }
         userModel.setMap(googleMap);
-        userModel.getmMap().moveCamera(CameraUpdateFactory.newCameraPosition(lastPosition));
+
         googleMap.clear();
-        MapDecorator.addPantStations(googleMap, getActivity().getApplicationContext());
+        if (stationsToggle.isChecked()) {
+            MapDecorator.addPantStations(googleMap, getActivity().getApplicationContext());
+        }
         googleMap.getUiSettings().setZoomControlsEnabled(true);
-        MapDecorator.addAdsToMap(googleMap,userModel);
+        MapDecorator.addAdsToMap(googleMap,userModel,availableToggle.isChecked(),claimedToggle.isChecked());
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {

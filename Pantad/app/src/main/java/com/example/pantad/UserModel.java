@@ -8,6 +8,7 @@ import android.util.Log;
 import com.example.pantad.firebaseUtil.Data;
 import com.example.pantad.firebaseUtil.PostRequestData;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -63,6 +64,8 @@ public class UserModel extends ViewModel {
     /*The GoogleMap object from our mapFragment. We use this object to set markers or otherwise modify the map
      */
     private GoogleMap mMap;
+    private CameraPosition mapCameraPosition;
+
 
     private String deviceID;
 
@@ -163,6 +166,15 @@ public class UserModel extends ViewModel {
     public Geocoder getGeocoder() {
         return geocoder;
     }
+
+    public CameraPosition getMapCameraPosition() {
+        return mapCameraPosition;
+    }
+
+    public void setMapCameraPosition(CameraPosition mapCameraPosition) {
+        this.mapCameraPosition = mapCameraPosition;
+    }
+
 
 
     public void setGeocoder(Geocoder geocoder) {

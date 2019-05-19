@@ -62,11 +62,15 @@ public final class MapDecorator {
         return bitmap;
     }
 
-    public static void addAdsToMap(GoogleMap map,UserModel userModel){
+    public static void addAdsToMap(GoogleMap map,UserModel userModel,boolean renderAvailable, boolean renderClaimed){
         List<Ad> adsToRender = new ArrayList<>();
         //adsToRender.addAll(userModel.getPostedAds());
-        adsToRender.addAll(userModel.getAvailableAds());
-        adsToRender.addAll(userModel.getClaimedAds());
+        if (renderAvailable) {
+            adsToRender.addAll(userModel.getAvailableAds());
+        }
+        if (renderClaimed) {
+            adsToRender.addAll(userModel.getClaimedAds());
+        }
         for(Ad a : adsToRender){
             Marker cur = map.addMarker(new MarkerOptions()
                     .position(new LatLng(a.getLocation().getLatitude(),a.getLocation().getLongitude()))
