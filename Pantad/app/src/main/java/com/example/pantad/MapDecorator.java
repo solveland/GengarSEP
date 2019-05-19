@@ -16,6 +16,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -63,11 +64,15 @@ public final class MapDecorator {
 
     public static void addAdsToMap(GoogleMap map,UserModel userModel){
         List<Ad> adsToRender = new ArrayList<>();
-        adsToRender.addAll(userModel.getPostedAds());
+        //adsToRender.addAll(userModel.getPostedAds());
         adsToRender.addAll(userModel.getAvailableAds());
         adsToRender.addAll(userModel.getClaimedAds());
         for(Ad a : adsToRender){
-            map.addMarker(new MarkerOptions().position(new LatLng(a.getLocation().getLatitude(),a.getLocation().getLongitude())).title(a.getName()));
+            Marker cur = map.addMarker(new MarkerOptions()
+                    .position(new LatLng(a.getLocation().getLatitude(),a.getLocation().getLongitude()))
+                    .title(a.getName())
+                    .icon(a.isClaimed()? BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE):BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED) ));
+            cur.setTag(a);
         }
     }
 
