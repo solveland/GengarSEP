@@ -11,15 +11,19 @@ import android.widget.TextView;
 
 import com.example.pantad.Ad;
 import com.example.pantad.R;
+import com.example.pantad.UserModel;
 
 public abstract class ItemDetailsWindow extends PopupWindow {
 
 public Ad ad;
     public Button functionButton;
     public Button cancelButton;
+    public UserModel userModel;
 
-    public ItemDetailsWindow(View parent, Ad ad) {
+
+    public ItemDetailsWindow(View parent, Ad ad, UserModel userModel) {
         this.ad=ad;
+        this.userModel=userModel;
         Context context = parent.getContext();
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -28,23 +32,13 @@ public Ad ad;
 
         setValues(inflater);
 
-        // Find reference to each element in the layout
-        /*this.name = (TextView) popupView.findViewById(R.id.details_name);
-        this.address = (TextView) popupView.findViewById(R.id.details_address);
-        this.value = (TextView) popupView.findViewById(R.id.details_value);
-        this.description = (TextView) popupView.findViewById(R.id.details_description);
-        this.rating = (TextView) popupView.findViewById(R.id.user_rating);
-        functionButton = (Button) popupView.findViewById(R.id.claim_details);
-        cancelButton = (Button) popupView.findViewById(R.id.cancel_details);
-        userAvatar = (ImageView) popupView.findViewById(R.id.user_avatar_details);
+        // Create and connect listener to cancel button
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
 
-        // Set all values to attributes
-        this.name.setText(name);
-        this.address.setText("Address: " + address);
-        this.value.setText("Uppskattat pantvärde: " + value + "kr");
-        this.description.setText(description);
-        this.rating.setText("" + rating + "/5.0 user rating");
-*/
             setWidth(width);
             setHeight(height);
             setFocusable(true);
