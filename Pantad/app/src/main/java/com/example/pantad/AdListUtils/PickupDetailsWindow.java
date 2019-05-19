@@ -57,14 +57,14 @@ public class PickupDetailsWindow extends ItemDetailsWindow {
         functionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(!ad.isClaimed()) {
-                    Snackbar.make(v, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(parent, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();
                     String recyclerID = Settings.Secure.getString(v.getContext().getContentResolver(),
                             Settings.Secure.ANDROID_ID);
                     userModel.claimAd(ad, recyclerID);
                 }
 
                 else{
-                    Snackbar.make(v, "Ad has been unclaimed!", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(parent, "Ad has been unclaimed!", Snackbar.LENGTH_SHORT).show();
                     userModel.unClaimAd(ad);
                 }
                 dismiss();

@@ -19,17 +19,17 @@ public Ad ad;
     public Button functionButton;
     public Button cancelButton;
     public UserModel userModel;
-
+    public View parent;
 
     public ItemDetailsWindow(View parent, Ad ad, UserModel userModel) {
         this.ad=ad;
         this.userModel=userModel;
+        this.parent=parent;
+
         Context context = parent.getContext();
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         LayoutInflater inflater = LayoutInflater.from(context);
-        View popupView;
-
         setValues(inflater);
 
         // Create and connect listener to cancel button

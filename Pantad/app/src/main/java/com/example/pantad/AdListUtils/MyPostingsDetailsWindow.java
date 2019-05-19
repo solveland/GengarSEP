@@ -64,7 +64,7 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
         functionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 userModel.removeAd(ad);
-                Snackbar.make(v, "Ad has been deleted!", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(parent, "Ad has been deleted!", Snackbar.LENGTH_SHORT).show();
                 dismiss();
             }
         });
