@@ -36,7 +36,7 @@ public final class PantParser {
             e.printStackTrace();
         }
 
-        Log.v("TAG", "Text File: " + text);
+        //Log.v("TAG", "Text File: " + text);
         return text;
     }
 

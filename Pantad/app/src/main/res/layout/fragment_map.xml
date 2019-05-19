@@ -17,6 +17,40 @@
             android:id="@+id/frg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
+        <ToggleButton
+            android:id="@+id/claimedToggle"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:backgroundTintMode="multiply"
+            android:checked="true"
+            android:textOff="Claimed"
+            android:textOn="Claimed"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ToggleButton
+            android:id="@+id/availableToggle"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:backgroundTintMode="multiply"
+            android:checked="true"
+            android:textOff="Available"
+            android:textOn="Available"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/claimedToggle" />
+
+        <ToggleButton
+            android:id="@+id/stationsToggle"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:backgroundTintMode="multiply"
+            android:checked="false"
+            android:textOff="Stations"
+            android:textOn="Stations"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/availableToggle" />
+
     </android.support.constraint.ConstraintLayout>
 
 </FrameLayout>
