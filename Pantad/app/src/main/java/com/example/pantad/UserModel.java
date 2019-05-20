@@ -245,4 +245,9 @@ public class UserModel extends ViewModel {
         okhttp3.Call call = client.newCall(request);
         call.enqueue(responseCallBack);
     }
+
+    public void updateAdMessage(Ad ad, String message){
+        ad.setMessage(message);
+        db.collection(adCollectionString).document(ad.getAdID()).update("message", message);
+    }
 }
