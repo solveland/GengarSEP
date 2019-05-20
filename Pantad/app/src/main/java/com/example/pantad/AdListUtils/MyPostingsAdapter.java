@@ -21,6 +21,7 @@ import com.example.pantad.AdListUtils.SectionedAdListContainer;
 import com.example.pantad.R;
 import com.example.pantad.TimeUtil;
 import com.example.pantad.UserModel;
+import com.example.pantad.UserProfileModel;
 
 
 /* This class is needed for the recycleView. It connects the textFields in the pos_ad xml file to a list of postings.
@@ -28,15 +29,15 @@ import com.example.pantad.UserModel;
 */
 public class MyPostingsAdapter extends AbstractAdapter {
 
-    public MyPostingsAdapter(SectionedAdListContainer adContainer, UserModel userModel) {
-        super(adContainer, userModel);
+    public MyPostingsAdapter(SectionedAdListContainer adContainer, UserModel userModel, UserProfileModel upm) {
+        super(adContainer, userModel, upm);
     }
 
 
 
     @Override
     protected ItemDetailsWindow createItemListener(final Ad ad, final RecyclerView.ViewHolder viewHolder, final View v) {
-        final ItemDetailsWindow itemDetails = new MyPostingsDetailsWindow(v, ad);
+        final ItemDetailsWindow itemDetails = new MyPostingsDetailsWindow(v, ad,upm);
         itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
 
         itemDetails.functionButton.setOnClickListener(new View.OnClickListener() {

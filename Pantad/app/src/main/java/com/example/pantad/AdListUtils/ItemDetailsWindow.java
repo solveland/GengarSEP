@@ -10,21 +10,30 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.example.pantad.Ad;
+import com.example.pantad.ImageLoader;
 import com.example.pantad.R;
+import com.example.pantad.UserProfileModel;
 
-public abstract class ItemDetailsWindow extends PopupWindow {
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public Ad ad;
+public abstract class ItemDetailsWindow extends PopupWindow implements PropertyChangeListener {
+
+    public Ad ad;
     public Button functionButton;
     public Button cancelButton;
+    public ImageView userAvatar;
+    private UserProfileModel upm;
 
-    public ItemDetailsWindow(View parent, Ad ad) {
+    public ItemDetailsWindow(View parent, Ad ad, UserProfileModel upm) {
         this.ad=ad;
         Context context = parent.getContext();
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         LayoutInflater inflater = LayoutInflater.from(context);
         View popupView;
+        this.upm = upm;
+        upm.setObserver(this);
 
         setValues(inflater);
 
@@ -51,4 +60,10 @@ public Ad ad;
 
     }
     public abstract void setValues(LayoutInflater inflater);
+
+    @Override
+    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+
+        ImageLoader.loadImageFromUrl(upm.getViewingPhotoUrl(), userAvatar);
+    }
 }

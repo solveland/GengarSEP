@@ -1,5 +1,6 @@
 package com.example.pantad;
 
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.arch.lifecycle.ViewModelProviders;
@@ -12,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -25,9 +27,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+
 import com.example.pantad.firebaseUtil.Config;
 import com.example.pantad.firebaseUtil.NotificationUtils;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 /*
@@ -40,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
     PickupFragment pickupFrag;
     MapFragment mapFrag;
     DonatorFragment donatorFrag;
-    
+    UserProfileModel upm;
+    UserModel userModel;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private TextView txtMessage;
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -89,18 +92,17 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannel();
         super.onCreate(savedInstanceState);
 
-        // Start login activity
-        //launchLoginActivity();
-
         pickupFrag = new PickupFragment();
         mapFrag = new MapFragment();
         donatorFrag = new DonatorFragment();
         createFragments();
+        // Start login activity
+        launchLoginActivity();
         txtMessage = (TextView) findViewById(R.id.txt_push_message);
-        UserModel userModel = ViewModelProviders.of(MainActivity.this).get(UserModel.class);
-        userModel.updateAds();
-        userModel.setDeviceID(Settings.Secure.getString(getApplicationContext().getContentResolver(),
-                Settings.Secure.ANDROID_ID));
+        upm = ViewModelProviders.of(MainActivity.this).get(UserProfileModel.class);
+        userModel = ViewModelProviders.of(MainActivity.this).get(UserModel.class);
+
+
 
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -137,13 +139,29 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        findViewById(R.id.sign_out_button).setOnClickListener(new View.OnClickListener() {
+
+        findViewById(R.id.profileButton).setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v) {
-                //signOut();
+            public void onClick(View v){
+
+                launchProfileActivity();
             }
         });
 
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 2){
+            if(resultCode == Activity.RESULT_OK){
+                String uid = data.getStringExtra("Uid");
+                userModel.setProfileID(uid);
+                userModel.updateAds();
+                upm.setUid(uid);
+                upm.updateCurrentProfile();
+            }
+        }
     }
 
     @Override
@@ -191,11 +209,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void launchLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 2);
     }
+     private void launchProfileActivity(){
+         Intent intent = new Intent(this, UserProfileActivity.class);
+         intent.putExtra("user profile model", upm);
+         startActivity(intent);
+     }
 
-    private void signOut() {
-        FirebaseAuth.getInstance().signOut();
-        launchLoginActivity();
-    }
+
 }

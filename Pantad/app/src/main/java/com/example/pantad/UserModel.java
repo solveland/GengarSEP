@@ -64,7 +64,7 @@ public class UserModel extends ViewModel {
      */
     private GoogleMap mMap;
 
-    private String deviceID;
+    private String profileID;
 
     /* A geocoder object. A geocoder is supposed to be able to convert an address to a LatLng, not used yet though */
     private Geocoder geocoder;
@@ -94,13 +94,13 @@ public class UserModel extends ViewModel {
         Ad ad = new Ad(name, address, estimatedValue, message, adsRef.getId(), donatorID, startTime, regID,location);
         adsRef.set(ad);
 
-        if (ad.getRecyclerID() != null && ad.getRecyclerID().equals(deviceID)){
+        if (ad.getRecyclerID() != null && ad.getRecyclerID().equals(profileID)){
             claimedAds.add(ad);
         }
-        if (!ad.isClaimed() && !ad.getDonatorID().equals(deviceID)){
+        if (!ad.isClaimed() && !ad.getDonatorID().equals(profileID)){
             availableAds.add(ad);
         }
-        if (ad.getDonatorID().equals(deviceID)){
+        if (ad.getDonatorID().equals(profileID)){
             postedAds.add(ad);
         }
         pcs.firePropertyChange(null,true,false);
@@ -119,13 +119,13 @@ public class UserModel extends ViewModel {
                     postedAds.clear();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Ad ad = document.toObject(Ad.class);
-                            if (ad.getRecyclerID() != null && ad.getRecyclerID().equals(deviceID)){
+                            if (ad.getRecyclerID() != null && ad.getRecyclerID().equals(profileID)){
                                 claimedAds.add(ad);
                             }
-                            if (!ad.isClaimed() && !ad.getDonatorID().equals(deviceID)){
+                            if (!ad.isClaimed() && !ad.getDonatorID().equals(profileID)){
                                 availableAds.add(ad);
                             }
-                            if (ad.getDonatorID().equals(deviceID)){
+                            if (ad.getDonatorID().equals(profileID)){
                                 postedAds.add(ad);
                             }
 
@@ -156,8 +156,8 @@ public class UserModel extends ViewModel {
         this.mMap = mMap;
     }
 
-    public void setDeviceID(String deviceID){
-        this.deviceID = deviceID;
+    public void setProfileID(String profileID){
+        this.profileID = profileID;
     }
 
     public Geocoder getGeocoder() {

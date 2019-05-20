@@ -1,5 +1,6 @@
 package com.example.pantad;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -38,7 +40,8 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken
+                ("622121211095-5mfq3dbtcb17gpaogcesvv6ts5dpapo5.apps.googleusercontent.com").requestEmail().build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         // Initialize Firebase Auth and Firebase firestore
@@ -151,7 +154,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         if (user != null) {
-            // Pass user information somehow
+            Intent upUid = new Intent();
+            upUid.putExtra("Uid", user.getUid());
+            setResult(Activity.RESULT_OK, upUid);
             finish(); // exit activity
         } else
         {
@@ -162,7 +167,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void createNewProfile() {
         FirebaseUser user = mAuth.getCurrentUser();
-        UserProfile userProfile = new UserProfile(user.getDisplayName(), user.getEmail(), user.getPhoneNumber());
+        UserProfile userProfile = new UserProfile(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString(), user.getPhoneNumber());
         DocumentReference profileRef = db.collection("userProfile").document(user.getUid());
         profileRef.set(userProfile);
     }

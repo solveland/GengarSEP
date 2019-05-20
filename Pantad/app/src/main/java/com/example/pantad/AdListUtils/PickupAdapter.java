@@ -1,6 +1,8 @@
 package com.example.pantad.AdListUtils;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
@@ -11,7 +13,10 @@ import android.view.View;
 
 import com.example.pantad.Ad;
 
+import com.example.pantad.ImageLoader;
 import com.example.pantad.UserModel;
+import com.example.pantad.UserProfileActivity;
+import com.example.pantad.UserProfileModel;
 
 
 /* This class is needed for the recycleView. It connects the textFields in the pos_ad xml file to a list of postings.
@@ -19,18 +24,19 @@ import com.example.pantad.UserModel;
 */
 public class PickupAdapter extends AbstractAdapter {
 
-    public PickupAdapter(SectionedAdListContainer adContainer, UserModel userModel) {
-        super( adContainer,  userModel);
-    }
 
+    public PickupAdapter(SectionedAdListContainer adContainer, UserModel userModel, UserProfileModel upm) {
+        super( adContainer,  userModel, upm);
+    }
     // Usually involves inflating a layout from XML and returning the holder
 
 
     @Override
     protected ItemDetailsWindow createItemListener(final Ad ad, final RecyclerView.ViewHolder viewHolder,View v) {
 
-        final ItemDetailsWindow itemDetails = new PickupDetailsWindow(v, ad);
+        final ItemDetailsWindow itemDetails = new PickupDetailsWindow(v, ad, upm);
         itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
+
 
         //Riktigt ful lösning, måste gå att göra bättre:
         if(ad.isClaimed()){
@@ -54,6 +60,21 @@ public class PickupAdapter extends AbstractAdapter {
                 itemDetails.dismiss();
             }
         });
+
+        //TODO FIX THIS FUCKING IMAGELOADER
+        //ImageLoader.loadImageFromUrl(upm.getViewingPhotoUrl(), itemDetails.userAvatar);
+        Snackbar.make(viewHolder.itemView, ad.getDonatorID(), Snackbar.LENGTH_SHORT).show();
+
+        itemDetails.userAvatar.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                Context mainActivity = viewHolder.itemView.getContext();
+                Intent intent = new Intent(mainActivity, UserProfileActivity.class);
+                intent.putExtra("uid", ad.getDonatorID());
+                mainActivity.startActivity(intent);
+            }
+        });
+
+
         return itemDetails;
     }
 /*

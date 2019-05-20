@@ -12,7 +12,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,8 +20,8 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.provider.Settings;
 import android.widget.FilterQueryProvider;
+import android.widget.TextView;
 
 import com.example.pantad.addresses.AddressAutocompleteAdapter;
 import com.example.pantad.addresses.AddressDatabaseHelper;
@@ -31,7 +30,7 @@ import com.google.firebase.firestore.GeoPoint;
 
 
 public class PostAdFragment extends DialogFragment {
-    private EditText name;
+    private TextView name;
     private AutoCompleteTextView address;
     private EditText value;
     private EditText message;
@@ -40,11 +39,14 @@ public class PostAdFragment extends DialogFragment {
     private String regID;
     private GeoPoint location;
     private boolean locationUpdated = false;
+    private UserProfileModel upm;
 
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         userModel= ViewModelProviders.of(getActivity()).get(UserModel.class);   //The userModel is a shared object between the fragments, it handles the communication between them
+
+        upm = ViewModelProviders.of(getActivity()).get(UserProfileModel.class);
 
         // Use the Builder class for convenient dialog construction
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -60,15 +62,18 @@ public class PostAdFragment extends DialogFragment {
                         dismiss();
                     }
                 });
+
+        name.setText(upm.getName());
         // Create the AlertDialog object and return it
         return builder.create();
     }
 
     private void initInputFields(View root) {
-        name = root.findViewById(R.id.nameInput);
+        name = root.findViewById(R.id.postAdName);
         address = root.findViewById(R.id.adressInput);
         value = root.findViewById(R.id.valueInput);
         message = root.findViewById(R.id.messageInput);
+
 
 
 
@@ -155,8 +160,7 @@ public class PostAdFragment extends DialogFragment {
     if the input is valid.
      */
     private void initSubmit(View root){
-        final String donatorID = Settings.Secure.getString(getContext().getContentResolver(),
-                Settings.Secure.ANDROID_ID);
+        final String donatorID = upm.getUid();
         submit=root.findViewById(R.id.submitAdBtn);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,7 +176,6 @@ public class PostAdFragment extends DialogFragment {
                 else{
                     addAds(nameInput, addressInput, Integer.parseInt(valueInput), messageInput, donatorID, startTime,location);
                     Snackbar.make(getActivity().findViewById(R.id.navigation), "AD was added", Snackbar.LENGTH_SHORT).show();
-                    name.getText().clear();
                     address.getText().clear();
                     value.getText().clear();
                     message.getText().clear();

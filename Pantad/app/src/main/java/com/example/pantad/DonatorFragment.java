@@ -26,6 +26,7 @@ public class DonatorFragment extends Fragment {
     private MyPostingsAdapter adapter;
     private FloatingActionButton postAdButton;
     private String regID;
+    private UserProfileModel upm;
     public DonatorFragment() {
         // Required empty public constructor
     }
@@ -37,6 +38,7 @@ public class DonatorFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_donator, container, false);
         userModel= ViewModelProviders.of(getActivity()).get(UserModel.class);
+        upm = ViewModelProviders.of(getActivity()).get(UserProfileModel.class);
         postAdButton=rootView.findViewById(R.id.donator_postadbtn);
 
         postAdButton.setOnClickListener(new View.OnClickListener() {
@@ -55,7 +57,7 @@ public class DonatorFragment extends Fragment {
 
         //We will probably need to make a new adapter for this list eventually
         AdListWithSectionHeader[] adsToShow = {new AdListWithSectionHeader(userModel.getPostedAds(),"Your posted ads")};
-        adapter = new MyPostingsAdapter(new SectionedAdListContainer(adsToShow),userModel);
+        adapter = new MyPostingsAdapter(new SectionedAdListContainer(adsToShow),userModel, upm);
         // Attach the adapter to the recyclerView to populate items
         donatorRVAds.setAdapter(adapter);
         // That's all!

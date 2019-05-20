@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.pantad.AdListUtils.PickupAdapter;
 import com.example.pantad.AdListUtils.AdListWithSectionHeader;
@@ -28,6 +29,7 @@ public class PickupFragment extends Fragment implements PropertyChangeListener {
     private UserModel userModel;
     private SwipeRefreshLayout refreshLayout;
     private PickupAdapter adapter;
+    private UserProfileModel upm;
 
 
     public PickupFragment() {
@@ -43,6 +45,7 @@ Handles the setup for the recyclerView
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_pickup, container, false);
         userModel= ViewModelProviders.of(getActivity()).get(UserModel.class);
+        upm = ViewModelProviders.of(getActivity()).get(UserProfileModel.class);
 
         rvAds = rootView.findViewById(R.id.recyclerView);
         refreshLayout = rootView.findViewById(R.id.swipe_refresh);
@@ -60,9 +63,10 @@ Handles the setup for the recyclerView
 
         // Create adapter passing in the sample user data
         AdListWithSectionHeader[] adsToShow = {new AdListWithSectionHeader(userModel.getClaimedAds(),"Your claimed ads"),new AdListWithSectionHeader(userModel.getAvailableAds(),"Available ads")};
-        adapter = new PickupAdapter(new SectionedAdListContainer(adsToShow),userModel);
+        adapter = new PickupAdapter(new SectionedAdListContainer(adsToShow),userModel, upm);
         // Attach the adapter to the recyclerView to populate items
         rvAds.setAdapter(adapter);
+
         // That's all!
         return rootView;
 
