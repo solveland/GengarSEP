@@ -1,6 +1,7 @@
 package com.example.pantad.AdListUtils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import com.example.pantad.Ad;
 import com.example.pantad.ImageLoader;
 import com.example.pantad.R;
 import com.example.pantad.UserModel;
+import com.example.pantad.UserProfileActivity;
 import com.example.pantad.UserProfileModel;
 
 import java.beans.PropertyChangeEvent;
@@ -20,15 +22,15 @@ import java.beans.PropertyChangeListener;
 
 public abstract class ItemDetailsWindow extends PopupWindow implements PropertyChangeListener {
 
-    public Ad ad;
+    public final Ad ad;
     public Button functionButton;
     public Button cancelButton;
     public UserModel userModel;
-    public View parent;
+    public final View parent;
     public ImageView userAvatar;
     private UserProfileModel upm;
 
-    public ItemDetailsWindow(View parent, Ad ad, UserProfileModel upm, UserModel userModel) {
+    public ItemDetailsWindow(final View parent, final Ad ad, UserProfileModel upm, UserModel userModel) {
         this.ad=ad;
         this.userModel=userModel;
         this.parent=parent;
@@ -41,6 +43,15 @@ public abstract class ItemDetailsWindow extends PopupWindow implements PropertyC
         setValues(inflater);
         this.upm = upm;
         upm.setObserver(this);
+
+        userAvatar.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                                Context mainActivity = parent.getContext();
+                                Intent intent = new Intent(mainActivity, UserProfileActivity.class);
+                                intent.putExtra("uid", ad.getDonatorID());
+                                mainActivity.startActivity(intent);
+                            }
+        });
 
 
 
