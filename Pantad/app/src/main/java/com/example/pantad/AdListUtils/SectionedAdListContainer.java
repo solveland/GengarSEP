@@ -13,13 +13,13 @@ public class SectionedAdListContainer {
     }
 
     // quick solution, probably pretty inefficient
-    public boolean isSegment(int pos){
+    public boolean isHeader(int pos){
         int count = 0;
         for(AdListWithSectionHeader list: lists){
             if (count == pos){
                 return true;
             }
-            count+= list.getAdList().size() +1;
+            count+= list.size();
             if (count > pos){
                 return false;
             }
@@ -36,7 +36,7 @@ public class SectionedAdListContainer {
             if(count + list.getAdList().size() > pos){
                 return list.getAdList().get(pos-count);
             }
-            count+= list.getAdList().size() +1;
+            count+= list.size();
             if (count > pos){
                 return null;
             }
@@ -47,10 +47,10 @@ public class SectionedAdListContainer {
     public String getHeaderText(int pos){
         int count = 0;
         for(AdListWithSectionHeader list: lists){
-            if (count == pos){
+            if (count == pos && list.size() > 0){
                 return list.getHeaderText();
             }
-            count+= list.getAdList().size() +1;
+            count+= list.size();
             if (count > pos){
                 return null;
             }
@@ -61,7 +61,7 @@ public class SectionedAdListContainer {
     public int size(){
         int count = 0;
         for(AdListWithSectionHeader list: lists){
-            count += list.getAdList().size() +1;
+            count += list.size();
         }
         return count;
     }
