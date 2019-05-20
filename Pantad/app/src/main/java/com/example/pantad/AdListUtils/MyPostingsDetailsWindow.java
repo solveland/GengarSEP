@@ -64,7 +64,7 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
                     Snackbar.make(parent, "A claimed ad cannot be edited!", Snackbar.LENGTH_SHORT).show();
                 }
                 else if(description.isEnabled()){
-                    ad.setMessage(description.getText().toString());
+                    userModel.updateAdMessage(ad,description.getText().toString());
                     updateBtn.setImageResource(R.drawable.ic_mode_edit_black_24dp);
                     description.setEnabled(false);
                 }
