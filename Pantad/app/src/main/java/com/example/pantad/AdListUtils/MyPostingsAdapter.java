@@ -35,17 +35,9 @@ public class MyPostingsAdapter extends AbstractAdapter {
 
 
     @Override
-    protected ItemDetailsWindow createItemListener(final Ad ad, final RecyclerView.ViewHolder viewHolder, final View v) {
-        final ItemDetailsWindow itemDetails = new MyPostingsDetailsWindow(v, ad);
+    protected ItemDetailsWindow createItemListener(final Ad ad, final View v) {
+        final ItemDetailsWindow itemDetails = new MyPostingsDetailsWindow(v, ad,userModel);
         itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
-
-        itemDetails.functionButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                removeAd(ad);
-                Snackbar.make(viewHolder.itemView, "Ad has been deleted!", Snackbar.LENGTH_SHORT).show();
-                itemDetails.dismiss();
-            }
-        });
         return itemDetails;
     }
 

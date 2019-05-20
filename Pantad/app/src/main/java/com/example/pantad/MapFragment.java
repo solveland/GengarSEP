@@ -151,61 +151,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Propert
                     return false;
                 }
 
-                //TODO: This is copy pasted from pickupfragment, can probably make this more abstract
-                final ItemDetailsWindow itemDetails=createItemListener(ad,getView() ,getView());
-
-                // Dim the background
-                View container = itemDetails.getContentView().getRootView();
-                Context context = itemDetails.getContentView().getContext();
-
-                WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-                WindowManager.LayoutParams params = (WindowManager.LayoutParams) container.getLayoutParams();
-                params.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-                params.dimAmount = 0.4f;
-                wm.updateViewLayout(container, params);
-
-
-                // Create and connect listener to cancel button
-                itemDetails.cancelButton.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        itemDetails.dismiss();
-                    }
-                });
+                createItemListener(ad,getView());
                 return true;
             }
         });
     }
 
 
-    //TODO: This is copy pasted from pickupfragment, can probably make this more abstract
-    protected ItemDetailsWindow createItemListener(final Ad ad, final View viewHolder, View v) {
 
-        final ItemDetailsWindow itemDetails = new PickupDetailsWindow(v, ad);
+    //TODO: This is copy pasted from pickupfragment, can probably make this more abstract
+    protected void createItemListener(final Ad ad, View v) {
+        final ItemDetailsWindow itemDetails = new PickupDetailsWindow(v, ad,userModel);
         itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
 
-        //Riktigt ful lösning, måste gå att göra bättre:
-        if(ad.isClaimed()){
-            itemDetails.functionButton.setBackgroundColor(Color.RED);
-            itemDetails.functionButton.setText("Unclaim");
-        }
-        // Create and connect listener to claim button
-        itemDetails.functionButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if(!ad.isClaimed()) {
-                    Snackbar.make(viewHolder, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();
-                    String recyclerID = Settings.Secure.getString(v.getContext().getContentResolver(),
-                            Settings.Secure.ANDROID_ID);
-                    userModel.claimAd(ad, recyclerID);
-                }
+        // Dim the background
+        View container = itemDetails.getContentView().getRootView();
+        Context context = itemDetails.getContentView().getContext();
 
-                else{
-                    Snackbar.make(viewHolder, "Ad has been unclaimed!", Snackbar.LENGTH_SHORT).show();
-                    userModel.unClaimAd(ad);
-                }
-                itemDetails.dismiss();
-            }
-        });
-        return itemDetails;
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager.LayoutParams params = (WindowManager.LayoutParams) container.getLayoutParams();
+        params.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        params.dimAmount = 0.4f;
+        wm.updateViewLayout(container, params);
+
     }
 
     /* Saves the last viewed location */
@@ -225,3 +193,4 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Propert
         mapFragment.getMapAsync(this);
     }
 }
+

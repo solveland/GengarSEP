@@ -92,9 +92,6 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
             // Normal ad view item
             // Get the data model based on position
             final Ad ad = adContainer.getAd(position);
-            final String name = ad.getName();
-            final String address = ad.getAddress();
-            final int value = ad.getValue();
             final String elapsedTime = TimeUtil.getDifference(ad.getStartTime());
             // Set item views based on your views and data model
             TextView nameView = ((AdItemViewHolder)viewHolder).nameTextView;
@@ -110,7 +107,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
 
                 public void onClick(View v) {
                     // Create the item details window
-                    final ItemDetailsWindow itemDetails=createItemListener(ad, viewHolder,v);
+                    final ItemDetailsWindow itemDetails=createItemListener(ad,v);
 
                     // Dim the background
                     View container = itemDetails.getContentView().getRootView();
@@ -123,13 +120,6 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
                     wm.updateViewLayout(container, params);
 
 
-                    // Create and connect listener to cancel button
-                    itemDetails.cancelButton.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View v) {
-                            itemDetails.dismiss();
-                        }
-                    });
-
                 }
 
             });
@@ -139,7 +129,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
             headerText.setText(adContainer.getHeaderText(position));
         }
     }
-    protected abstract ItemDetailsWindow createItemListener(final Ad ad, final RecyclerView.ViewHolder viewHolder, final View v);
+    protected abstract ItemDetailsWindow createItemListener(final Ad ad,final View v);
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access

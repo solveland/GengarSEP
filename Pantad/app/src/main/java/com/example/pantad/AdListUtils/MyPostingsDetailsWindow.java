@@ -1,6 +1,7 @@
 package com.example.pantad.AdListUtils;
 
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.pantad.Ad;
 import com.example.pantad.R;
+import com.example.pantad.UserModel;
 
 public class MyPostingsDetailsWindow extends ItemDetailsWindow {
 
@@ -21,8 +23,8 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
     public ImageView userAvatar;
     public FloatingActionButton updateBtn;
 
-    public MyPostingsDetailsWindow(View parent, Ad ad) {
-        super(parent,ad);
+    public MyPostingsDetailsWindow(View parent, Ad ad, UserModel userModel) {
+        super(parent,ad,userModel);
     }
 
     public void setValues(LayoutInflater inflater){
@@ -55,6 +57,15 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
             @Override
             public void onClick(View v) {
                 ad.setMessage(description.getText().toString());
+            }
+        });
+
+
+        functionButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                userModel.removeAd(ad);
+                Snackbar.make(parent, "Ad has been deleted!", Snackbar.LENGTH_SHORT).show();
+                dismiss();
             }
         });
 
