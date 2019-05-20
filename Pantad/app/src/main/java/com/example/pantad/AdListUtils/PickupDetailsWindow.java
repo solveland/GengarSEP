@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.pantad.Ad;
 import com.example.pantad.R;
 import com.example.pantad.UserModel;
+import com.example.pantad.UserProfileModel;
 
 public class PickupDetailsWindow extends ItemDetailsWindow {
 
@@ -19,12 +20,11 @@ public class PickupDetailsWindow extends ItemDetailsWindow {
     public TextView address;
     public TextView value;
     public TextView rating;
-    public TextView description;;
-    public ImageView userAvatar;
+    public TextView description;
 
 
-    public PickupDetailsWindow(View parent, Ad ad, UserModel userModel) {
-        super(parent, ad,userModel);
+    public PickupDetailsWindow(View parent, Ad ad, UserProfileModel upm,UserModel userModel) {
+        super(parent, ad,upm,userModel);
     }
 
     @Override
@@ -39,6 +39,7 @@ public class PickupDetailsWindow extends ItemDetailsWindow {
         functionButton = (Button) popupView.findViewById(R.id.delete_details);
         cancelButton = (Button) popupView.findViewById(R.id.cancel_details);
         userAvatar = (ImageView) popupView.findViewById(R.id.user_avatar_details);
+
 
         // Set all values to attributes
         this.name.setText(ad.getName());

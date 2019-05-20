@@ -1,18 +1,26 @@
 package com.example.pantad;
 
-public class UserProfile {
+import java.io.Serializable;
+
+public class UserProfile implements Serializable {
 
     private String name;
     private String email;
+    private String photoUrl;
     private String phoneNumber;
 
-    public UserProfile(String name, String email, String phoneNumber) {
-        this.name = name;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
+
+    public UserProfile(){
+
     }
 
-    public String getFirstName() {
+    public UserProfile(String name, String email, String photoUrl, String phoneNumber) {
+        this.name = name;
+        this.email = email;
+        this.photoUrl = photoUrl;
+        this.phoneNumber = phoneNumber;
+    }
+    public String getName() {
         return name;
     }
 
@@ -20,8 +28,10 @@ public class UserProfile {
         return email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+    public String getPhotoUrl(){ return photoUrl;}
+
+
+
+    public String getPhoneNumber(){return phoneNumber;}
 
 }

@@ -1,6 +1,8 @@
 package com.example.pantad.AdListUtils;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
@@ -11,7 +13,10 @@ import android.view.View;
 
 import com.example.pantad.Ad;
 
+import com.example.pantad.ImageLoader;
 import com.example.pantad.UserModel;
+import com.example.pantad.UserProfileActivity;
+import com.example.pantad.UserProfileModel;
 
 
 /* This class is needed for the recycleView. It connects the textFields in the pos_ad xml file to a list of postings.
@@ -19,17 +24,20 @@ import com.example.pantad.UserModel;
 */
 public class PickupAdapter extends AbstractAdapter {
 
-    public PickupAdapter(SectionedAdListContainer adContainer, UserModel userModel) {
-        super( adContainer,  userModel);
-    }
 
+    public PickupAdapter(SectionedAdListContainer adContainer, UserModel userModel, UserProfileModel upm) {
+        super( adContainer,  userModel, upm);
+    }
     // Usually involves inflating a layout from XML and returning the holder
 
 
     @Override
     protected ItemDetailsWindow createItemListener(final Ad ad, View v) {
-        final ItemDetailsWindow itemDetails = new PickupDetailsWindow(v, ad,userModel);
+        final ItemDetailsWindow itemDetails = new PickupDetailsWindow(v, ad, upm,userModel);
         itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
+
+
+
         return itemDetails;
     }
 /*

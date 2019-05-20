@@ -13,19 +13,26 @@ import com.example.pantad.Ad;
 import com.example.pantad.R;
 import com.example.pantad.TimeUtil;
 import com.example.pantad.UserModel;
+import com.example.pantad.UserProfileModel;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.Semaphore;
 
 public abstract class AbstractAdapter extends RecyclerView.Adapter implements PropertyChangeListener {
 
     protected SectionedAdListContainer adContainer;
     protected UserModel userModel;
+    protected UserProfileModel upm;
 
-    public AbstractAdapter(SectionedAdListContainer adContainer, UserModel userModel) {
+    public AbstractAdapter(SectionedAdListContainer adContainer, UserModel userModel, UserProfileModel upm) {
         this.adContainer = adContainer;
         this.userModel=userModel;
+        this.upm = upm;
         userModel.setObserver(this);
+
     }
 
 
@@ -104,8 +111,9 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
             valueView.setText("Uppskattat pantvärde: " + Integer.toString(ad.getValue()) + "kr");
 
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-
                 public void onClick(View v) {
+
+                    upm.updateViewingProfile(ad.getDonatorID());
                     // Create the item details window
                     final ItemDetailsWindow itemDetails=createItemListener(ad,v);
 
@@ -118,6 +126,14 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
                     params.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
                     params.dimAmount = 0.4f;
                     wm.updateViewLayout(container, params);
+
+
+                    // Create and connect listener to cancel button
+                    itemDetails.cancelButton.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            itemDetails.dismiss();
+                        }
+                    });
 
 
                 }

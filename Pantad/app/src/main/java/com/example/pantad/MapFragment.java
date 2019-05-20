@@ -51,6 +51,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Propert
     private LatLng first = new LatLng(57.709339, 11.969752);
     private CameraPosition lastPosition = new CameraPosition(first, 10.0f, 0.0f, 0.0f);
     private UserModel userModel;
+    private UserProfileModel upm;
 
     /* A geocode object. A geocode is supposed to be able to convert an address to a LatLng, not used yet though
      Is created here but sent to the userModel
@@ -97,6 +98,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Propert
         userModel.setGeocoder(geocoder);*/
         userModel= ViewModelProviders.of(getActivity()).get(UserModel.class);   //The userModel is a shared object between the fragments, it handles the communication between them
         userModel.setObserver(this);
+        upm = ViewModelProviders.of(getActivity()).get(UserProfileModel.class);
 
         stationsToggle = rootView.findViewById(R.id.stationsToggle);
         availableToggle = rootView.findViewById(R.id.availableToggle);
@@ -161,7 +163,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Propert
 
     //TODO: This is copy pasted from pickupfragment, can probably make this more abstract
     protected void createItemListener(final Ad ad, View v) {
-        final ItemDetailsWindow itemDetails = new PickupDetailsWindow(v, ad,userModel);
+        final ItemDetailsWindow itemDetails = new PickupDetailsWindow(v, ad,upm,userModel);
+        upm.updateViewingProfile(ad.getDonatorID());
         itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
 
         // Dim the background

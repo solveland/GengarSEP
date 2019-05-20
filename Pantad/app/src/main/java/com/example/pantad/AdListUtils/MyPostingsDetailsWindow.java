@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.pantad.Ad;
 import com.example.pantad.R;
 import com.example.pantad.UserModel;
+import com.example.pantad.UserProfileModel;
 
 public class MyPostingsDetailsWindow extends ItemDetailsWindow {
 
@@ -19,12 +20,12 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
     public TextView address;
     public TextView value;
     public TextView rating;
-    public TextView description;;
-    public ImageView userAvatar;
+    public TextView description;
     public FloatingActionButton updateBtn;
 
-    public MyPostingsDetailsWindow(View parent, Ad ad, UserModel userModel) {
-        super(parent,ad,userModel);
+
+    public MyPostingsDetailsWindow(View parent, Ad ad, UserProfileModel upm,UserModel userModel) {
+        super(parent,ad,upm,userModel);
     }
 
     public void setValues(LayoutInflater inflater){
