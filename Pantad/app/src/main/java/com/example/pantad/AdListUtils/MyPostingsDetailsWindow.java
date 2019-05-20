@@ -71,6 +71,7 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
                 else{
                     description.setEnabled(true);
                     description.setSelected(true);
+                    description.requestFocus();
                     InputMethodManager imm = (InputMethodManager) parent.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
                     updateBtn.setImageResource(R.drawable.ic_done_black_24dp);
