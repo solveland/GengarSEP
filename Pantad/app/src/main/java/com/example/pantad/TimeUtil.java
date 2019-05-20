@@ -27,11 +27,12 @@ public final class TimeUtil {
         long minutes = diff / 60 % 60;
         String result = "";
         if(days != 0) {
-            result = days + " days, ";
-        }if(days != 0 || hours != 0) {
-            result += hours + " hours, ";
+            result = days + " dagar ";
         }
-        result += minutes + " minutes. ";
+        else if(days != 0 || hours != 0) {
+            result += hours + " timmar ";
+        }
+        else result += minutes + " minuter. ";
 
         return result;
     }

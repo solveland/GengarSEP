@@ -53,15 +53,26 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
         this.address.setText("Address: " + ad.getAddress());
         this.value.setText("Uppskattat pantvärde: " + ad.getValue() + "kr");
         this.description.setText(ad.getMessage());
+        this.description.setEnabled(false);
 
         this.updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ad.setMessage(description.getText().toString());
+                if(ad.isClaimed()) {
+                    Snackbar.make(parent, "A claimed ad cannot be edited!", Snackbar.LENGTH_SHORT).show();
+                }
+                else if(description.isEnabled()){
+                    ad.setMessage(description.getText().toString());
+                    updateBtn.setImageResource(R.drawable.ic_mode_edit_black_24dp);
+                    description.setEnabled(false);
+                }
+                else{
+                    description.setEnabled(true);
+                    updateBtn.setImageResource(R.drawable.ic_done_black_24dp);
+                }
             }
         });
-
-
+        
         functionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 userModel.removeAd(ad);

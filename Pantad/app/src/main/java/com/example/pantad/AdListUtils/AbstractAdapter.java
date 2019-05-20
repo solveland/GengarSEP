@@ -102,13 +102,16 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
             final String elapsedTime = TimeUtil.getDifference(ad.getStartTime());
             // Set item views based on your views and data model
             TextView nameView = ((AdItemViewHolder)viewHolder).nameTextView;
-            nameView.setText("Namn: " + ad.getName() + "                  " + elapsedTime);
+            nameView.setText("Namn: " + ad.getName());
 
             TextView addressView = ((AdItemViewHolder)viewHolder).addressTextView;
             addressView.setText("Upphämtningsadress: " + ad.getAddress());
 
             TextView valueView = ((AdItemViewHolder)viewHolder).valueTextView;
             valueView.setText("Uppskattat pantvärde: " + Integer.toString(ad.getValue()) + "kr");
+
+            TextView timeTextView= ((AdItemViewHolder) viewHolder).timeTextView;
+            timeTextView.setText("Tid sedan annonsen lades upp: " + elapsedTime);
 
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -155,7 +158,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
         public TextView nameTextView;
         public TextView addressTextView;
         public TextView valueTextView;
-
+        public TextView timeTextView;
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public AdItemViewHolder(View itemView) {
@@ -165,6 +168,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
             nameTextView = (TextView) itemView.findViewById(R.id.annons_namn);
             addressTextView = (TextView) itemView.findViewById(R.id.annons_adress);
             valueTextView = (TextView) itemView.findViewById(R.id.annons_value);
+            timeTextView =(TextView) itemView.findViewById(R.id.annons_time);
         }
     }
 }

@@ -24,4 +24,10 @@
       android:layout_height="wrap_content"
       tools:text="@tools:sample/lorem" />
 
+  <TextView
+      android:id="@+id/annons_time"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      tools:text="@tools:sample/lorem" />
+
 </LinearLayout>
