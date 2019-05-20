@@ -1,9 +1,11 @@
 package com.example.pantad.AdListUtils;
 
+import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -68,11 +70,14 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
                 }
                 else{
                     description.setEnabled(true);
+                    description.setSelected(true);
+                    InputMethodManager imm = (InputMethodManager) parent.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
                     updateBtn.setImageResource(R.drawable.ic_done_black_24dp);
                 }
             }
         });
-        
+
         functionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 userModel.removeAd(ad);
