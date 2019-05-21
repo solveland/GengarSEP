@@ -8,11 +8,24 @@
     app:navigationIcon="@drawable/ic_recycling_logo"
     app:titleTextColor="#FFFFFFFF">
 
-    <Button
-        android:id="@+id/profileButton"
+    <ImageView
+        android:id="@+id/profile_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+
+        android:layout_gravity="end"
+        android:foreground="@drawable/layer_list"
+        android:translationX="-15dp" />
+
+    <TextView
+        android:id="@+id/toolbar_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:text="Profile" />
+        android:layout_gravity="left"
+        android:fontFamily="sans-serif-light"
+        android:text="Map"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="22sp"
+        android:textStyle="bold" />
 
 </android.support.v7.widget.Toolbar>

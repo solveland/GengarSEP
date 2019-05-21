@@ -24,6 +24,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,20 +32,26 @@ import android.widget.Toast;
 
 import com.example.pantad.firebaseUtil.Config;
 import com.example.pantad.firebaseUtil.NotificationUtils;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /*
 Our main activity, which handles the different fragments and the navigationBar
 Most of the processes should be handled by the fragments themselves, this activity only
 initiates them and handles the menu navigation
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PropertyChangeListener {
 
     PickupFragment pickupFrag;
     MapFragment mapFrag;
     DonatorFragment donatorFrag;
     UserProfileModel upm;
     UserModel userModel;
+    TextView toolbar_title;
+    ImageView profileButton;
     MenuItem prevMenuItem;
     BottomNavigationView navigation;
     ViewPager viewPager;
@@ -104,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         txtMessage = (TextView) findViewById(R.id.txt_push_message);
         upm = ViewModelProviders.of(MainActivity.this).get(UserProfileModel.class);
         userModel = ViewModelProviders.of(MainActivity.this).get(UserModel.class);
+        upm.setObserver(this);
 
 
 
@@ -146,13 +154,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        toolbar_title = findViewById(R.id.toolbar_title);
+        profileButton = findViewById(R.id.profile_button);
 
-        findViewById(R.id.profileButton).setOnClickListener(new View.OnClickListener(){
+
+        profileButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-
                 launchProfileActivity();
             }
         });
@@ -165,10 +173,16 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 2){
             if(resultCode == Activity.RESULT_OK){
                 String uid = data.getStringExtra("Uid");
-                userModel.setProfileID(uid);
-                userModel.updateAds();
                 upm.setUid(uid);
                 upm.updateCurrentProfile();
+                userModel.setProfileID(uid);
+                userModel.updateAds();
+            }
+        } else if (requestCode == 3) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data.getBooleanExtra("signOutResult", false)) {
+                    signOut();
+                }
             }
         }
     }
@@ -204,9 +218,20 @@ public class MainActivity extends AppCompatActivity {
      private void launchProfileActivity(){
          Intent intent = new Intent(this, UserProfileActivity.class);
          intent.putExtra("user profile model", upm);
-         startActivity(intent);
+         startActivityForResult(intent, 3);
      }
 
+    private void signOut() {
+        FirebaseAuth.getInstance().signOut();
+        launchLoginActivity();
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+        if (propertyChangeEvent.getPropertyName().equals("currentProfile")) {
+            ImageLoader.loadImageFromUrl(upm.getPhotoUrl(), profileButton);
+        }
+    }
     private void setupViewPager(ViewPager viewPager) {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
