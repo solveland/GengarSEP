@@ -2,10 +2,12 @@ package com.example.pantad.AdListUtils;
 
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -61,14 +63,29 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
         this.address.setText("Address: " + ad.getAddress());
         this.value.setText("Uppskattat pantvärde: " + ad.getValue() + "kr");
         this.description.setText(ad.getMessage());
+        this.description.setEnabled(false);
 
         this.updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ad.setMessage(description.getText().toString());
+                if(ad.isClaimed()) {
+                    Snackbar.make(parent, "A claimed ad cannot be edited!", Snackbar.LENGTH_SHORT).show();
+                }
+                else if(description.isEnabled()){
+                    userModel.updateAdMessage(ad,description.getText().toString());
+                    updateBtn.setImageResource(R.drawable.ic_mode_edit_black_24dp);
+                    description.setEnabled(false);
+                }
+                else{
+                    description.setEnabled(true);
+                    description.setSelected(true);
+                    description.requestFocus();
+                    InputMethodManager imm = (InputMethodManager) parent.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                    updateBtn.setImageResource(R.drawable.ic_done_black_24dp);
+                }
             }
         });
-
 
         functionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

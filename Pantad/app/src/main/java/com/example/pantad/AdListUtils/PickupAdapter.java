@@ -39,6 +39,9 @@ public class PickupAdapter extends AbstractAdapter {
 
     @Override
     protected ItemDetailsWindow createItemListener(final Ad ad, View v) {
+        if (!ItemDetailsWindow.canOpenDetalView()){
+            return null;
+        }
         final ItemDetailsWindow itemDetails = new PickupDetailsWindow(v, ad, upm,userModel);
         itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
 

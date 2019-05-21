@@ -132,6 +132,7 @@
                 app:layout_constraintStart_toEndOf="@+id/valueInput"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
         </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>
 

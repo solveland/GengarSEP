@@ -18,6 +18,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -51,6 +52,9 @@ public class MainActivity extends AppCompatActivity implements PropertyChangeLis
     UserModel userModel;
     TextView toolbar_title;
     ImageView profileButton;
+    MenuItem prevMenuItem;
+    BottomNavigationView navigation;
+    ViewPager viewPager;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private TextView txtMessage;
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -65,16 +69,13 @@ public class MainActivity extends AppCompatActivity implements PropertyChangeLis
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_map:
-                    setFragment(mapFrag);
-                    toolbar_title.setText("Map");
+                    viewPager.setCurrentItem(1);
                     return true;
                 case R.id.navigation_pickups:
-                    setFragment(pickupFrag);
-                    toolbar_title.setText("Pickups");
+                    viewPager.setCurrentItem(0);
                     return true;
                 case R.id.navigation_donator:
-                    setFragment(donatorFrag);
-                    toolbar_title.setText("Donator");
+                    viewPager.setCurrentItem(2);
                     return true;
             }
             return false;
@@ -105,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements PropertyChangeLis
         pickupFrag = new PickupFragment();
         mapFrag = new MapFragment();
         donatorFrag = new DonatorFragment();
-        createFragments();
         // Start login activity
         launchLoginActivity();
         txtMessage = (TextView) findViewById(R.id.txt_push_message);
@@ -145,8 +145,14 @@ public class MainActivity extends AppCompatActivity implements PropertyChangeLis
         donatorFrag.setRegID(regId);
         setContentView(R.layout.activity_main);
         // initiateRecycleView();
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setSelectedItemId(R.id.navigation_map);
+
+        //Swipe
+
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        viewPager = findViewById(R.id.view_pager);
+        setupViewPager(viewPager);
+
+
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         toolbar_title = findViewById(R.id.toolbar_title);
         profileButton = findViewById(R.id.profile_button);
@@ -204,30 +210,11 @@ public class MainActivity extends AppCompatActivity implements PropertyChangeLis
         super.onPause();
     }
 
-    /*
-    Switches the currently active fragment
-    @param fragment The fragment that should be set s active
-     */
-    private void setFragment(Fragment fragment) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.frame, fragment);
-        fragmentTransaction.commit();
-    }
-
-    /*Initially creates the fragments (calling their onCreate() methods)
-    Not needed but speeds up the menu-navigation.
-    There is a trade-off between app boot-time and menu navigation smoothness
-    */
-    public void createFragments(){
-        setFragment(donatorFrag);
-        setFragment(pickupFrag);
-        setFragment(mapFrag);
-    }
-
     private void launchLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivityForResult(intent, 2);
     }
+
      private void launchProfileActivity(){
          Intent intent = new Intent(this, UserProfileActivity.class);
          intent.putExtra("user profile model", upm);
@@ -245,5 +232,39 @@ public class MainActivity extends AppCompatActivity implements PropertyChangeLis
             ImageLoader.loadImageFromUrl(upm.getPhotoUrl(), profileButton);
         }
     }
+    private void setupViewPager(ViewPager viewPager) {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (prevMenuItem != null) {
+                    prevMenuItem.setChecked(false);
+                } else {
+                    navigation.getMenu().getItem(0).setChecked(false);
+                }
+                Log.d("page", "onPageSelected: " + position);
+                navigation.getMenu().getItem(position).setChecked(true);
+                prevMenuItem = navigation.getMenu().getItem(position);
+            }
+
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPagerAdapter.addFragment(pickupFrag);
+        viewPagerAdapter.addFragment(mapFrag);
+        viewPagerAdapter.addFragment(donatorFrag);
+        viewPager.setAdapter(viewPagerAdapter);
+        viewPager.setCurrentItem(1);
+        navigation.setSelectedItemId(R.id.navigation_map);
+    }
+
 
 }

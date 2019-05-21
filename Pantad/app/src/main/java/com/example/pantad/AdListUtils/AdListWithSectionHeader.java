@@ -14,6 +14,13 @@ public class AdListWithSectionHeader {
         this.headerText = headerText;
     }
 
+    public int size(){
+        if(adList.size() > 0){
+            return adList.size() +1;
+        }
+        return 0;
+    }
+
     public List<Ad> getAdList() {
         return adList;
     }

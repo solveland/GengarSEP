@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,9 +19,6 @@ import com.example.pantad.UserProfileModel;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.Semaphore;
 
 public abstract class AbstractAdapter extends RecyclerView.Adapter implements PropertyChangeListener {
 
@@ -50,7 +46,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
      */
     @Override
     public int getItemViewType(int pos){
-        return (adContainer.isSegment(pos))? 1:0;
+        return (adContainer.isHeader(pos))? 1:0;
     }
 
     // Returns the total count of items in the list
@@ -106,6 +102,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
             // Set item views based on your views and data model
             setNameField(((AdItemViewHolder)viewHolder).nameTextView, ad);
 
+
             TextView addressView = ((AdItemViewHolder)viewHolder).addressTextView;
             addressView.setText("Upphämtningsadress: " + ad.getAddress());
 
@@ -133,29 +130,33 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
                 }
             });
 
+            TextView timeTextView= ((AdItemViewHolder) viewHolder).timeTextView;
+            timeTextView.setText("Tid sedan annonsen lades upp: " + elapsedTime);
+
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-
                     // Create the item details window
                     final ItemDetailsWindow itemDetails=createItemListener(ad,v);
+                    if (itemDetails != null) {
+                        upm.updateViewingProfile(ad.getDonatorID());
+                        // Dim the background
+                        View container = itemDetails.getContentView().getRootView();
+                        Context context = itemDetails.getContentView().getContext();
 
-                    // Dim the background
-                    View container = itemDetails.getContentView().getRootView();
-                    Context context = itemDetails.getContentView().getContext();
-
-                    WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-                    WindowManager.LayoutParams params = (WindowManager.LayoutParams) container.getLayoutParams();
-                    params.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-                    params.dimAmount = 0.4f;
-                    wm.updateViewLayout(container, params);
+                        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                        WindowManager.LayoutParams params = (WindowManager.LayoutParams) container.getLayoutParams();
+                        params.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+                        params.dimAmount = 0.4f;
+                        wm.updateViewLayout(container, params);
 
 
-                    // Create and connect listener to cancel button
-                    itemDetails.cancelButton.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View v) {
-                            itemDetails.dismiss();
-                        }
-                    });
+                        // Create and connect listener to cancel button
+                        /*itemDetails.cancelButton.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                itemDetails.dismiss();
+                            }
+                        });*/
+                    }
 
 
                 }
@@ -179,7 +180,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
         public TextView nameTextView;
         public TextView addressTextView;
         public TextView valueTextView;
-
+        public TextView timeTextView;
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public AdItemViewHolder(View itemView) {
@@ -189,6 +190,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
             nameTextView = (TextView) itemView.findViewById(R.id.annons_namn);
             addressTextView = (TextView) itemView.findViewById(R.id.annons_adress);
             valueTextView = (TextView) itemView.findViewById(R.id.annons_value);
+            timeTextView =(TextView) itemView.findViewById(R.id.annons_time);
         }
     }
 }
