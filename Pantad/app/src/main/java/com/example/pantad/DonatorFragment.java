@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -54,7 +55,11 @@ public class DonatorFragment extends Fragment {
         donatorRVAds = rootView.findViewById(R.id.donator_recycler_view);
 
         // Set layout manager to position the items
-        donatorRVAds.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        donatorRVAds.setLayoutManager(linearLayoutManager);
+        // Create divider to divide items
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(donatorRVAds.getContext(), linearLayoutManager.getOrientation());
+        donatorRVAds.addItemDecoration(dividerItemDecoration);
 
         //We will probably need to make a new adapter for this list eventually
         AdListWithSectionHeader[] adsToShow = {new AdListWithSectionHeader(userModel.getPostedAds(),"Your posted ads")};

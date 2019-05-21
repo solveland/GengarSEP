@@ -33,7 +33,16 @@ public class MyPostingsAdapter extends AbstractAdapter {
         super(adContainer, userModel, upm);
     }
 
-
+    @Override
+    protected void setNameField(TextView nameView, Ad ad) {
+        if (ad.isClaimed()) {
+            nameView.setText("Claimed");
+            nameView.setBackgroundColor(Color.parseColor("#0DDB74"));
+        } else {
+            nameView.setText("Unclaimed");
+            nameView.setBackgroundColor(Color.parseColor("#E45454"));
+        }
+    }
 
     @Override
     protected ItemDetailsWindow createItemListener(final Ad ad, final View v) {

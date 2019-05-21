@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -59,7 +60,11 @@ Handles the setup for the recyclerView
         userModel.setObserver(this);
 
         // Set layout manager to position the items
-        rvAds.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        rvAds.setLayoutManager(linearLayoutManager);
+        // Create divider to divide items
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvAds.getContext(), linearLayoutManager.getOrientation());
+        rvAds.addItemDecoration(dividerItemDecoration);
 
         // Create adapter passing in the sample user data
         AdListWithSectionHeader[] adsToShow = {new AdListWithSectionHeader(userModel.getClaimedAds(),"Your claimed ads"),new AdListWithSectionHeader(userModel.getAvailableAds(),"Available ads")};

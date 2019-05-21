@@ -30,7 +30,6 @@ import com.google.firebase.firestore.GeoPoint;
 
 
 public class PostAdFragment extends DialogFragment {
-    private TextView name;
     private AutoCompleteTextView address;
     private EditText value;
     private EditText message;
@@ -63,13 +62,11 @@ public class PostAdFragment extends DialogFragment {
                     }
                 });
 
-        name.setText(upm.getName());
         // Create the AlertDialog object and return it
         return builder.create();
     }
 
     private void initInputFields(View root) {
-        name = root.findViewById(R.id.postAdName);
         address = root.findViewById(R.id.adressInput);
         value = root.findViewById(R.id.valueInput);
         message = root.findViewById(R.id.messageInput);
@@ -148,7 +145,6 @@ public class PostAdFragment extends DialogFragment {
 
 
 
-        name.setOnFocusChangeListener(focusListener);
         address.setOnFocusChangeListener(focusListener);
         value.setOnFocusChangeListener(focusListener);
         message.setOnFocusChangeListener(focusListener);
@@ -165,12 +161,12 @@ public class PostAdFragment extends DialogFragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String nameInput=name.getText().toString();
+                String nameInput = upm.getName();
                 String addressInput=address.getText().toString();
                 String valueInput=value.getText().toString();
                 String messageInput=message.getText().toString();
                 Timestamp startTime = Timestamp.now();
-                if(nameInput.equals("") ||addressInput.equals("") || valueInput.equals("") || !locationUpdated){
+                if(addressInput.equals("") || valueInput.equals("") || !locationUpdated){
                     Snackbar.make(submit, "You fucked up", Snackbar.LENGTH_SHORT).show();
                 }
                 else{
