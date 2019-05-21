@@ -56,6 +56,9 @@ public class UserProfileModel extends ViewModel implements Serializable {
                     DocumentSnapshot document = task.getResult();
                     UserProfile up = document.toObject(UserProfile.class);
                     setCurrentProfile(up);
+                    if (up != null) {
+                        pcs.firePropertyChange("currentProfile", true, false);
+                    }
 
                 } else {
 
@@ -80,7 +83,7 @@ public class UserProfileModel extends ViewModel implements Serializable {
                         setViewingProfile(up);
                         System.out.println("test");
                         if (up != null) {
-                            pcs.firePropertyChange(null, true, false);
+                            pcs.firePropertyChange("viewingProfile", true, false);
                         }
                     } else {
                         Log.w("user profile model", "Viewingprofile query failed");

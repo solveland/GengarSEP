@@ -164,7 +164,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Propert
     //TODO: This is copy pasted from pickupfragment, can probably make this more abstract
     protected void createItemListener(final Ad ad, View v) {
         final ItemDetailsWindow itemDetails = new PickupDetailsWindow(v, ad,upm,userModel);
-        upm.updateViewingProfile(ad.getDonatorID());
         itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
 
         // Dim the background

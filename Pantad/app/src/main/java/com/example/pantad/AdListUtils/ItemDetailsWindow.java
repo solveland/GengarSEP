@@ -28,12 +28,15 @@ public abstract class ItemDetailsWindow extends PopupWindow implements PropertyC
     public UserModel userModel;
     public final View parent;
     public ImageView userAvatar;
-    private UserProfileModel upm;
+    public TextView name;
+    protected UserProfileModel upm;
 
     public ItemDetailsWindow(final View parent, final Ad ad, UserProfileModel upm, UserModel userModel) {
         this.ad=ad;
         this.userModel=userModel;
         this.parent=parent;
+        this.upm = upm;
+        upm.setObserver(this);
 
         Context context = parent.getContext();
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -41,19 +44,6 @@ public abstract class ItemDetailsWindow extends PopupWindow implements PropertyC
         LayoutInflater inflater = LayoutInflater.from(context);
         View popupView;
         setValues(inflater);
-        this.upm = upm;
-        upm.setObserver(this);
-
-        userAvatar.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                                Context mainActivity = parent.getContext();
-                                Intent intent = new Intent(mainActivity, UserProfileActivity.class);
-                                intent.putExtra("uid", ad.getDonatorID());
-                                mainActivity.startActivity(intent);
-                            }
-        });
-
-
 
         // Create and connect listener to cancel button
         cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -71,9 +61,21 @@ public abstract class ItemDetailsWindow extends PopupWindow implements PropertyC
 
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-        if (userAvatar == null){
-            return;
+        if (propertyChangeEvent.getPropertyName().equals("viewingProfile")) {
+            ImageLoader.loadImageFromUrl(upm.getViewingPhotoUrl(), userAvatar, 250);
+            String str = upm.getViewingName() + name.getText();
+            name.setText(str);
         }
-        ImageLoader.loadImageFromUrl(upm.getViewingPhotoUrl(), userAvatar);
+    }
+
+    protected void setUserAvatarListener(final String userID) {
+        userAvatar.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                Context mainActivity = parent.getContext();
+                Intent intent = new Intent(mainActivity, UserProfileActivity.class);
+                intent.putExtra("uid", userID);
+                mainActivity.startActivity(intent);
+            }
+        });
     }
 }

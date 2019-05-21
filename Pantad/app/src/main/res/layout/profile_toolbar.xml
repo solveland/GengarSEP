@@ -2,6 +2,8 @@
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorPrimary"
     android:elevation="4dp">
 
@@ -11,14 +13,29 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:layout_marginRight="12dp"
-        android:text="Sign Out"
-        />
+        android:backgroundTint="#D8D8D8"
+        android:text="Sign Out" />
 
-    <Button
+    <ImageButton
         android:id="@+id/profile_back_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:text="Back" />
+        android:backgroundTint="@android:color/transparent"
+        android:translationX="-8dp"
+        app:srcCompat="@drawable/ic_back_button"
+        tools:layout_editor_absoluteX="59dp"
+        tools:layout_editor_absoluteY="80dp" />
+
+    <TextView
+        android:id="@+id/profile_toolbar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="sans-serif-light"
+        android:text="Profile"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="22sp"
+        android:textStyle="bold" />
 
 </android.support.v7.widget.Toolbar>

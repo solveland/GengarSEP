@@ -1,5 +1,7 @@
 package com.example.pantad.AdListUtils;
 
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
@@ -16,12 +18,11 @@ import com.example.pantad.UserProfileModel;
 
 public class MyPostingsDetailsWindow extends ItemDetailsWindow {
 
-    public TextView name;
     public TextView address;
     public TextView value;
-    public TextView rating;
     public TextView description;
     public FloatingActionButton updateBtn;
+    public ConstraintLayout claimedAdLayout;
 
 
     public MyPostingsDetailsWindow(View parent, Ad ad, UserProfileModel upm,UserModel userModel) {
@@ -35,20 +36,27 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
         this.address = (TextView) popupView.findViewById(R.id.details_address);
         this.value = (TextView) popupView.findViewById(R.id.details_value);
         this.description = (EditText) popupView.findViewById(R.id.editablemessage_details);
-        this.rating = (TextView) popupView.findViewById(R.id.user_rating);
         this.updateBtn=(FloatingActionButton) popupView.findViewById(R.id.updatemessage_details);
         functionButton = (Button) popupView.findViewById(R.id.delete_details);
         cancelButton = (Button) popupView.findViewById(R.id.cancel_details);
         userAvatar = (ImageView) popupView.findViewById(R.id.user_avatar_details);
+        claimedAdLayout = (ConstraintLayout) popupView.findViewById(R.id.claimedAd_Layout);
+
 
         // Set all values to attributes, will be updated in the future to show what we want it to show (hopefully by a better designer then me)
         if (!ad.isClaimed()) {
-            this.name.setText("Unclaimed!");
+            claimedAdLayout.setVisibility(View.GONE);
+            ConstraintLayout cLayout = popupView.findViewById(R.id.itemDetailsLayout);
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(cLayout);
+            constraintSet.connect(address.getId(), ConstraintSet.TOP, R.id.unclaimed_text, ConstraintSet.BOTTOM, 180);
+            constraintSet.applyTo(cLayout);
         }
         else {
-            this.name.setText(ad.getRecyclerID()); //Change to that person´s name when we have the profile system
-            this.rating.setText("" + "4.5" + "/5.0 user rating");
-            // set userAvatarPicture
+            // Set viewing profile to the ad claimer, update load recycler avatar and name
+            name.setText(" has claimed your ad!");
+            upm.updateViewingProfile(ad.getRecyclerID());
+            setUserAvatarListener(ad.getRecyclerID());
         }
         this.address.setText("Address: " + ad.getAddress());
         this.value.setText("Uppskattat pantvärde: " + ad.getValue() + "kr");

@@ -3,6 +3,7 @@ package com.example.pantad.AdListUtils;
 import android.graphics.Color;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -16,7 +17,6 @@ import com.example.pantad.UserProfileModel;
 
 public class PickupDetailsWindow extends ItemDetailsWindow {
 
-    public TextView name;
     public TextView address;
     public TextView value;
     public TextView rating;
@@ -29,7 +29,7 @@ public class PickupDetailsWindow extends ItemDetailsWindow {
 
     @Override
     public void setValues(LayoutInflater inflater) {
-         View popupView = inflater.inflate(R.layout.item_details, null);
+        View popupView = inflater.inflate(R.layout.item_details, null);
 
         this.name = (TextView) popupView.findViewById(R.id.details_name);
         this.address = (TextView) popupView.findViewById(R.id.details_address);
@@ -42,10 +42,11 @@ public class PickupDetailsWindow extends ItemDetailsWindow {
 
 
         // Set all values to attributes
-        this.name.setText(ad.getName());
+        this.name.setText("");  // Empty string, will be loaded from profile later
         this.address.setText("Address: " + ad.getAddress());
         this.value.setText("Uppskattat pantvärde: " + ad.getValue() + "kr");
         this.description.setText(ad.getMessage());
+        this.description.setMovementMethod(new ScrollingMovementMethod());
         this.rating.setText("" + "4.5" + "/5.0 user rating");
 
 
@@ -59,8 +60,7 @@ public class PickupDetailsWindow extends ItemDetailsWindow {
             public void onClick(View v) {
                 if(!ad.isClaimed()) {
                     Snackbar.make(parent, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();
-                    String recyclerID = Settings.Secure.getString(v.getContext().getContentResolver(),
-                            Settings.Secure.ANDROID_ID);
+                    String recyclerID = upm.getUid();
                     userModel.claimAd(ad, recyclerID);
                 }
 
@@ -71,6 +71,13 @@ public class PickupDetailsWindow extends ItemDetailsWindow {
                 dismiss();
             }
         });
+
+        // Set viewing profile to the donator, load name and avatar
+        upm.updateViewingProfile(ad.getDonatorID());
+
+        // Set user avatar on click listener
+        setUserAvatarListener(ad.getDonatorID());
+
         setContentView(popupView);
     }
 }

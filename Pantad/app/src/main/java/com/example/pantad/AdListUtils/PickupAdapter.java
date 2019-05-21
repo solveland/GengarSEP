@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 
 import android.view.Gravity;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.pantad.Ad;
 
@@ -30,6 +31,11 @@ public class PickupAdapter extends AbstractAdapter {
     }
     // Usually involves inflating a layout from XML and returning the holder
 
+    @Override
+    protected void setNameField(TextView nameView, Ad ad) {
+        String str = "Donator: " + ad.getName();
+        nameView.setText(str);
+    }
 
     @Override
     protected ItemDetailsWindow createItemListener(final Ad ad, View v) {

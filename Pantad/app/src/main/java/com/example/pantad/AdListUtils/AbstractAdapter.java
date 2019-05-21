@@ -1,9 +1,12 @@
 package com.example.pantad.AdListUtils;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -101,8 +104,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
             final Ad ad = adContainer.getAd(position);
             final String elapsedTime = TimeUtil.getDifference(ad.getStartTime());
             // Set item views based on your views and data model
-            TextView nameView = ((AdItemViewHolder)viewHolder).nameTextView;
-            nameView.setText("Namn: " + ad.getName() + "                  " + elapsedTime);
+            setNameField(((AdItemViewHolder)viewHolder).nameTextView, ad);
 
             TextView addressView = ((AdItemViewHolder)viewHolder).addressTextView;
             addressView.setText("Upphämtningsadress: " + ad.getAddress());
@@ -110,10 +112,30 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
             TextView valueView = ((AdItemViewHolder)viewHolder).valueTextView;
             valueView.setText("Uppskattat pantvärde: " + Integer.toString(ad.getValue()) + "kr");
 
+            // Change color on recycler item view when touching to indicate clickability
+            viewHolder.itemView.setOnTouchListener(new View.OnTouchListener() {
+                private Rect rect;
+
+                @Override
+                public boolean onTouch(View v, MotionEvent arg1) {
+                    if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
+                        v.setBackgroundColor(Color.parseColor("#EFEFEF"));
+                        rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+                        return true;
+                    } else if (arg1.getAction() == MotionEvent.ACTION_UP) {
+                        viewHolder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                        v.performClick();
+                        return true;
+                    } else if(rect != null && !rect.contains(v.getLeft() + (int) arg1.getX(), v.getTop() + (int) arg1.getY())){
+                        v.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                    }
+                    return false;
+                }
+            });
+
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
 
-                    upm.updateViewingProfile(ad.getDonatorID());
                     // Create the item details window
                     final ItemDetailsWindow itemDetails=createItemListener(ad,v);
 
@@ -146,6 +168,8 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
         }
     }
     protected abstract ItemDetailsWindow createItemListener(final Ad ad,final View v);
+
+    protected abstract void setNameField(TextView nameView, Ad ad);
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
