@@ -2,7 +2,6 @@ package com.example.pantad.AdListUtils;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +16,6 @@ import com.example.pantad.UserProfileModel;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.Semaphore;
 
 public abstract class AbstractAdapter extends RecyclerView.Adapter implements PropertyChangeListener {
 
@@ -47,7 +43,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
      */
     @Override
     public int getItemViewType(int pos){
-        return (adContainer.isSegment(pos))? 1:0;
+        return (adContainer.isHeader(pos))? 1:0;
     }
 
     // Returns the total count of items in the list
