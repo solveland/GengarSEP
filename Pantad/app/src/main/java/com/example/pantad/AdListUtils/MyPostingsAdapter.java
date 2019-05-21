@@ -37,7 +37,9 @@ public class MyPostingsAdapter extends AbstractAdapter {
 
     @Override
     protected ItemDetailsWindow createItemListener(final Ad ad, final View v) {
-
+        if (!ItemDetailsWindow.canOpenDetalView()){
+            return null;
+        }
         final ItemDetailsWindow itemDetails = new MyPostingsDetailsWindow(v, ad,upm,userModel);
         itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
         return itemDetails;
