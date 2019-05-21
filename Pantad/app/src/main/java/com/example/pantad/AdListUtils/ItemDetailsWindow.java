@@ -88,7 +88,7 @@ public abstract class ItemDetailsWindow extends PopupWindow implements PropertyC
         super.dismiss();
     }
 
-    public static boolean canOpenDetalView(){
+    public static boolean canOpenDetailView(){
         return !open;
     }
 

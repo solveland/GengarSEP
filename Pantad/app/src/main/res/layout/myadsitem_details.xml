@@ -9,7 +9,7 @@
 
     <Button
         android:id="@+id/delete_details"
-        android:layout_width="184dp"
+        android:layout_width="0dp"
         android:layout_height="54dp"
         android:layout_marginTop="32dp"
         android:background="#E91A1A"
@@ -18,6 +18,7 @@
         android:paddingLeft="0dp"
         android:text="Delete"
         android:translationX="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/cancel_details"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,7 +26,7 @@
 
     <Button
         android:id="@+id/cancel_details"
-        android:layout_width="187dp"
+        android:layout_width="0dp"
         android:layout_height="54dp"
         android:background="@color/colorAccent"
         android:text="Cancel"

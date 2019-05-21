@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:fontFamily="sans-serif-light"
-        android:text="Map"
+        android:text="Kartan"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="22sp"
         android:textStyle="bold" />
