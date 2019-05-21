@@ -111,28 +111,28 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
 
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-
-                    upm.updateViewingProfile(ad.getDonatorID());
                     // Create the item details window
                     final ItemDetailsWindow itemDetails=createItemListener(ad,v);
+                    if (itemDetails != null) {
+                        upm.updateViewingProfile(ad.getDonatorID());
+                        // Dim the background
+                        View container = itemDetails.getContentView().getRootView();
+                        Context context = itemDetails.getContentView().getContext();
 
-                    // Dim the background
-                    View container = itemDetails.getContentView().getRootView();
-                    Context context = itemDetails.getContentView().getContext();
-
-                    WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-                    WindowManager.LayoutParams params = (WindowManager.LayoutParams) container.getLayoutParams();
-                    params.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-                    params.dimAmount = 0.4f;
-                    wm.updateViewLayout(container, params);
+                        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                        WindowManager.LayoutParams params = (WindowManager.LayoutParams) container.getLayoutParams();
+                        params.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+                        params.dimAmount = 0.4f;
+                        wm.updateViewLayout(container, params);
 
 
-                    // Create and connect listener to cancel button
-                    itemDetails.cancelButton.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View v) {
-                            itemDetails.dismiss();
-                        }
-                    });
+                        // Create and connect listener to cancel button
+                        /*itemDetails.cancelButton.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                itemDetails.dismiss();
+                            }
+                        });*/
+                    }
 
 
                 }

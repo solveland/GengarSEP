@@ -29,8 +29,11 @@ public abstract class ItemDetailsWindow extends PopupWindow implements PropertyC
     public final View parent;
     public ImageView userAvatar;
     private UserProfileModel upm;
+    //making sure only one detailview can be open, fix for the problem with pressing on two ads with 2 different fingers opening two detailviews.
+    private static boolean open = false;
 
     public ItemDetailsWindow(final View parent, final Ad ad, UserProfileModel upm, UserModel userModel) {
+        open = true;
         this.ad=ad;
         this.userModel=userModel;
         this.parent=parent;
@@ -71,9 +74,21 @@ public abstract class ItemDetailsWindow extends PopupWindow implements PropertyC
 
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-        if (userAvatar == null){
+        if (upm.getViewingProfile() == null){
             return;
         }
         ImageLoader.loadImageFromUrl(upm.getViewingPhotoUrl(), userAvatar);
     }
+
+    @Override
+    public void dismiss(){
+        open = false;
+        super.dismiss();
+    }
+
+    public static boolean canOpenDetalView(){
+        return !open;
+    }
+
+
 }
