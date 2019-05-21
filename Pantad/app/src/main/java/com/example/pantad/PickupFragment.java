@@ -62,9 +62,6 @@ Handles the setup for the recyclerView
         // Set layout manager to position the items
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         rvAds.setLayoutManager(linearLayoutManager);
-        // Create divider to divide items
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvAds.getContext(), linearLayoutManager.getOrientation());
-        rvAds.addItemDecoration(dividerItemDecoration);
 
         // Create adapter passing in the sample user data
         AdListWithSectionHeader[] adsToShow = {new AdListWithSectionHeader(userModel.getClaimedAds(),"Your claimed ads"),new AdListWithSectionHeader(userModel.getAvailableAds(),"Available ads")};

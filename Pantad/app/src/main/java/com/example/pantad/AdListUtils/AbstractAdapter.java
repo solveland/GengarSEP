@@ -138,7 +138,6 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
                     // Create the item details window
                     final ItemDetailsWindow itemDetails=createItemListener(ad,v);
                     if (itemDetails != null) {
-                        upm.updateViewingProfile(ad.getDonatorID());
                         // Dim the background
                         View container = itemDetails.getContentView().getRootView();
                         Context context = itemDetails.getContentView().getContext();

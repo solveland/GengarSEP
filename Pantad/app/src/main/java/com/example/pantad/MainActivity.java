@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements PropertyChangeLis
     MenuItem prevMenuItem;
     BottomNavigationView navigation;
     ViewPager viewPager;
+    private String[] pageTitles = new String[]{"Annonser i närheten","Kartan","Dina annonser"};
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private TextView txtMessage;
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -69,12 +70,15 @@ public class MainActivity extends AppCompatActivity implements PropertyChangeLis
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_map:
+                    toolbar_title.setText(pageTitles[1]);
                     viewPager.setCurrentItem(1);
                     return true;
                 case R.id.navigation_pickups:
+                    toolbar_title.setText(pageTitles[0]);
                     viewPager.setCurrentItem(0);
                     return true;
                 case R.id.navigation_donator:
+                    toolbar_title.setText(pageTitles[2]);
                     viewPager.setCurrentItem(2);
                     return true;
             }
@@ -144,6 +148,8 @@ public class MainActivity extends AppCompatActivity implements PropertyChangeLis
         Log.e(TAG, "Firebase reg id: " + regId);
         donatorFrag.setRegID(regId);
         setContentView(R.layout.activity_main);
+
+        toolbar_title = findViewById(R.id.toolbar_title);
         // initiateRecycleView();
 
         //Swipe
@@ -154,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements PropertyChangeLis
 
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        toolbar_title = findViewById(R.id.toolbar_title);
+
         profileButton = findViewById(R.id.profile_button);
 
 
@@ -244,10 +250,11 @@ public class MainActivity extends AppCompatActivity implements PropertyChangeLis
                 if (prevMenuItem != null) {
                     prevMenuItem.setChecked(false);
                 } else {
-                    navigation.getMenu().getItem(0).setChecked(false);
+                    navigation.getMenu().getItem(1).setChecked(false);
                 }
                 Log.d("page", "onPageSelected: " + position);
                 navigation.getMenu().getItem(position).setChecked(true);
+                toolbar_title.setText(pageTitles[position]);
                 prevMenuItem = navigation.getMenu().getItem(position);
             }
 

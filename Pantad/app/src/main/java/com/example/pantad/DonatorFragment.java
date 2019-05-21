@@ -57,9 +57,6 @@ public class DonatorFragment extends Fragment {
         // Set layout manager to position the items
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         donatorRVAds.setLayoutManager(linearLayoutManager);
-        // Create divider to divide items
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(donatorRVAds.getContext(), linearLayoutManager.getOrientation());
-        donatorRVAds.addItemDecoration(dividerItemDecoration);
 
         //We will probably need to make a new adapter for this list eventually
         AdListWithSectionHeader[] adsToShow = {new AdListWithSectionHeader(userModel.getPostedAds(),"Your posted ads")};
