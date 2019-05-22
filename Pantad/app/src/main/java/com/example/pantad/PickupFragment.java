@@ -81,18 +81,4 @@ Handles the setup for the recyclerView
     public void propertyChange(PropertyChangeEvent evt) {
         refreshLayout.setRefreshing(false);
     }
-
-    /*
-    Updates the list of postings in recycleView when the home-tab is switched to.
-    Might be a better way to do this
-     */
-   /*
-    removed for now, we call upon updateAds() when creating the userModel instead.
-    @Override
-    public void onResume() {
-        super.onResume();
-        userModel.updateAds();
-        //adapter.notifyDataSetChanged(); //this happens in updateAds currently, might change
-
-    } */
 }
