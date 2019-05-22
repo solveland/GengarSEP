@@ -9,10 +9,6 @@ public final class DistanceUtil {
     public static String getDistance(double lat1, double lat2, double lon1,
                                      double lon2, double el1, double el2) {
 
-        System.out.println(lat1);
-        System.out.println(lat2);
-        System.out.println(lon1);
-        System.out.println(lon2);
         final int R = 6371; // Radius of the earth
 
         double latDistance = Math.toRadians(lat2 - lat1);
