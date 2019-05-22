@@ -1,13 +1,17 @@
 package com.example.pantad;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -27,8 +31,8 @@ public class UserProfileActivity extends AppCompatActivity {
     private TextView email;
     private UserProfileModel upm;
     private EditText phoneNumber;
-    private Button edit_button;
-    private Button save_button;
+    private ImageButton messageBtn;
+    private FloatingActionButton edit_button;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -43,16 +47,17 @@ public class UserProfileActivity extends AppCompatActivity {
         upm = (UserProfileModel) getIntent().getSerializableExtra("user profile model");
         phoneNumber = findViewById(R.id.profilePhone);
 
-        edit_button = findViewById(R.id.edit_button);
-        save_button = findViewById(R.id.save_button);
+        edit_button = findViewById(R.id.edit_profile);
         ImageButton back_button = findViewById(R.id.profile_back_button);
         Button sign_out_button = findViewById(R.id.sign_out_button);
 
+        messageBtn= findViewById(R.id.messageBtn);
+
         if(upm != null){
             updateProfile(upm.getUid());
+            messageBtn.setVisibility(View.INVISIBLE);
         } else {
-            edit_button.setVisibility(View.INVISIBLE);
-            save_button.setVisibility(View.INVISIBLE);
+            edit_button.hide();
             sign_out_button.setVisibility(View.INVISIBLE);
             String uid = getIntent().getStringExtra("uid");
             updateProfile(uid);
@@ -75,20 +80,29 @@ public class UserProfileActivity extends AppCompatActivity {
         edit_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                if(!phoneNumber.isEnabled()){
                 phoneNumber.setEnabled(true);
-                edit_button.setVisibility(View.INVISIBLE);
-                save_button.setVisibility(View.VISIBLE);
+                phoneNumber.setSelected(true);
+                phoneNumber.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                edit_button.setImageResource(R.drawable.ic_done_black_24dp);
             }
-        });
-
-        save_button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                phoneNumber.setEnabled(false);
-                save_button.setVisibility(View.INVISIBLE);
-                edit_button.setVisibility(View.VISIBLE);
+            else{
                 upm.setPhoneNumber(phoneNumber.getText().toString());
+                phoneNumber.setEnabled(false);
+                edit_button.setImageResource(R.drawable.ic_mode_edit_black_24dp);
+            }
 
+        }});
+
+        messageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setData(Uri.parse("smsto:" + phoneNumber.getText())); // This ensures only SMS apps respond
+                startActivity(intent);
             }
         });
     }
@@ -125,5 +139,4 @@ public class UserProfileActivity extends AppCompatActivity {
         setResult(Activity.RESULT_OK, result);
         finish();
     }
-
 }
