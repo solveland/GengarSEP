@@ -69,7 +69,7 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
             @Override
             public void onClick(View v) {
                 if(ad.isClaimed()) {
-                    Snackbar.make(parent, "A claimed ad cannot be edited!", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(getContentView(), "A claimed ad cannot be edited!", Snackbar.LENGTH_SHORT).show();
                 }
                 else if(description.isEnabled()){
                     userModel.updateAdMessage(ad,description.getText().toString());

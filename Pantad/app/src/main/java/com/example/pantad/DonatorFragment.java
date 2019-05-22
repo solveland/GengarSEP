@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,15 +19,19 @@ import com.example.pantad.AdListUtils.MyPostingsAdapter;
 import com.example.pantad.AdListUtils.SectionedAdListContainer;
 import com.example.pantad.addresses.AddressDatabaseHelper;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DonatorFragment extends Fragment {
+public class DonatorFragment extends Fragment implements PropertyChangeListener {
 
     private UserModel userModel;
     private RecyclerView donatorRVAds;
     private MyPostingsAdapter adapter;
     private FloatingActionButton postAdButton;
+    private SwipeRefreshLayout swipeRefesh;
     private String regID;
     private UserProfileModel upm;
     public DonatorFragment() {
@@ -64,10 +69,24 @@ public class DonatorFragment extends Fragment {
         // Attach the adapter to the recyclerView to populate items
         donatorRVAds.setAdapter(adapter);
         // That's all!
+
+        swipeRefesh = rootView.findViewById(R.id.swipe_refresh_donator);
+        swipeRefesh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                userModel.updateAds();
+            }
+        });
+        userModel.setObserver(this);
         return rootView;
     }
 
     public void setRegID(String regID) {
         this.regID = regID;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        swipeRefesh.setRefreshing(false);
     }
 }//DonatorFragment Class
