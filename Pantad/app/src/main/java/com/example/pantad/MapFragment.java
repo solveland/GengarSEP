@@ -3,6 +3,8 @@ package com.example.pantad;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -65,17 +67,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Propert
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (isChecked) {
-                buttonView.setAlpha(1.0f);
-            } else {
-                buttonView.setAlpha(0.3f);
-            }
+            paintFilterButton(buttonView,isChecked);
             SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg);
             mapFragment.getMapAsync(parent);
         }
 
         public ToggleButtonListener(MapFragment parent){
             this.parent = parent;
+        }
+    }
+
+    private void paintFilterButton(CompoundButton buttonView, boolean isChecked){
+        if (isChecked) {
+            buttonView.setBackgroundColor(getResources().getColor(R.color.colorPrimary,null));
+            buttonView.setTextColor(Color.WHITE);
+        } else {
+            buttonView.setBackgroundColor(0);
+            buttonView.setTextColor(Color.BLACK);
         }
     }
 
@@ -99,9 +107,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Propert
         ToggleButtonListener listener = new ToggleButtonListener(this);
         for(ToggleButton button : new ToggleButton[]{stationsToggle,availableToggle,claimedToggle}){
             button.setOnCheckedChangeListener(listener);
-            if (!button.isChecked()){
-                button.setAlpha(0.3f);
-            }
+            paintFilterButton(button,button.isChecked());
         }
 
 
