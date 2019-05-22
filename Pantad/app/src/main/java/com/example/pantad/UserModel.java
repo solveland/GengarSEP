@@ -41,11 +41,11 @@ public class UserModel extends ViewModel {
     /* Our list of ads. There might be a more suitable container for this */
     //public final ArrayList<Ad> ads = new ArrayList<>();
 
-    public final List<Ad> claimedAds = new ArrayList<>();
-    public final List<Ad> availableAds = new ArrayList<>();
-    public final List<Ad> postedAds = new ArrayList<>();
+    private final List<Ad> claimedAds = new ArrayList<>();
+    private final List<Ad> availableAds = new ArrayList<>();
+    private final List<Ad> postedAds = new ArrayList<>();
 
-    public static final String adCollectionString = "ads";
+    private static final String adCollectionString = "ads";
 
     private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 

@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements PropertyChangeLis
 // Register the listener with the Location Manager to receive location updates
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 0, locationListener);
             String locationProvider = LocationManager.GPS_PROVIDER;
             Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
             userModel.setLocation(lastKnownLocation);
