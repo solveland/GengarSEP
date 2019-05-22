@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:fontFamily="sans-serif-light"
-        android:text="Profile"
+        android:text="Profil"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="22sp"
         android:textStyle="bold" />
