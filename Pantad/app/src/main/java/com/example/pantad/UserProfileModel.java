@@ -115,5 +115,17 @@ public class UserProfileModel extends ViewModel implements Serializable {
     }
 
 
+    public void updateRating(String uid, UserProfile profile,float newInput) {
+        //Unsure about this, should we use the local values or get them from firebase?
+        float current=profile.getRating();
+        float numberofRatings=profile.nrOfRatings;
+        current=(current*numberofRatings+newInput)/(numberofRatings+1);
+        profile.setRating(current);
 
+        //add firebase update
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("userProfile").document(uid);
+        docRef.update("nrOfRatings", numberofRatings);
+        docRef.update("rating", current);
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.pantad.AdListUtils;
 
+import android.app.Dialog;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.content.Context;
@@ -11,10 +12,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.pantad.Ad;
 import com.example.pantad.R;
+import com.example.pantad.RatingDialog;
 import com.example.pantad.UserModel;
 import com.example.pantad.UserProfileModel;
 
@@ -25,7 +28,7 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
     public TextView description;
     public FloatingActionButton updateBtn;
     public ConstraintLayout claimedAdLayout;
-
+    private FloatingActionButton completeBtn;
 
     public MyPostingsDetailsWindow(View parent, Ad ad, UserProfileModel upm,UserModel userModel) {
         super(parent,ad,upm,userModel);
@@ -44,7 +47,6 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
         userAvatar = (ImageView) popupView.findViewById(R.id.user_avatar_details);
         claimedAdLayout = (ConstraintLayout) popupView.findViewById(R.id.claimedAd_Layout);
 
-
         // Set all values to attributes, will be updated in the future to show what we want it to show (hopefully by a better designer then me)
         if (!ad.isClaimed()) {
             claimedAdLayout.setVisibility(View.GONE);
@@ -59,6 +61,7 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
             name.setText(" has claimed your ad!");
             upm.updateViewingProfile(ad.getRecyclerID());
             setUserAvatarListener(ad.getRecyclerID());
+            createConfirmStuff(popupView);
         }
         this.address.setText("Address: " + ad.getAddress());
         this.value.setText("Uppskattat pantvärde: " + ad.getValue() + "kr");
@@ -97,5 +100,49 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
         });
 
         setContentView(popupView);
+    }
+
+    private void createConfirmStuff(View popupView){
+        completeBtn=popupView.findViewById(R.id.completeBtn);
+
+        completeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final RatingDialog rankDialog = new RatingDialog(parent.getContext());
+                rankDialog.setContentView(R.layout.rank_dialog);
+                rankDialog.setCancelable(true);
+                final RatingBar ratingBar = (RatingBar)rankDialog.findViewById(R.id.dialog_ratingbar);
+                ratingBar.setRating(0);
+
+                TextView text = (TextView) rankDialog.findViewById(R.id.rank_dialog_text1);
+                text.setText("Rate user and confirm");
+
+                Button confirmButton = (Button) rankDialog.findViewById(R.id.rank_dialog_button);
+                Button cancelBtn = rankDialog.findViewById(R.id.rank_dialog_cancel);
+                cancelBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        rankDialog.dismiss();
+                    }
+                });
+                confirmButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //if the rating is 0, the user probably just skipped this step. Is this a good solution for this?
+                        if(ratingBar.getRating()!=0){
+                            upm.updateRating(ad.getRecyclerID(),upm.getViewingProfile(),ratingBar.getRating());
+                        }
+                        userModel.sendNotificationOnComplete(ad);
+
+                        //Uncomment next line after debugging
+                        userModel.removeAd(ad);
+                        rankDialog.dismiss();
+                        MyPostingsDetailsWindow.this.dismiss();
+                    }
+                });
+                //now that the dialog is set up, it's time to show it
+                rankDialog.show();
+            }
+        });
     }
 }

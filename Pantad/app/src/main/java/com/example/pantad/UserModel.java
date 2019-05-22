@@ -254,4 +254,10 @@ public class UserModel extends ViewModel {
         ad.setMessage(message);
         db.collection(adCollectionString).document(ad.getAdID()).update("message", message);
     }
+
+
+    //August hjälp
+    public void sendNotificationOnComplete(Ad ad){
+        sendNotification(ad);
+    }
 }

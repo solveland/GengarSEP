@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,6 +35,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private ImageButton messageBtn;
     private ImageButton mailBtn;
     private FloatingActionButton edit_button;
+    private RatingBar ratingBar;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -54,6 +56,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
         messageBtn= findViewById(R.id.messageBtn);
         mailBtn= findViewById(R.id.mailButton);
+
+        ratingBar=findViewById(R.id.profile_ratingbar);
 
         if(upm != null){
             updateProfile(upm.getUid());
@@ -137,6 +141,8 @@ public class UserProfileActivity extends AppCompatActivity {
                         String photoUrl = document.getString("photoUrl");
                         ImageLoader.loadImageFromUrl(photoUrl, profilePic, 300);
                         phoneNumber.setText(document.getString("phoneNumber"));
+                       Long longRating=(Long)document.getLong("rating");
+                        ratingBar.setRating(longRating.floatValue());
                     }
                 } else {
                     Log.w("user profile", "error fetching user profile information");
