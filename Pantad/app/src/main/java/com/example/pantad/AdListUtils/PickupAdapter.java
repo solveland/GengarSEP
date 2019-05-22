@@ -1,22 +1,13 @@
 package com.example.pantad.AdListUtils;
 
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.provider.Settings;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.RecyclerView;
-
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.pantad.Ad;
 
-import com.example.pantad.ImageLoader;
 import com.example.pantad.UserModel;
-import com.example.pantad.UserProfileActivity;
 import com.example.pantad.UserProfileModel;
 
 
@@ -39,7 +30,7 @@ public class PickupAdapter extends AbstractAdapter {
 
     @Override
     protected ItemDetailsWindow createItemListener(final Ad ad, View v) {
-        if (!ItemDetailsWindow.canOpenDetalView()){
+        if (!ItemDetailsWindow.canOpenDetailView()){
             return null;
         }
         final ItemDetailsWindow itemDetails = new PickupDetailsWindow(v, ad, upm,userModel);
