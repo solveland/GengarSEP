@@ -121,15 +121,15 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
                         rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
                         return true;
                     } else if (arg1.getAction() == MotionEvent.ACTION_UP) {
-                        viewHolder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                        viewHolder.itemView.setBackgroundColor(Color.parseColor("#FAFAFA"));
                         v.performClick();
                         return true;
                     } else if (arg1.getAction() == MotionEvent.ACTION_CANCEL){
-                        viewHolder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                        viewHolder.itemView.setBackgroundColor(Color.parseColor("#FAFAFA"));
                         return true;
                     }
                         else if(rect != null && !rect.contains(v.getLeft() + (int) arg1.getX(), v.getTop() + (int) arg1.getY())){
-                        v.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                        v.setBackgroundColor(Color.parseColor("#FAFAFA"));
                     }
                     return false;
                 }
