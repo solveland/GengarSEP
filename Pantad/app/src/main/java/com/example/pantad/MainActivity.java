@@ -285,10 +285,10 @@ public class MainActivity extends AppCompatActivity implements PropertyChangeLis
                 } else {
                     navigation.getMenu().getItem(1).setChecked(false);
                 }
-                Log.d("page", "onPageSelected: " + position);
                 navigation.getMenu().getItem(position).setChecked(true);
                 toolbar_title.setText(pageTitles[position]);
                 prevMenuItem = navigation.getMenu().getItem(position);
+
             }
 
 
