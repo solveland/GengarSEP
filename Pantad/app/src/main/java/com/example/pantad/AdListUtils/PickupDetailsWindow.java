@@ -3,6 +3,7 @@ package com.example.pantad.AdListUtils;
 import android.graphics.Color;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +53,7 @@ public class PickupDetailsWindow extends ItemDetailsWindow {
 
         //Riktigt ful lösning, måste gå att göra bättre:
         if(ad.isClaimed()){
-            functionButton.setBackgroundColor(Color.RED);
+            functionButton.setBackgroundColor(ResourcesCompat.getColor(popupView.getResources(), R.color.colorRed, null));
             functionButton.setText("Unclaim");
         }
         // Create and connect listener to claim button
