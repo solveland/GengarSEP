@@ -32,6 +32,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private UserProfileModel upm;
     private EditText phoneNumber;
     private ImageButton messageBtn;
+    private ImageButton mailBtn;
     private FloatingActionButton edit_button;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -52,10 +53,12 @@ public class UserProfileActivity extends AppCompatActivity {
         Button sign_out_button = findViewById(R.id.sign_out_button);
 
         messageBtn= findViewById(R.id.messageBtn);
+        mailBtn= findViewById(R.id.mailButton);
 
         if(upm != null){
             updateProfile(upm.getUid());
             messageBtn.setVisibility(View.INVISIBLE);
+            mailBtn.setVisibility(View.INVISIBLE);
         } else {
             edit_button.hide();
             sign_out_button.setVisibility(View.INVISIBLE);
@@ -103,6 +106,16 @@ public class UserProfileActivity extends AppCompatActivity {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setData(Uri.parse("smsto:" + phoneNumber.getText())); // This ensures only SMS apps respond
                 startActivity(intent);
+            }
+        });
+        mailBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("plain/text");
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[] { (email.getText().toString()) });
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Pantad!");
+                startActivity(Intent.createChooser(intent, ""));
             }
         });
     }
