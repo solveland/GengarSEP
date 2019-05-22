@@ -1,11 +1,15 @@
 package com.example.pantad;
 
 
+import android.Manifest;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,9 +132,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Propert
             googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(userModel.getmMap().getCameraPosition()));
         }
         userModel.setMap(googleMap);
-
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            googleMap.setMyLocationEnabled(true);
+        } else {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},0);
+        }
         googleMap.clear();
-        if (stationsToggle.isChecked()) {
+        if (stationsToggle.isChecked() && getActivity().getApplicationContext() != null) {
             MapDecorator.addPantStations(googleMap, getActivity().getApplicationContext());
         }
         googleMap.getUiSettings().setZoomControlsEnabled(true);

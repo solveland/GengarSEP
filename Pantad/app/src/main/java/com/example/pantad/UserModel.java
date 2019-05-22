@@ -2,6 +2,7 @@ package com.example.pantad;
 
 import android.arch.lifecycle.ViewModel;
 import android.location.Geocoder;
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -44,9 +45,9 @@ public class UserModel extends ViewModel {
     public final List<Ad> availableAds = new ArrayList<>();
     public final List<Ad> postedAds = new ArrayList<>();
 
-    private static final String adCollectionString = "ads";
+    public static final String adCollectionString = "ads";
 
-    public PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
 
     public List<Ad> getClaimedAds() {
@@ -65,6 +66,7 @@ public class UserModel extends ViewModel {
      */
     private GoogleMap mMap;
     private CameraPosition mapCameraPosition;
+    private Location location;
 
 
     private String profileID;
@@ -180,6 +182,8 @@ public class UserModel extends ViewModel {
     public void setGeocoder(Geocoder geocoder) {
         this.geocoder = geocoder;
     }
+    public void setLocation(Location location) {this.location = location; }
+    public Location getLocation(){ return location;}
 
     //Made it so the adapters listen to the usermodel. Makes sure the lists are updated whenever a change is made. Don´t know what this means for
     //our dependencies though, they might be real bad atm.
