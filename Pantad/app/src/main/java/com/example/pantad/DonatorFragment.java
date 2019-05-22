@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,10 +19,13 @@ import com.example.pantad.AdListUtils.MyPostingsAdapter;
 import com.example.pantad.AdListUtils.SectionedAdListContainer;
 import com.example.pantad.addresses.AddressDatabaseHelper;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DonatorFragment extends Fragment {
+public class DonatorFragment extends Fragment implements PropertyChangeListener {
 
     private UserModel userModel;
     private RecyclerView donatorRVAds;
@@ -29,6 +33,8 @@ public class DonatorFragment extends Fragment {
     private FloatingActionButton postAdButton;
     private String regID;
     private UserProfileModel upm;
+    private SwipeRefreshLayout refreshLayout;
+
     public DonatorFragment() {
         // Required empty public constructor
     }
@@ -63,6 +69,16 @@ public class DonatorFragment extends Fragment {
         adapter = new MyPostingsAdapter(new SectionedAdListContainer(adsToShow),userModel, upm);
         // Attach the adapter to the recyclerView to populate items
         donatorRVAds.setAdapter(adapter);
+
+        refreshLayout = rootView.findViewById(R.id.swipe_refresh);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                userModel.updateAds();
+            }
+        });
+
+        userModel.setObserver(this);
         // That's all!
         return rootView;
     }
@@ -70,4 +86,13 @@ public class DonatorFragment extends Fragment {
     public void setRegID(String regID) {
         this.regID = regID;
     }
+
+    /*
+ Gets called when the local list of ads has been updated.
+ */
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        refreshLayout.setRefreshing(false);
+    }
+
 }//DonatorFragment Class
