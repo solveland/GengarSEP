@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -123,7 +124,11 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
                         viewHolder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
                         v.performClick();
                         return true;
-                    } else if(rect != null && !rect.contains(v.getLeft() + (int) arg1.getX(), v.getTop() + (int) arg1.getY())){
+                    } else if (arg1.getAction() == MotionEvent.ACTION_CANCEL){
+                        viewHolder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                        return true;
+                    }
+                        else if(rect != null && !rect.contains(v.getLeft() + (int) arg1.getX(), v.getTop() + (int) arg1.getY())){
                         v.setBackgroundColor(Color.parseColor("#FFFFFF"));
                     }
                     return false;
