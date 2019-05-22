@@ -1,11 +1,13 @@
 package com.example.pantad.AdListUtils;
 
 import android.graphics.Color;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.pantad.Ad;
+import com.example.pantad.R;
 import com.example.pantad.UserModel;
 import com.example.pantad.UserProfileModel;
 
@@ -23,10 +25,10 @@ public class MyPostingsAdapter extends AbstractAdapter {
     protected void setNameField(TextView nameView, Ad ad) {
         if (ad.isClaimed()) {
             nameView.setText("Claimed");
-            nameView.setBackgroundColor(Color.parseColor("#0DDB74"));
+            nameView.setBackgroundColor(ResourcesCompat.getColor(nameView.getResources(), R.color.colorPrimary, null));
         } else {
             nameView.setText("Unclaimed");
-            nameView.setBackgroundColor(Color.parseColor("#E45454"));
+            nameView.setBackgroundColor(ResourcesCompat.getColor(nameView.getResources(), R.color.colorRed, null));
         }
     }
 

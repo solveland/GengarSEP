@@ -122,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            final FirebaseUser user = mAuth.getCurrentUser();
 
                             // Query and check if user profile is created in firebase colllection
                             CollectionReference profileRef = db.collection("userProfile");
@@ -133,14 +133,15 @@ public class LoginActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                             if (task.isSuccessful()) {
                                                 if (task.getResult().isEmpty()) {
-                                                    createNewProfile();
+                                                    createNewProfile(user);
+                                                } else {
+                                                    updateUI(user);
                                                 }
                                             } else {
                                                 Log.d(TAG, "Error getting documents: ", task.getException());
                                             }
                                         }
-                                    });;
-                            updateUI(user);
+                                    });
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -165,11 +166,19 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void createNewProfile() {
-        FirebaseUser user = mAuth.getCurrentUser();
+    private void createNewProfile(final FirebaseUser user) {
         UserProfile userProfile = new UserProfile(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString(), user.getPhoneNumber());
         DocumentReference profileRef = db.collection("userProfile").document(user.getUid());
-        profileRef.set(userProfile);
+        profileRef.set(userProfile).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    updateUI(user);
+                } else {
+                    updateUI(null);
+                }
+            }
+        });
     }
 
     @Override
