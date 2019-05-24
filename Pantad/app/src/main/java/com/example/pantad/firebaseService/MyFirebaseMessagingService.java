@@ -1,5 +1,6 @@
 package com.example.pantad.firebaseService;
 import android.app.Activity;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -13,7 +14,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.pantad.MainActivity;
+import com.example.pantad.NotificationActivity;
 import com.example.pantad.R;
+import com.example.pantad.TestBroadCast;
 import com.example.pantad.firebaseUtil.Config;
 import com.example.pantad.firebaseUtil.NotificationUtils;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -49,8 +52,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             handleNotification(remoteMessage.getNotification().getBody());
         }
 
+
         // Check if message contains a data payload.
-        if (remoteMessage.getData().size() > 0) {
+        else if (remoteMessage.getData().size() > 0) {
             Log.e(TAG, "Data Payload: " + remoteMessage.getData());
             /*
             try {
@@ -59,8 +63,31 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             } catch (Exception e) {
                 Log.e(TAG, "Exception: " + e.getMessage());
             }*/
-            sendNotification(remoteMessage.getData().get("title"));
+            sendNotification2(remoteMessage.getData().get("title"));
         }
+    }
+
+    private void sendNotification2(String s) {
+
+        Intent intent = new Intent(this, NotificationActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                PendingIntent.FLAG_ONE_SHOT);
+
+        Uri defaultSoundUri=
+                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "TestChannel")
+                .setSmallIcon(R.mipmap.ic_launcher_recycle)
+                .setContentTitle("Pantad Push Notification")
+                .setContentText(s)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+
     }
 
     //Temporary solution

@@ -142,6 +142,7 @@ public class UserProfileActivity extends AppCompatActivity {
                         ImageLoader.loadImageFromUrl(photoUrl, profilePic, 300);
                         phoneNumber.setText(document.getString("phoneNumber"));
                        Long longRating=(Long)document.getLong("rating");
+                       ratingBar.setIsIndicator(true);
                         ratingBar.setRating(longRating.floatValue());
                     }
                 } else {

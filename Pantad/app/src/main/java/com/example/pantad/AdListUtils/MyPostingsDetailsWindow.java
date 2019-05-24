@@ -135,9 +135,10 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
                         userModel.sendNotificationOnComplete(ad);
 
                         //Uncomment next line after debugging
-                        userModel.removeAd(ad);
+                        //userModel.removeAd(ad);
                         rankDialog.dismiss();
                         MyPostingsDetailsWindow.this.dismiss();
+
                     }
                 });
                 //now that the dialog is set up, it's time to show it

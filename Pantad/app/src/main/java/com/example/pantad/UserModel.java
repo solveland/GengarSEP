@@ -45,9 +45,10 @@ public class UserModel extends ViewModel {
     private final List<Ad> availableAds = new ArrayList<>();
     private final List<Ad> postedAds = new ArrayList<>();
 
-    private static final String adCollectionString = "ads";
+    private static final String adCollectionString = "ads2";
 
     private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private String regId;
 
 
     public List<Ad> getClaimedAds() {
@@ -96,7 +97,7 @@ public class UserModel extends ViewModel {
     */
     public void addAd(String name, String address, int estimatedValue, String message, String donatorID, Timestamp startTime, String regID, GeoPoint location) {
         DocumentReference adsRef = db.collection(adCollectionString).document();
-        Ad ad = new Ad(name, address, estimatedValue, message, adsRef.getId(), donatorID, startTime, regID,location);
+        Ad ad = new Ad(name, address, estimatedValue, message, adsRef.getId(), donatorID, startTime, regID,location,null);
         adsRef.set(ad);
 
         if (ad.getRecyclerID() != null && ad.getRecyclerID().equals(profileID)){
@@ -193,8 +194,10 @@ public class UserModel extends ViewModel {
 
     public void claimAd(Ad ad, String recyclerID){
         db.collection(adCollectionString).document(ad.getAdID()).update("claimed", true);
+        db.collection(adCollectionString).document(ad.getAdID()).update("recyclerFirebaseToken",regId);
         db.collection(adCollectionString).document(ad.getAdID()).update("recyclerID", recyclerID);
         ad.setClaimed(true);
+        ad.setRecyclerFirebaseToken(regId);
         availableAds.remove(ad);
         claimedAds.add(ad);
         pcs.firePropertyChange(null,true,false);
@@ -203,8 +206,10 @@ public class UserModel extends ViewModel {
 
     public void unClaimAd(Ad ad){
         db.collection(adCollectionString).document(ad.getAdID()).update("claimed", false);
+        db.collection(adCollectionString).document(ad.getAdID()).update("recyclerFirebaseToken",null);
         db.collection(adCollectionString).document(ad.getAdID()).update("recyclerID", null);
         ad.setClaimed(false);
+        ad.setRecyclerFirebaseToken(null);
         availableAds.add(ad);
         claimedAds.remove(ad);
         pcs.firePropertyChange(null,true,false);
@@ -258,6 +263,50 @@ public class UserModel extends ViewModel {
 
     //August hjälp
     public void sendNotificationOnComplete(Ad ad){
-        sendNotification(ad);
+
+        Gson gson = new Gson();
+        Data data = new Data();
+        data.setTitle("Test");
+        PostRequestData postRequestData = new PostRequestData();
+        postRequestData.setTo(ad.getFirebaseToken());
+        postRequestData.setData(data);
+        String json = gson.toJson(postRequestData);
+        String url = "https://fcm.googleapis.com/fcm/send";
+        System.out.println(json);
+
+        final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder()
+                .url(url)
+                .header("Authorization", "key=AAAAkNlQVNc:APA91bHHE6Dkyj9fn0bopSkAx0ruyIOU0dDjf6cGaUeqPyGRkf6HF47hCAiWrAmLtSoEHJEyytjGTLjS8Ry67-vyeB3_tOcRY2MSatG3axYdiGadD3dRkrF0T7RGTo3wlQzyYwEKkEqR")
+                .post(body)
+                .build();
+
+
+        Callback responseCallBack = new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.v("Fail Message", "fail");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.v("response", response.toString());
+            }
+
+
+        };
+        okhttp3.Call call = client.newCall(request);
+        call.enqueue(responseCallBack);
+    }
+
+    public String getRegId() {
+        return regId;
+    }
+
+    public void setRegId(String regId) {
+        this.regId = regId;
     }
 }

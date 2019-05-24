@@ -79,7 +79,6 @@ public class PickupDetailsWindow extends ItemDetailsWindow{
                 dismiss();
             }
         });
-
         setContentView(popupView);
     }
 

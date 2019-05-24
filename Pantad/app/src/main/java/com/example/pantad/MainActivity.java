@@ -179,9 +179,8 @@ public class MainActivity extends AppCompatActivity implements PropertyChangeLis
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
         String regId = pref.getString("regId", null);
         Log.e(TAG, "Firebase reg id: " + regId);
-        donatorFrag.setRegID(regId);
+        userModel.setRegId(regId);
         setContentView(R.layout.activity_main);
-
         toolbar_title = findViewById(R.id.toolbar_title);
         // initiateRecycleView();
 

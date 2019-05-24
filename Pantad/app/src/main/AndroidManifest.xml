@@ -8,6 +8,7 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
@@ -15,6 +16,9 @@
         android:label="Pantad"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+        <receiver android:name=".TestBroadCast">
+        </receiver>
         <!--
      The API key for Google Maps-based APIs is defined as a string resource.
      (See the file "res/values/google_maps_api.xml").
@@ -44,6 +48,11 @@
         <activity
             android:name=".UserProfileActivity"
             android:label="Profile">
+        </activity>
+        <activity
+            android:name=".NotificationActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog"
+            >
         </activity>
         <service
             android:name=".firebaseService.MyFirebaseMessagingService"
