@@ -148,6 +148,7 @@ public class UserModel extends ViewModel {
         availableAds.remove(ad);
         postedAds.remove(ad);
         pcs.firePropertyChange(null,true,false);
+        sendNotification(ad);
     }
 
 
@@ -208,13 +209,20 @@ public class UserModel extends ViewModel {
         availableAds.add(ad);
         claimedAds.remove(ad);
         pcs.firePropertyChange(null,true,false);
+        sendNotification(ad);
+
     }
 
     private void sendNotification(Ad ad) {
 
         Gson gson = new Gson();
         Data data = new Data();
-        data.setTitle("Your ad has been claimed");
+        if (ad.isClaimed()) {
+            data.setTitle("Your ad has been claimed");
+        }
+        else {
+            data.setTitle("Your ad has been unclaimed");
+        }
         PostRequestData postRequestData = new PostRequestData();
         postRequestData.setTo(ad.getFirebaseToken());
         postRequestData.setData(data);
