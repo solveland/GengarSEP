@@ -266,9 +266,11 @@ public class UserModel extends ViewModel {
 
         Gson gson = new Gson();
         Data data = new Data();
-        data.setTitle("Test");
+        data.setTitle("Completed pickup");
+        data.setDonatorID(ad.getDonatorID());
+        data.setDonatorName(ad.getName());
         PostRequestData postRequestData = new PostRequestData();
-        postRequestData.setTo(ad.getFirebaseToken());
+        postRequestData.setTo(ad.getRecyclerFirebaseToken());
         postRequestData.setData(data);
         String json = gson.toJson(postRequestData);
         String url = "https://fcm.googleapis.com/fcm/send";

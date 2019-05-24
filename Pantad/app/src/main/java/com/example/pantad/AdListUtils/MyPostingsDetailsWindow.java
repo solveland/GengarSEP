@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.example.pantad.Ad;
 import com.example.pantad.R;
-import com.example.pantad.RatingDialog;
 import com.example.pantad.UserModel;
 import com.example.pantad.UserProfileModel;
 
@@ -102,22 +101,20 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
         setContentView(popupView);
     }
 
-    private void createConfirmStuff(View popupView){
+    private void createConfirmStuff(final View popupView){
         completeBtn=popupView.findViewById(R.id.completeBtn);
 
         completeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final RatingDialog rankDialog = new RatingDialog(parent.getContext());
+                final Dialog rankDialog = new Dialog(parent.getContext());
                 rankDialog.setContentView(R.layout.rank_dialog);
                 rankDialog.setCancelable(true);
                 final RatingBar ratingBar = (RatingBar)rankDialog.findViewById(R.id.dialog_ratingbar);
-                ratingBar.setRating(0);
+                TextView text = rankDialog.findViewById(R.id.rank_dialog_text1);
+                text.setText("Rate user " +upm.getViewingName()+" and confirm");
 
-                TextView text = (TextView) rankDialog.findViewById(R.id.rank_dialog_text1);
-                text.setText("Rate user and confirm");
-
-                Button confirmButton = (Button) rankDialog.findViewById(R.id.rank_dialog_button);
+                Button confirmButton = rankDialog.findViewById(R.id.rank_dialog_button);
                 Button cancelBtn = rankDialog.findViewById(R.id.rank_dialog_cancel);
                 cancelBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -135,10 +132,9 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
                         userModel.sendNotificationOnComplete(ad);
 
                         //Uncomment next line after debugging
-                        //userModel.removeAd(ad);
+                        userModel.removeAd(ad);
                         rankDialog.dismiss();
                         MyPostingsDetailsWindow.this.dismiss();
-
                     }
                 });
                 //now that the dialog is set up, it's time to show it
