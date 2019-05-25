@@ -66,7 +66,6 @@ public final class MapDecorator {
 
     public static void addAdsToMap(GoogleMap map,UserModel userModel,boolean renderAvailable, boolean renderClaimed){
         List<Ad> adsToRender = new ArrayList<>();
-        //adsToRender.addAll(userModel.getPostedAds());
         if (renderAvailable) {
             adsToRender.addAll(userModel.getAvailableAds());
         }
@@ -77,7 +76,7 @@ public final class MapDecorator {
             Marker cur = map.addMarker(new MarkerOptions()
                     .position(new LatLng(a.getLocation().getLatitude(),a.getLocation().getLongitude()))
                     .title(a.getName())
-                    .icon(a.isClaimed()? BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE):BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED) ));
+                    .icon(a.isClaimed()? BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN):BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED) ));
             cur.setTag(a);
         }
     }
