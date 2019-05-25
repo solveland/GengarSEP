@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.pantad.firebaseUtil.Data;
+import com.example.pantad.firebaseUtil.MessageType;
 import com.example.pantad.firebaseUtil.PostRequestData;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -201,7 +202,7 @@ public class UserModel extends ViewModel {
         availableAds.remove(ad);
         claimedAds.add(ad);
         pcs.firePropertyChange(null,true,false);
-        sendNotification(ad);
+        sendNotification(ad, "Någon har begärt din pant", "CLAIMED");
     }
 
     public void unClaimAd(Ad ad){
@@ -215,13 +216,22 @@ public class UserModel extends ViewModel {
         pcs.firePropertyChange(null,true,false);
     }
 
-    private void sendNotification(Ad ad) {
+    public void sendNotification(Ad ad, String title, String messageType) {
 
         Gson gson = new Gson();
         Data data = new Data();
-        data.setTitle("Your ad has been claimed");
+        data.setMessageType(messageType);
+        data.setTitle(title);
+        if(messageType.equals("COMPLETED")){
+            data.setDonatorID(ad.getDonatorID());
+            data.setDonatorName(ad.getName());
+        }
         PostRequestData postRequestData = new PostRequestData();
-        postRequestData.setTo(ad.getFirebaseToken());
+        if(messageType.equals("CLAIMED")) {
+            postRequestData.setTo(ad.getFirebaseToken());
+        }else if(messageType.equals("COMPLETED")){
+            postRequestData.setTo(ad.getRecyclerFirebaseToken());
+        }
         postRequestData.setData(data);
         String json = gson.toJson(postRequestData);
         String url = "https://fcm.googleapis.com/fcm/send";
@@ -261,48 +271,6 @@ public class UserModel extends ViewModel {
     }
 
 
-    //August hjälp
-    public void sendNotificationOnComplete(Ad ad){
-
-        Gson gson = new Gson();
-        Data data = new Data();
-        data.setTitle("Completed pickup");
-        data.setDonatorID(ad.getDonatorID());
-        data.setDonatorName(ad.getName());
-        PostRequestData postRequestData = new PostRequestData();
-        postRequestData.setTo(ad.getRecyclerFirebaseToken());
-        postRequestData.setData(data);
-        String json = gson.toJson(postRequestData);
-        String url = "https://fcm.googleapis.com/fcm/send";
-        System.out.println(json);
-
-        final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
-        OkHttpClient client = new OkHttpClient();
-        RequestBody body = RequestBody.create(JSON, json);
-        Request request = new Request.Builder()
-                .url(url)
-                .header("Authorization", "key=AAAAkNlQVNc:APA91bHHE6Dkyj9fn0bopSkAx0ruyIOU0dDjf6cGaUeqPyGRkf6HF47hCAiWrAmLtSoEHJEyytjGTLjS8Ry67-vyeB3_tOcRY2MSatG3axYdiGadD3dRkrF0T7RGTo3wlQzyYwEKkEqR")
-                .post(body)
-                .build();
-
-
-        Callback responseCallBack = new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.v("Fail Message", "fail");
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                Log.v("response", response.toString());
-            }
-
-
-        };
-        okhttp3.Call call = client.newCall(request);
-        call.enqueue(responseCallBack);
-    }
 
     public String getRegId() {
         return regId;

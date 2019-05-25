@@ -19,6 +19,7 @@ import com.example.pantad.Ad;
 import com.example.pantad.R;
 import com.example.pantad.UserModel;
 import com.example.pantad.UserProfileModel;
+import com.example.pantad.firebaseUtil.MessageType;
 
 public class MyPostingsDetailsWindow extends ItemDetailsWindow {
 
@@ -129,7 +130,8 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
                         if(ratingBar.getRating()!=0){
                             upm.updateRating(ad.getRecyclerID(),upm.getViewingProfile(),ratingBar.getRating());
                         }
-                        userModel.sendNotificationOnComplete(ad);
+                        String title = ad.getName() + " har angett att uppdraget är avklarat";
+                        userModel.sendNotification(ad, title, "COMPLETED");
 
                         //Uncomment next line after debugging
                         userModel.removeAd(ad);

@@ -50,54 +50,26 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.e(TAG, "Notification Body: " + remoteMessage.getNotification().getBody());
             handleNotification(remoteMessage.getNotification().getBody());
         }
-        Map<String,String> map =remoteMessage.getData();
-        if (map.size() > 0 && map.get("donatorID")!=null){
-            sendOnCompleteNotification(map.get("title"),map.get("donatorID"),map.get("donatorName"));
+        Map<String,String> map = remoteMessage.getData();
+        if (map.size() > 0){
+            sendNotification(map);
         }
-        // Check if message contains a data payload.
-        else if (map.size() > 0) {
-            Log.e(TAG, "Data Payload: " + remoteMessage.getData());
-            /*
-            try {
-                JSONObject json = new JSONObject(remoteMessage.getData().toString());
-                handleDataMessage(json);
-            } catch (Exception e) {
-                Log.e(TAG, "Exception: " + e.getMessage());
-            }*/
-            sendNotification(remoteMessage.getData().get("title"));
-        }
-    }
-
-    private void sendOnCompleteNotification(String title,String donatorID,String donatorName) {
-
-        Intent intent = new Intent(this, NotificationActivity.class);
-        intent.putExtra("donatorID",donatorID);
-        intent.putExtra("donatorName",donatorName);
-
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
-
-        Uri defaultSoundUri=
-                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "TestChannel")
-                .setSmallIcon(R.mipmap.ic_launcher_recycle)
-                .setContentTitle("Pantad Push Notification")
-                .setContentText(title)
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
-
     }
 
     //Temporary solution
 
-    private void sendNotification(String messageBody) {
-        Intent intent = new Intent(this, MainActivity.class);
+    private void sendNotification(Map<String,String> map) {
+        Intent intent;
+        String messageType = map.get("messageType");
+        if(messageType != null && messageType.equals("COMPLETED")){
+            intent = new Intent(this, NotificationActivity.class);
+            intent.putExtra("donatorID", map.get("donatorID"));
+            intent.putExtra("donatorName", map.get("donatorName"));
+        }
+        else{
+            intent = new Intent(this, MainActivity.class);
+        }
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
@@ -107,7 +79,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "TestChannel")
                 .setSmallIcon(R.mipmap.ic_launcher_recycle)
                 .setContentTitle("Pantad Push Notification")
-                .setContentText(messageBody)
+                .setContentText(map.get("title"))
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
