@@ -1,5 +1,4 @@
 package com.example.pantad.firebaseService;
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -13,6 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.pantad.MainActivity;
+import com.example.pantad.NotificationActivity;
 import com.example.pantad.R;
 import com.example.pantad.firebaseUtil.Config;
 import com.example.pantad.firebaseUtil.NotificationUtils;
@@ -21,6 +21,8 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = MyFirebaseMessagingService.class.getSimpleName();
@@ -48,25 +50,26 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.e(TAG, "Notification Body: " + remoteMessage.getNotification().getBody());
             handleNotification(remoteMessage.getNotification().getBody());
         }
-
-        // Check if message contains a data payload.
-        if (remoteMessage.getData().size() > 0) {
-            Log.e(TAG, "Data Payload: " + remoteMessage.getData());
-            /*
-            try {
-                JSONObject json = new JSONObject(remoteMessage.getData().toString());
-                handleDataMessage(json);
-            } catch (Exception e) {
-                Log.e(TAG, "Exception: " + e.getMessage());
-            }*/
-            sendNotification(remoteMessage.getData().get("title"));
+        Map<String,String> map = remoteMessage.getData();
+        if (map.size() > 0){
+            sendNotification(map);
         }
     }
 
     //Temporary solution
 
-    private void sendNotification(String messageBody) {
-        Intent intent = new Intent(this, MainActivity.class);
+    private void sendNotification(Map<String,String> map) {
+        Intent intent;
+        String messageType = map.get("messageType");
+        if(messageType != null && messageType.equals("COMPLETED")){
+            intent = new Intent(this, NotificationActivity.class);
+            intent.putExtra("donatorID", map.get("donatorID"));
+            intent.putExtra("donatorName", map.get("donatorName"));
+        }
+        else{
+            intent = new Intent(this, MainActivity.class);
+        }
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
@@ -76,7 +79,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "TestChannel")
                 .setSmallIcon(R.mipmap.ic_launcher_recycle)
                 .setContentTitle("Pantad Push Notification")
-                .setContentText(messageBody)
+                .setContentText(map.get("title"))
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);

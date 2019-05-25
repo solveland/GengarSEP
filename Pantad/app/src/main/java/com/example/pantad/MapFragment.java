@@ -1,17 +1,25 @@
 package com.example.pantad;
 
 
+import android.Manifest;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.Spinner;
 import android.widget.ToggleButton;
 
 import com.example.pantad.AdListUtils.ItemDetailsWindow;
@@ -26,6 +34,7 @@ import com.google.android.gms.maps.model.Marker;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 
 
 /**
@@ -62,17 +71,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Propert
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (isChecked) {
-                buttonView.setAlpha(1.0f);
-            } else {
-                buttonView.setAlpha(0.3f);
-            }
+            paintFilterButton(buttonView,isChecked);
             SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg);
             mapFragment.getMapAsync(parent);
         }
 
         public ToggleButtonListener(MapFragment parent){
             this.parent = parent;
+        }
+    }
+
+    private void paintFilterButton(CompoundButton buttonView, boolean isChecked){
+        if (isChecked) {
+            buttonView.setBackgroundColor(getResources().getColor(R.color.colorPrimary,null));
+            buttonView.setTextColor(Color.WHITE);
+        } else {
+            buttonView.setBackgroundColor(0);
+            buttonView.setTextColor(Color.BLACK);
         }
     }
 
@@ -96,9 +111,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Propert
         ToggleButtonListener listener = new ToggleButtonListener(this);
         for(ToggleButton button : new ToggleButton[]{stationsToggle,availableToggle,claimedToggle}){
             button.setOnCheckedChangeListener(listener);
-            if (!button.isChecked()){
-                button.setAlpha(0.3f);
-            }
+            paintFilterButton(button,button.isChecked());
         }
 
 
@@ -128,9 +141,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Propert
             googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(userModel.getmMap().getCameraPosition()));
         }
         userModel.setMap(googleMap);
-
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            googleMap.setMyLocationEnabled(true);
+        } else {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},0);
+        }
         googleMap.clear();
-        if (stationsToggle.isChecked()) {
+        if (stationsToggle.isChecked() && getActivity().getApplicationContext() != null) {
             MapDecorator.addPantStations(googleMap, getActivity().getApplicationContext());
         }
         googleMap.getUiSettings().setZoomControlsEnabled(true);

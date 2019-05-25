@@ -3,6 +3,8 @@ package com.example.pantad.AdListUtils;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.location.Location;
+import android.location.LocationProvider;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,10 +15,13 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.example.pantad.Ad;
+import com.example.pantad.DistanceUtil;
 import com.example.pantad.R;
 import com.example.pantad.TimeUtil;
 import com.example.pantad.UserModel;
 import com.example.pantad.UserProfileModel;
+
+import org.w3c.dom.Text;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -121,15 +126,15 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
                         rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
                         return true;
                     } else if (arg1.getAction() == MotionEvent.ACTION_UP) {
-                        viewHolder.itemView.setBackgroundColor(Color.parseColor("#FAFAFA"));
+                        viewHolder.itemView.setBackgroundColor(Color.parseColor("#00FFFFFF"));
                         v.performClick();
                         return true;
                     } else if (arg1.getAction() == MotionEvent.ACTION_CANCEL){
-                        viewHolder.itemView.setBackgroundColor(Color.parseColor("#FAFAFA"));
+                        viewHolder.itemView.setBackgroundColor(Color.parseColor("#00FFFFFF"));
                         return true;
                     }
                         else if(rect != null && !rect.contains(v.getLeft() + (int) arg1.getX(), v.getTop() + (int) arg1.getY())){
-                        v.setBackgroundColor(Color.parseColor("#FAFAFA"));
+                        v.setBackgroundColor(Color.parseColor("#00FFFFFF"));
                     }
                     return false;
                 }
@@ -138,6 +143,12 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
             TextView timeTextView= ((AdItemViewHolder) viewHolder).timeTextView;
             timeTextView.setText("Tid sedan annonsen lades upp: " + elapsedTime);
 
+            TextView distanceTextView = ((AdItemViewHolder) viewHolder).distanceTextView;
+            if(userModel.getLocation() != null){
+                Location location = userModel.getLocation();
+                String distance = DistanceUtil.getDistance(location.getLatitude(), ad.getLocation().getLatitude(), location.getLongitude(), ad.getLocation().getLongitude(), 0.0, 0.0 );
+                distanceTextView.setText(distance);
+            }
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     // Create the item details window
@@ -185,6 +196,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
         public TextView addressTextView;
         public TextView valueTextView;
         public TextView timeTextView;
+        public TextView distanceTextView;
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public AdItemViewHolder(View itemView) {
@@ -195,6 +207,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
             addressTextView = (TextView) itemView.findViewById(R.id.annons_adress);
             valueTextView = (TextView) itemView.findViewById(R.id.annons_value);
             timeTextView =(TextView) itemView.findViewById(R.id.annons_time);
+            distanceTextView = (TextView) itemView.findViewById(R.id.annons_distance);
         }
     }
 }

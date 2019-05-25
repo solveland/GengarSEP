@@ -31,7 +31,6 @@ public class DonatorFragment extends Fragment implements PropertyChangeListener 
     private RecyclerView donatorRVAds;
     private MyPostingsAdapter adapter;
     private FloatingActionButton postAdButton;
-    private String regID;
     private UserProfileModel upm;
     private SwipeRefreshLayout refreshLayout;
 
@@ -53,7 +52,7 @@ public class DonatorFragment extends Fragment implements PropertyChangeListener 
             @Override
             public void onClick(final View v) {
                 DialogFragment postAdFragment = new PostAdFragment();
-                ((PostAdFragment) postAdFragment).setRegID(regID);
+                ((PostAdFragment) postAdFragment).setRegID(userModel.getRegId());
                 postAdFragment.show(getFragmentManager(), "");
             }
         });
@@ -83,9 +82,6 @@ public class DonatorFragment extends Fragment implements PropertyChangeListener 
         return rootView;
     }
 
-    public void setRegID(String regID) {
-        this.regID = regID;
-    }
 
     /*
  Gets called when the local list of ads has been updated.

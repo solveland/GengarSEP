@@ -13,10 +13,14 @@
         android:layout_height="match_parent">
 
         <fragment
-            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:id="@+id/frg"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/availableToggle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ToggleButton
             android:id="@+id/claimedToggle"
@@ -27,6 +31,7 @@
             android:textOff="Claimed"
             android:textOn="Claimed"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/availableToggle"
             app:layout_constraintStart_toStartOf="parent" />
 
         <ToggleButton
@@ -38,6 +43,7 @@
             android:textOff="Available"
             android:textOn="Available"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/stationsToggle"
             app:layout_constraintStart_toEndOf="@id/claimedToggle" />
 
         <ToggleButton
@@ -49,6 +55,7 @@
             android:textOff="Stations"
             android:textOn="Stations"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/availableToggle" />
 
     </android.support.constraint.ConstraintLayout>

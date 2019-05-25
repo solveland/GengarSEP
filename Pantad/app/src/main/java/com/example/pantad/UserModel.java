@@ -2,10 +2,12 @@ package com.example.pantad;
 
 import android.arch.lifecycle.ViewModel;
 import android.location.Geocoder;
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.pantad.firebaseUtil.Data;
+import com.example.pantad.firebaseUtil.MessageType;
 import com.example.pantad.firebaseUtil.PostRequestData;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -40,13 +42,14 @@ public class UserModel extends ViewModel {
     /* Our list of ads. There might be a more suitable container for this */
     //public final ArrayList<Ad> ads = new ArrayList<>();
 
-    public final List<Ad> claimedAds = new ArrayList<>();
-    public final List<Ad> availableAds = new ArrayList<>();
-    public final List<Ad> postedAds = new ArrayList<>();
+    private final List<Ad> claimedAds = new ArrayList<>();
+    private final List<Ad> availableAds = new ArrayList<>();
+    private final List<Ad> postedAds = new ArrayList<>();
 
-    private static final String adCollectionString = "ads";
+    private static final String adCollectionString = "ads2";
 
-    public PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private String regId;
 
 
     public List<Ad> getClaimedAds() {
@@ -65,6 +68,7 @@ public class UserModel extends ViewModel {
      */
     private GoogleMap mMap;
     private CameraPosition mapCameraPosition;
+    private Location location;
 
 
     private String profileID;
@@ -94,7 +98,7 @@ public class UserModel extends ViewModel {
     */
     public void addAd(String name, String address, int estimatedValue, String message, String donatorID, Timestamp startTime, String regID, GeoPoint location) {
         DocumentReference adsRef = db.collection(adCollectionString).document();
-        Ad ad = new Ad(name, address, estimatedValue, message, adsRef.getId(), donatorID, startTime, regID,location);
+        Ad ad = new Ad(name, address, estimatedValue, message, adsRef.getId(), donatorID, startTime, regID,location,null);
         adsRef.set(ad);
 
         if (ad.getRecyclerID() != null && ad.getRecyclerID().equals(profileID)){
@@ -180,6 +184,8 @@ public class UserModel extends ViewModel {
     public void setGeocoder(Geocoder geocoder) {
         this.geocoder = geocoder;
     }
+    public void setLocation(Location location) {this.location = location; }
+    public Location getLocation(){ return location;}
 
     //Made it so the adapters listen to the usermodel. Makes sure the lists are updated whenever a change is made. Don´t know what this means for
     //our dependencies though, they might be real bad atm.
@@ -189,30 +195,43 @@ public class UserModel extends ViewModel {
 
     public void claimAd(Ad ad, String recyclerID){
         db.collection(adCollectionString).document(ad.getAdID()).update("claimed", true);
+        db.collection(adCollectionString).document(ad.getAdID()).update("recyclerFirebaseToken",regId);
         db.collection(adCollectionString).document(ad.getAdID()).update("recyclerID", recyclerID);
         ad.setClaimed(true);
+        ad.setRecyclerFirebaseToken(regId);
         availableAds.remove(ad);
         claimedAds.add(ad);
         pcs.firePropertyChange(null,true,false);
-        sendNotification(ad);
+        sendNotification(ad, "Någon har begärt din pant", "CLAIMED");
     }
 
     public void unClaimAd(Ad ad){
         db.collection(adCollectionString).document(ad.getAdID()).update("claimed", false);
+        db.collection(adCollectionString).document(ad.getAdID()).update("recyclerFirebaseToken",null);
         db.collection(adCollectionString).document(ad.getAdID()).update("recyclerID", null);
         ad.setClaimed(false);
+        ad.setRecyclerFirebaseToken(null);
         availableAds.add(ad);
         claimedAds.remove(ad);
         pcs.firePropertyChange(null,true,false);
     }
 
-    private void sendNotification(Ad ad) {
+    public void sendNotification(Ad ad, String title, String messageType) {
 
         Gson gson = new Gson();
         Data data = new Data();
-        data.setTitle("Your ad has been claimed");
+        data.setMessageType(messageType);
+        data.setTitle(title);
+        if(messageType.equals("COMPLETED")){
+            data.setDonatorID(ad.getDonatorID());
+            data.setDonatorName(ad.getName());
+        }
         PostRequestData postRequestData = new PostRequestData();
-        postRequestData.setTo(ad.getFirebaseToken());
+        if(messageType.equals("CLAIMED")) {
+            postRequestData.setTo(ad.getFirebaseToken());
+        }else if(messageType.equals("COMPLETED")){
+            postRequestData.setTo(ad.getRecyclerFirebaseToken());
+        }
         postRequestData.setData(data);
         String json = gson.toJson(postRequestData);
         String url = "https://fcm.googleapis.com/fcm/send";
@@ -249,5 +268,15 @@ public class UserModel extends ViewModel {
     public void updateAdMessage(Ad ad, String message){
         ad.setMessage(message);
         db.collection(adCollectionString).document(ad.getAdID()).update("message", message);
+    }
+
+
+
+    public String getRegId() {
+        return regId;
+    }
+
+    public void setRegId(String regId) {
+        this.regId = regId;
     }
 }

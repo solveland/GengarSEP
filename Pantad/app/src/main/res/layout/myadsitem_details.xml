@@ -145,4 +145,25 @@
 
     </android.support.constraint.ConstraintLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/completeBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="64dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="@+id/claimedAd_Layout"
+        app:layout_constraintStart_toEndOf="@+id/unclaimed_text"
+        app:srcCompat="@drawable/ic_done_black_24dp" />
+
+    <TextView
+        android:id="@+id/completeText"
+        android:layout_width="82dp"
+        android:layout_height="110dp"
+        android:layout_marginEnd="8dp"
+        android:text="Mark pickup as completed by pressing the button to the right"
+        app:layout_constraintBottom_toBottomOf="@+id/completeBtn"
+        app:layout_constraintEnd_toStartOf="@+id/unclaimed_text"
+        app:layout_constraintTop_toTopOf="@+id/completeBtn" />
+
 </android.support.constraint.ConstraintLayout>

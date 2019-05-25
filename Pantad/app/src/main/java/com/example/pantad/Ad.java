@@ -21,8 +21,9 @@ public class Ad {
     private String recyclerID;
     private String firebaseToken;
     private GeoPoint location;
+    private String recyclerFirebaseToken;
 
-    public Ad(String name, String address, int estimatedValue, String message, String adID, String donatorID, Timestamp startTime, String firebaseToken,GeoPoint location) {
+    public Ad(String name, String address, int estimatedValue, String message, String adID, String donatorID, Timestamp startTime, String firebaseToken,GeoPoint location,String recyclerFirebaseToken) {
 
         this.name = name;
         this.address = address;
@@ -42,6 +43,10 @@ public class Ad {
     }
 
     public String getFirebaseToken() { return firebaseToken; }
+
+    public void setFirebaseToken(String firebaseToken) {
+        this.firebaseToken = firebaseToken;
+    }
 
     public String getName() {
         return name;
@@ -69,4 +74,11 @@ public class Ad {
     public void setMessage(String message) { this.message = message; }
     public void setClaimed(boolean claimed) { this.claimed = claimed; }
 
+    public String getRecyclerFirebaseToken() {
+        return recyclerFirebaseToken;
+    }
+
+    public void setRecyclerFirebaseToken(String recyclerFirebaseToken) {
+        this.recyclerFirebaseToken = recyclerFirebaseToken;
+    }
 }

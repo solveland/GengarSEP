@@ -12,6 +12,9 @@ public class UserProfile implements Serializable {
     private String photoUrl;
     private String phoneNumber;
 
+    public int nrOfRatings;
+    public float rating;
+
     public void setName(String name) {
         this.name = name;
     }
@@ -37,6 +40,8 @@ public class UserProfile implements Serializable {
         this.email = email;
         this.photoUrl = photoUrl;
         this.phoneNumber = phoneNumber;
+        nrOfRatings=0;
+        rating=0;
     }
     public String getName() {
         return name;
@@ -48,8 +53,22 @@ public class UserProfile implements Serializable {
 
     public String getPhotoUrl(){ return photoUrl;}
 
-
-
     public String getPhoneNumber(){return phoneNumber;}
 
+
+    public int getNrOfRatings() {
+        return nrOfRatings;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setNrOfRatings(int nrOfRatings) {
+        this.nrOfRatings = nrOfRatings;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
 }

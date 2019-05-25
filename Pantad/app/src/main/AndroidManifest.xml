@@ -15,6 +15,7 @@
         android:label="Pantad"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
         <!--
      The API key for Google Maps-based APIs is defined as a string resource.
      (See the file "res/values/google_maps_api.xml").
@@ -44,6 +45,12 @@
         <activity
             android:name=".UserProfileActivity"
             android:label="Profile">
+        </activity>
+        <activity
+            android:name=".NotificationActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog"
+            android:windowNoTitle="true"
+            >
         </activity>
         <service
             android:name=".firebaseService.MyFirebaseMessagingService"
