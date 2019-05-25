@@ -10,6 +10,7 @@ import android.support.v7.content.res.AppCompatResources;
 
 
 import com.example.pantad.pantMapUtil.PantParser;
+import com.example.pantad.pantMapUtil.PantStation;
 import com.example.pantad.pantMapUtil.PantTriplet;
 import com.google.android.gms.maps.GoogleMap;
 
@@ -26,13 +27,14 @@ public final class MapDecorator {
 
 
 
+
     public static void addPantStations(GoogleMap map, Context context){
-        List<PantTriplet<Double, Double, String>> stations = createStationTriplet(context);
+        PantStation[] stations = PantStation.getStations(context);
         Bitmap bitmap = getBitmapFromVectorDrawable(context,R.drawable.ic_trashcan);
         BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
-        for(PantTriplet<Double, Double, String> station : stations){
-            LatLng coords = new LatLng(station.getLat(), station.getLng());
-            map.addMarker(new MarkerOptions().position(coords).title(station.getAddress()).icon(descriptor));
+        for(PantStation station : stations){
+            LatLng coords = new LatLng(station.lat, station.lon);
+            map.addMarker(new MarkerOptions().position(coords).title(station.title).snippet(station.address).icon(descriptor));
         }
     }
 

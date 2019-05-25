@@ -15,7 +15,7 @@ import java.util.List;
 
 public final class PantParser {
 
-    private static String readFileAsString(String fileName, Context context) {
+    public static String readFileAsString(String fileName, Context context) {
         AssetManager assetManager = context.getAssets();
         InputStream input;
         String text = "";
