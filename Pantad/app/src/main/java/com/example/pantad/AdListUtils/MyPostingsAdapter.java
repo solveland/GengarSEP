@@ -1,6 +1,7 @@
 package com.example.pantad.AdListUtils;
 
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.Gravity;
 import android.view.View;
@@ -38,6 +39,9 @@ public class MyPostingsAdapter extends AbstractAdapter {
             return null;
         }
         final ItemDetailsWindow itemDetails = new MyPostingsDetailsWindow(v, ad,upm,userModel);
+        itemDetails.setElevation(20);
+        itemDetails.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
         itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
         return itemDetails;
     }

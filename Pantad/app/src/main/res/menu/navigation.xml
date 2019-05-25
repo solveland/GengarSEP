@@ -11,7 +11,7 @@
         android:title="@string/title_map" />
     <item
         android:id="@+id/navigation_donator"
-        android:icon="@drawable/ic_trashcan"
+        android:icon="@drawable/ic_donator_icon"
         android:title="@string/title_donator" />
 
 
