@@ -150,6 +150,9 @@ public class UserModel extends ViewModel {
         availableAds.remove(ad);
         postedAds.remove(ad);
         pcs.firePropertyChange(null,true,false);
+        if(ad.isClaimed()) {
+            sendNotification(ad, "En annons du har begärt har tagits bort", "REMOVED");
+        }
     }
 
 
@@ -214,6 +217,8 @@ public class UserModel extends ViewModel {
         availableAds.add(ad);
         claimedAds.remove(ad);
         pcs.firePropertyChange(null,true,false);
+        sendNotification(ad, "Någon har tagit bort sin begäran gällande din pant", "UNCLAIMED");
+
     }
 
     public void sendNotification(Ad ad, String title, String messageType) {
@@ -222,14 +227,14 @@ public class UserModel extends ViewModel {
         Data data = new Data();
         data.setMessageType(messageType);
         data.setTitle(title);
-        if(messageType.equals("COMPLETED")){
+        if(messageType.equals("COMPLETED") || messageType.equals("REMOVED")){
             data.setDonatorID(ad.getDonatorID());
             data.setDonatorName(ad.getName());
         }
         PostRequestData postRequestData = new PostRequestData();
-        if(messageType.equals("CLAIMED")) {
+        if(messageType.equals("CLAIMED") || messageType.equals("UNCLAIMED")) {
             postRequestData.setTo(ad.getFirebaseToken());
-        }else if(messageType.equals("COMPLETED")){
+        }else if(messageType.equals("COMPLETED") || messageType.equals("REMOVED")){
             postRequestData.setTo(ad.getRecyclerFirebaseToken());
         }
         postRequestData.setData(data);
