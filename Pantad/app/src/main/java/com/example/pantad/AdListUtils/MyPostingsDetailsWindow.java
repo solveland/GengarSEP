@@ -58,12 +58,12 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
         }
         else {
             // Set viewing profile to the ad claimer, update load recycler avatar and name
-            name.setText(" has claimed your ad!");
+            name.setText(" har begärt din annons!");
             upm.updateViewingProfile(ad.getRecyclerID());
             setUserAvatarListener(ad.getRecyclerID());
             createConfirmStuff(popupView);
         }
-        this.address.setText("Address: " + ad.getAddress());
+        this.address.setText("Adress: " + ad.getAddress());
         this.value.setText("Uppskattat pantvärde: " + ad.getValue() + "kr");
         this.description.setText(ad.getMessage());
         this.description.setEnabled(false);
@@ -72,7 +72,7 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
             @Override
             public void onClick(View v) {
                 if(ad.isClaimed()) {
-                    Snackbar.make(v, "A claimed ad cannot be edited!", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(v, "En publicerad annons kan inte redigeras!", Snackbar.LENGTH_SHORT).show();
 
                 }
                 else if(description.isEnabled()){
@@ -94,7 +94,7 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
         functionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 userModel.removeAd(ad);
-                Snackbar.make(parent, "Ad has been deleted!", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(parent, "Annons har tagits bort!", Snackbar.LENGTH_SHORT).show();
                 dismiss();
             }
         });
@@ -113,7 +113,7 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
                 rankDialog.setCancelable(true);
                 final RatingBar ratingBar = (RatingBar)rankDialog.findViewById(R.id.dialog_ratingbar);
                 TextView text = rankDialog.findViewById(R.id.rank_dialog_text1);
-                text.setText("Rate user " +upm.getViewingName()+" and confirm");
+                text.setText("Betygssätt användare " +upm.getViewingName()+" och bekräfta");
 
                 Button confirmButton = rankDialog.findViewById(R.id.rank_dialog_button);
                 Button cancelBtn = rankDialog.findViewById(R.id.rank_dialog_cancel);

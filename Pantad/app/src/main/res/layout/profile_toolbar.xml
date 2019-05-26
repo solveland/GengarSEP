@@ -14,7 +14,7 @@
         android:layout_gravity="right"
         android:layout_marginRight="12dp"
         android:backgroundTint="#D8D8D8"
-        android:text="Sign Out" />
+        android:text="Logga ut" />
 
     <ImageButton
         android:id="@+id/profile_back_button"

@@ -64,7 +64,7 @@ Handles the setup for the recyclerView
         rvAds.setLayoutManager(linearLayoutManager);
 
         // Create adapter passing in the sample user data
-        AdListWithSectionHeader[] adsToShow = {new AdListWithSectionHeader(userModel.getClaimedAds(),"Your claimed ads"),new AdListWithSectionHeader(userModel.getAvailableAds(),"Available ads")};
+        AdListWithSectionHeader[] adsToShow = {new AdListWithSectionHeader(userModel.getClaimedAds(),"Dina annonser"),new AdListWithSectionHeader(userModel.getAvailableAds(),"Tillgängliga annonser")};
         adapter = new PickupAdapter(new SectionedAdListContainer(adsToShow),userModel, upm);
         // Attach the adapter to the recyclerView to populate items
         rvAds.setAdapter(adapter);
