@@ -18,7 +18,6 @@ import com.example.pantad.UserModel;
 import com.example.pantad.UserProfileModel;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 public class PickupDetailsWindow extends ItemDetailsWindow{
 
@@ -67,11 +66,13 @@ public class PickupDetailsWindow extends ItemDetailsWindow{
         functionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(!ad.isClaimed()) {
-                    Snackbar.make(parent, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();
                     String recyclerID = upm.getUid();
-                    userModel.claimAd(ad, recyclerID);
+                    if(userModel.claimAd(ad, recyclerID)){
+                        Snackbar.make(parent, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();}
+                    else{
+                        Snackbar.make(parent, "Ad has already been claimed by someone else, or has been modified!", Snackbar.LENGTH_SHORT).show();
+                    }
                 }
-
                 else{
                     Snackbar.make(parent, "Ad has been unclaimed!", Snackbar.LENGTH_SHORT).show();
                     userModel.unClaimAd(ad);

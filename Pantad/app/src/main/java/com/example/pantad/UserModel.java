@@ -196,16 +196,23 @@ public class UserModel extends ViewModel {
         pcs.addPropertyChangeListener(listener);
     }
 
-    public void claimAd(Ad ad, String recyclerID){
-        db.collection(adCollectionString).document(ad.getAdID()).update("claimed", true);
-        db.collection(adCollectionString).document(ad.getAdID()).update("recyclerFirebaseToken",regId);
-        db.collection(adCollectionString).document(ad.getAdID()).update("recyclerID", recyclerID);
-        ad.setClaimed(true);
-        ad.setRecyclerFirebaseToken(regId);
-        availableAds.remove(ad);
-        claimedAds.add(ad);
-        pcs.firePropertyChange(null,true,false);
-        sendNotification(ad, "Någon har begärt din pant", "CLAIMED");
+    public boolean claimAd(Ad ad, String recyclerID){
+        //Temporary solution, but should work? Should prevent an ad from being claimed by 2 people at the same time
+        updateAds();
+        if (!availableAds.contains(ad)){return false;}
+        else {
+
+            db.collection(adCollectionString).document(ad.getAdID()).update("claimed", true);
+            db.collection(adCollectionString).document(ad.getAdID()).update("recyclerFirebaseToken", regId);
+            db.collection(adCollectionString).document(ad.getAdID()).update("recyclerID", recyclerID);
+            ad.setClaimed(true);
+            ad.setRecyclerFirebaseToken(regId);
+            availableAds.remove(ad);
+            claimedAds.add(ad);
+            pcs.firePropertyChange(null, true, false);
+            sendNotification(ad, "Någon har begärt din pant", "CLAIMED");
+            return true;
+        }
     }
 
     public void unClaimAd(Ad ad){
