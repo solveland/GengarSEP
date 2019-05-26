@@ -131,7 +131,7 @@ public class UserModel extends ViewModel {
                             if (ad.getRecyclerID() != null && ad.getRecyclerID().equals(profileID)){
                                 claimedAds.add(ad);
                             }
-                            if (!ad.isClaimed() && !ad.getDonatorID().equals(profileID) && DistanceUtil.getDistanceDouble(location.getLatitude(), ad.getLocation().getLatitude(), location.getLongitude(), ad.getLocation().getLongitude(), 0.0, 0.0 ) < meterLimitForAd){
+                            if (!ad.isClaimed() && location != null && !ad.getDonatorID().equals(profileID) && DistanceUtil.getDistanceDouble(location.getLatitude(), ad.getLocation().getLatitude(), location.getLongitude(), ad.getLocation().getLongitude(), 0.0, 0.0 ) < meterLimitForAd){
                                 availableAds.add(ad);
                             }
                             if (ad.getDonatorID().equals(profileID)){

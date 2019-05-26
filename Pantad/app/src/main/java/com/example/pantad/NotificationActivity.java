@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.example.pantad.AdListUtils.ItemDetailsWindow;
+
 public class NotificationActivity extends AppCompatActivity {
 
     private UserProfileModel upm;
@@ -40,7 +42,7 @@ public class NotificationActivity extends AppCompatActivity {
             setCancelable(true);
             final RatingBar ratingBar = (RatingBar)findViewById(R.id.dialog_ratingbar);
             TextView text = (TextView) findViewById(R.id.rank_dialog_text1);
-            text.setText("Rate user "+donatorName+" and confirm");
+            text.setText("Betygsätt \n"+donatorName);
             Button confirmButton = (Button) findViewById(R.id.rank_dialog_button);
             confirmButton.setOnClickListener(new View.OnClickListener() {
                 @Override

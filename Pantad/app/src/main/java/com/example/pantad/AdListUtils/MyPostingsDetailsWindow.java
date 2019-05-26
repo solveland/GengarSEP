@@ -117,7 +117,7 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
                 rankDialog.setCancelable(true);
                 final RatingBar ratingBar = (RatingBar)rankDialog.findViewById(R.id.dialog_ratingbar);
                 TextView text = rankDialog.findViewById(R.id.rank_dialog_text1);
-                text.setText("Betygssätt användare " +upm.getViewingName()+" och bekräfta");
+                text.setText("Betygssätt \n" +upm.getViewingName());
 
                 Button confirmButton = rankDialog.findViewById(R.id.rank_dialog_button);
                 Button cancelBtn = rankDialog.findViewById(R.id.rank_dialog_cancel);

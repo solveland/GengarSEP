@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:layout_marginBottom="10dp"
+        android:gravity="center"
         android:text="Betygssätt användare och bekräfta"
         android:textSize="24dp"
         app:layout_constraintBottom_toTopOf="@+id/dialog_ratingbar"
