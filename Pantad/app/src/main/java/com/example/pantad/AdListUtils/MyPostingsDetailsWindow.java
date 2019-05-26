@@ -93,6 +93,9 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
         functionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 userModel.removeAd(ad);
+                if(ad.isClaimed()) {
+                    userModel.sendNotification(ad, "En annons du har begärt har tagits bort", "REMOVED");
+                }
                 Snackbar.make(parent, "Annons har tagits bort!", Snackbar.LENGTH_SHORT).show();
                 dismiss();
             }

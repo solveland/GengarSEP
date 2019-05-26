@@ -150,9 +150,7 @@ public class UserModel extends ViewModel {
         availableAds.remove(ad);
         postedAds.remove(ad);
         pcs.firePropertyChange(null,true,false);
-        if(ad.isClaimed()) {
-            sendNotification(ad, "En annons du har begärt har tagits bort", "REMOVED");
-        }
+
     }
 
 

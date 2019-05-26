@@ -24,7 +24,7 @@
         android:layout_gravity="center"
         android:fontFamily="sans-serif-light"
         android:text="Karta"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="#FFFFFF"
         android:textSize="22sp"
         android:textStyle="bold" />
 
