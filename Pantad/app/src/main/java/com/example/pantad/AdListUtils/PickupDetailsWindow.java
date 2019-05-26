@@ -64,14 +64,11 @@ public class PickupDetailsWindow extends ItemDetailsWindow{
         }
         // Create and connect listener to claim button
         functionButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+                       public void onClick(View v) {
                 if(!ad.isClaimed()) {
                     String recyclerID = upm.getUid();
-                    if(userModel.claimAd(ad, recyclerID)){
-                        Snackbar.make(parent, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();}
-                    else{
-                        Snackbar.make(parent, "Ad has already been claimed by someone else, or has been modified!", Snackbar.LENGTH_SHORT).show();
-                    }
+                        Snackbar.make(parent, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();
+                    userModel.claimAd(ad, recyclerID);
                 }
                 else{
                     Snackbar.make(parent, "Ad has been unclaimed!", Snackbar.LENGTH_SHORT).show();
