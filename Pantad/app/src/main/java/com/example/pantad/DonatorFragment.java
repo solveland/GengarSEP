@@ -64,7 +64,7 @@ public class DonatorFragment extends Fragment implements PropertyChangeListener 
         donatorRVAds.setLayoutManager(linearLayoutManager);
 
         //We will probably need to make a new adapter for this list eventually
-        AdListWithSectionHeader[] adsToShow = {new AdListWithSectionHeader(userModel.getPostedAds(),"Your posted ads")};
+        AdListWithSectionHeader[] adsToShow = {new AdListWithSectionHeader(userModel.getPostedAds(),"Dina publicerade annonser")};
         adapter = new MyPostingsAdapter(new SectionedAdListContainer(adsToShow),userModel, upm);
         // Attach the adapter to the recyclerView to populate items
         donatorRVAds.setAdapter(adapter);

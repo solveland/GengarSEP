@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements PropertyChangeLis
     MenuItem prevMenuItem;
     BottomNavigationView navigation;
     ViewPager viewPager;
-    private String[] pageTitles = new String[]{"Annonser i närheten","Kartan","Dina annonser"};
+    private String[] pageTitles = new String[]{"Annonser i närheten","Karta","Dina annonser"};
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private TextView txtMessage;
     private static final String TAG = MainActivity.class.getSimpleName();
