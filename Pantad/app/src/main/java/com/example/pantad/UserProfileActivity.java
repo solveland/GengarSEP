@@ -141,9 +141,9 @@ public class UserProfileActivity extends AppCompatActivity {
                         String photoUrl = document.getString("photoUrl");
                         ImageLoader.loadImageFromUrl(photoUrl, profilePic, 300);
                         phoneNumber.setText(document.getString("phoneNumber"));
-                       Long longRating=(Long)document.getLong("rating");
+                       Float floatRating=((Double) document.get("rating")).floatValue();
                        ratingBar.setIsIndicator(true);
-                        ratingBar.setRating(longRating.floatValue());
+                        ratingBar.setRating(floatRating);
                     }
                 } else {
                     Log.w("user profile", "error fetching user profile information");
