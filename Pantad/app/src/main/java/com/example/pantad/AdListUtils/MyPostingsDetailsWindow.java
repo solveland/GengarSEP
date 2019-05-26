@@ -19,7 +19,6 @@ import com.example.pantad.Ad;
 import com.example.pantad.R;
 import com.example.pantad.UserModel;
 import com.example.pantad.UserProfileModel;
-import com.example.pantad.firebaseUtil.MessageType;
 
 public class MyPostingsDetailsWindow extends ItemDetailsWindow {
 
