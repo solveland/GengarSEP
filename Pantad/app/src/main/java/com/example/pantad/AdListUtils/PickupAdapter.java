@@ -1,6 +1,8 @@
 package com.example.pantad.AdListUtils;
 
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -34,6 +36,8 @@ public class PickupAdapter extends AbstractAdapter {
             return null;
         }
         final ItemDetailsWindow itemDetails = new PickupDetailsWindow(v, ad, upm,userModel);
+        itemDetails.setElevation(20);
+        itemDetails.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         itemDetails.showAtLocation(v, Gravity.CENTER, 0, 0);
 
 

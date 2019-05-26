@@ -5,6 +5,8 @@
     android:id="@+id/itemDetailsLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:background="#f6f6f6">
 
     <Button
@@ -14,11 +16,9 @@
         android:layout_marginTop="24dp"
         android:background="@color/colorPrimary"
         android:baselineAligned="false"
-        android:paddingLeft="0dp"
         android:text="Claim"
         android:translationX="0dp"
         app:layout_constraintEnd_toStartOf="@+id/cancel_details"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/details_description" />
 
