@@ -32,6 +32,7 @@
         android:stepSize="0.5"
         app:layout_constraintBottom_toTopOf="@+id/rank_dialog_button"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rank_dialog_text1" />
 
     <Button
