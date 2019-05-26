@@ -6,9 +6,8 @@ public final class DistanceUtil {
     private DistanceUtil() {
     }
 
-    public static String getDistance(double lat1, double lat2, double lon1,
-                                     double lon2, double el1, double el2) {
-
+    public static double getDistanceDouble(double lat1, double lat2, double lon1,
+                                     double lon2, double el1, double el2){
         final int R = 6371; // Radius of the earth
 
         double latDistance = Math.toRadians(lat2 - lat1);
@@ -23,7 +22,14 @@ public final class DistanceUtil {
 
         distance = Math.pow(distance, 2) + Math.pow(height, 2);
         distance = Math.sqrt(distance);
+        return distance;
+    }
 
+    public static String getDistance(double lat1, double lat2, double lon1,
+                                     double lon2, double el1, double el2) {
+
+
+        double distance = getDistanceDouble(lat1,lat2,lon1,lon2,el1,el2);
         String result = "";
         if(distance < 1000){
             result += distance;

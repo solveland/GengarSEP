@@ -71,8 +71,7 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
             @Override
             public void onClick(View v) {
                 if(ad.isClaimed()) {
-                    Snackbar.make(v, "En publicerad annons kan inte redigeras!", Snackbar.LENGTH_SHORT).show();
-
+                    Snackbar.make(getContentView(), "En publicerad annons kan inte redigeras!", Snackbar.LENGTH_SHORT).show();
                 }
                 else if(description.isEnabled()){
                     userModel.updateAdMessage(ad,description.getText().toString());
