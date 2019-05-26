@@ -25,10 +25,10 @@ public class MyPostingsAdapter extends AbstractAdapter {
     @Override
     protected void setNameField(TextView nameView, Ad ad) {
         if (ad.isClaimed()) {
-            nameView.setText("Claimed");
+            nameView.setText("Begärd");
             nameView.setBackgroundColor(ResourcesCompat.getColor(nameView.getResources(), R.color.colorPrimary, null));
         } else {
-            nameView.setText("Unclaimed");
+            nameView.setText("Ej begärd");
             nameView.setBackgroundColor(ResourcesCompat.getColor(nameView.getResources(), R.color.colorRed, null));
         }
     }

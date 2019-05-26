@@ -141,7 +141,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
             });*/
 
             TextView timeTextView= ((AdItemViewHolder) viewHolder).timeTextView;
-            timeTextView.setText("Tid sedan annonsen lades upp: " + elapsedTime);
+            timeTextView.setText("Tid sedan publicering: " + elapsedTime);
 
             TextView distanceTextView = ((AdItemViewHolder) viewHolder).distanceTextView;
             if(userModel.getLocation() != null){

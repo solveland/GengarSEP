@@ -53,7 +53,7 @@ public class PickupDetailsWindow extends ItemDetailsWindow{
 
         // Set all values to attributes
         this.name.setText("");  // Empty string, will be loaded from profile later
-        this.address.setText("Address: " + ad.getAddress());
+        this.address.setText("Adress: " + ad.getAddress());
         this.value.setText("Uppskattat pantvärde: " + ad.getValue() + "kr");
         this.description.setText(ad.getMessage());
         this.description.setMovementMethod(new ScrollingMovementMethod());
@@ -61,19 +61,19 @@ public class PickupDetailsWindow extends ItemDetailsWindow{
         //Riktigt ful lösning, måste gå att göra bättre:
         if(ad.isClaimed()){
             functionButton.setBackgroundColor(ResourcesCompat.getColor(popupView.getResources(), R.color.colorRed, null));
-            functionButton.setText("Unclaim");
+            functionButton.setText("Avbegär");
         }
         // Create and connect listener to claim button
         functionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(!ad.isClaimed()) {
-                    Snackbar.make(parent, "Ad has been claimed!", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(parent, "Annonsen har begärts!", Snackbar.LENGTH_SHORT).show();
                     String recyclerID = upm.getUid();
                     userModel.claimAd(ad, recyclerID);
                 }
 
                 else{
-                    Snackbar.make(parent, "Ad has been unclaimed!", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(parent, "Annonsen har avbegärts!", Snackbar.LENGTH_SHORT).show();
                     userModel.unClaimAd(ad);
                 }
                 dismiss();
@@ -86,7 +86,7 @@ public class PickupDetailsWindow extends ItemDetailsWindow{
     //rating.setText returns nullpointerexception for upm.getViewingProfile().getRating() if i dont do this
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-        this.rating.setText(upm.getViewingProfile().getRating()+"/5.0 user rating");
+        this.rating.setText("Användarbetyg: " + upm.getViewingProfile().getRating()+"/5.0");
         if (propertyChangeEvent.getPropertyName().equals("viewingProfile")) {
             ImageLoader.loadImageFromUrl(upm.getViewingPhotoUrl(), userAvatar, 250);
             String str = upm.getViewingName() + name.getText();
