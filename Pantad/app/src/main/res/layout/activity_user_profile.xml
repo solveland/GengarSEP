@@ -17,6 +17,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="39dp"
         android:layout_marginEnd="39dp"
+        android:layout_marginBottom="39dp"
         android:background="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -57,9 +58,11 @@
 
         <TextView
             android:id="@+id/profileEmail"
-            android:layout_width="303dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="8dp"
+            android:layout_width="270dp"
+            android:layout_height="27dp"
+            android:layout_marginStart="23dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="36dp"
             android:ems="10"
             android:importantForAutofill="no"
             android:inputType="textEmailAddress"
@@ -68,7 +71,6 @@
             android:textColor="#020202"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.098"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profile_email_label" />
 
@@ -117,32 +119,33 @@
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/edit_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="44dp"
+            android:layout_height="40dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:clickable="true"
             app:layout_constraintBottom_toBottomOf="@+id/profilePhone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.6"
+            app:layout_constraintHorizontal_bias="0.388"
             app:layout_constraintStart_toEndOf="@+id/profilePhone"
             app:layout_constraintTop_toTopOf="@+id/profilePhone"
-            app:layout_constraintVertical_bias="0.176"
-            app:srcCompat="@drawable/ic_mode_edit_black_24dp" />
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/ic_mode_edit_black_24dp"
+            app:fabCustomSize="40dp"/>
 
         <ImageButton
             android:id="@+id/messageBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="52dp"
             android:layout_marginBottom="8dp"
             android:background="#FFFFFF"
             android:src="@drawable/ic_message_black_48dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/profilePhone"
-            app:layout_constraintTop_toBottomOf="@+id/profilePhone"
-            app:layout_constraintVertical_bias="0.165"
+            app:layout_constraintEnd_toEndOf="@+id/profile_ratingbar"
+            app:layout_constraintTop_toBottomOf="@+id/profile_ratingbar"
+            app:layout_constraintVertical_bias="0.157"
             tools:srcCompat="@drawable/ic_message_black_48dp" />
 
         <ImageButton
@@ -156,22 +159,24 @@
             android:background="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/messageBtn"
-            app:layout_constraintStart_toStartOf="@+id/profilePhone"
-            app:layout_constraintTop_toBottomOf="@+id/profilePhone"
-            app:layout_constraintVertical_bias="0.158"
+            app:layout_constraintHorizontal_bias="0.578"
+            app:layout_constraintStart_toStartOf="@+id/profile_ratingbar"
+            app:layout_constraintTop_toBottomOf="@+id/profile_ratingbar"
+            app:layout_constraintVertical_bias="0.157"
             app:srcCompat="@drawable/ic_mail_outline_black_48dp" />
 
         <RatingBar
             android:id="@+id/profile_ratingbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="120dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/profileEmail"
-            app:layout_constraintStart_toStartOf="@+id/profilePhone"
-            app:layout_constraintTop_toBottomOf="@+id/mailButton" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profilePhone" />
 
     </android.support.constraint.ConstraintLayout>
 

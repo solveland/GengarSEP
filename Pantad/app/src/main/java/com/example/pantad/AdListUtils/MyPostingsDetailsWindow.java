@@ -95,6 +95,7 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
             public void onClick(View v) {
                 userModel.removeAd(ad);
                 Snackbar.make(parent, "Ad has been deleted!", Snackbar.LENGTH_SHORT).show();
+                userModel.sendNotification(ad, "En begärd annons har blivit bortagen", "REMOVED");
                 dismiss();
             }
         });
