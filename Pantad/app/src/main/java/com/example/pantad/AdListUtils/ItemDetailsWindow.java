@@ -66,7 +66,7 @@ public abstract class ItemDetailsWindow extends PopupWindow implements PropertyC
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
         if (propertyChangeEvent.getPropertyName().equals("viewingProfile")) {
             ImageLoader.loadImageFromUrl(upm.getViewingPhotoUrl(), userAvatar, 250);
-            String str = upm.getViewingName() + name.getText();
+            String str = upm.getViewingName() + name.getText() ;
             name.setText(str);
         }
     }

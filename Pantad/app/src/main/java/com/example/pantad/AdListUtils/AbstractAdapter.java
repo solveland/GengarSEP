@@ -116,7 +116,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
             valueView.setText("Uppskattat pantvärde: " + Integer.toString(ad.getValue()) + "kr");
 
             // Change color on recycler item view when touching to indicate clickability
-            viewHolder.itemView.setOnTouchListener(new View.OnTouchListener() {
+            /*viewHolder.itemView.setOnTouchListener(new View.OnTouchListener() {
                 private Rect rect;
 
                 @Override
@@ -138,7 +138,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements Pr
                     }
                     return false;
                 }
-            });
+            });*/
 
             TextView timeTextView= ((AdItemViewHolder) viewHolder).timeTextView;
             timeTextView.setText("Tid sedan annonsen lades upp: " + elapsedTime);

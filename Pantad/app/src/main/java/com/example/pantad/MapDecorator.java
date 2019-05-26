@@ -28,7 +28,7 @@ public final class MapDecorator {
 
     public static void addPantStations(GoogleMap map, Context context){
         List<PantTriplet<Double, Double, String>> stations = createStationTriplet(context);
-        Bitmap bitmap = getBitmapFromVectorDrawable(context,R.drawable.ic_trashcan);
+        Bitmap bitmap = getBitmapFromVectorDrawable(context,R.drawable.ic_pantstation);
         BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
         for(PantTriplet<Double, Double, String> station : stations){
             LatLng coords = new LatLng(station.getLat(), station.getLng());
@@ -53,8 +53,8 @@ public final class MapDecorator {
             drawable = (DrawableCompat.wrap(drawable)).mutate();
         }
 
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth()/3,
+                drawable.getIntrinsicHeight()/3, Bitmap.Config.ARGB_8888);  // Divide by 3 becuase image source is too big
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
