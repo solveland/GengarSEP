@@ -10,6 +10,7 @@ import android.support.v7.content.res.AppCompatResources;
 
 
 import com.example.pantad.pantMapUtil.PantParser;
+import com.example.pantad.pantMapUtil.PantStation;
 import com.example.pantad.pantMapUtil.PantTriplet;
 import com.google.android.gms.maps.GoogleMap;
 
@@ -26,13 +27,14 @@ public final class MapDecorator {
 
 
 
+
     public static void addPantStations(GoogleMap map, Context context){
-        List<PantTriplet<Double, Double, String>> stations = createStationTriplet(context);
+        PantStation[] stations = PantStation.getStations(context);
         Bitmap bitmap = getBitmapFromVectorDrawable(context,R.drawable.ic_pantstation);
         BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
-        for(PantTriplet<Double, Double, String> station : stations){
-            LatLng coords = new LatLng(station.getLat(), station.getLng());
-            map.addMarker(new MarkerOptions().position(coords).title(station.getAddress()).icon(descriptor));
+        for(PantStation station : stations){
+            LatLng coords = new LatLng(station.lat, station.lon);
+            map.addMarker(new MarkerOptions().position(coords).title(station.title).snippet(station.address).icon(descriptor));
         }
     }
 
@@ -64,7 +66,6 @@ public final class MapDecorator {
 
     public static void addAdsToMap(GoogleMap map,UserModel userModel,boolean renderAvailable, boolean renderClaimed){
         List<Ad> adsToRender = new ArrayList<>();
-        //adsToRender.addAll(userModel.getPostedAds());
         if (renderAvailable) {
             adsToRender.addAll(userModel.getAvailableAds());
         }
@@ -75,7 +76,7 @@ public final class MapDecorator {
             Marker cur = map.addMarker(new MarkerOptions()
                     .position(new LatLng(a.getLocation().getLatitude(),a.getLocation().getLongitude()))
                     .title(a.getName())
-                    .icon(a.isClaimed()? BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE):BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED) ));
+                    .icon(a.isClaimed()? BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN):BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED) ));
             cur.setTag(a);
         }
     }
