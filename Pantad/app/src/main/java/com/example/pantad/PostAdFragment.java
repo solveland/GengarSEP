@@ -56,7 +56,7 @@ public class PostAdFragment extends DialogFragment {
         initSubmit(postAdView);
 
         builder.setView(postAdView)
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dismiss();
                     }
