@@ -196,7 +196,7 @@ public class UserModel extends ViewModel {
         pcs.addPropertyChangeListener(listener);
     }
 
-    public void claimAd(Ad ad, String recyclerID){
+       public void claimAd(Ad ad, String recyclerID){
         db.collection(adCollectionString).document(ad.getAdID()).update("claimed", true);
         db.collection(adCollectionString).document(ad.getAdID()).update("recyclerFirebaseToken",regId);
         db.collection(adCollectionString).document(ad.getAdID()).update("recyclerID", recyclerID);

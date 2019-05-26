@@ -18,7 +18,6 @@ import com.example.pantad.UserModel;
 import com.example.pantad.UserProfileModel;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 public class PickupDetailsWindow extends ItemDetailsWindow{
 
@@ -65,13 +64,12 @@ public class PickupDetailsWindow extends ItemDetailsWindow{
         }
         // Create and connect listener to claim button
         functionButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+                       public void onClick(View v) {
                 if(!ad.isClaimed()) {
                     Snackbar.make(parent, "Annonsen har begärts!", Snackbar.LENGTH_SHORT).show();
                     String recyclerID = upm.getUid();
                     userModel.claimAd(ad, recyclerID);
                 }
-
                 else{
                     Snackbar.make(parent, "Annonsen har avbegärts!", Snackbar.LENGTH_SHORT).show();
                     userModel.unClaimAd(ad);

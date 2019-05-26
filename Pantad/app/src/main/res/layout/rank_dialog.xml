@@ -24,15 +24,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="2dp"
-        android:layout_marginRight="2dp"
         android:layout_marginBottom="15dp"
         android:clickable="true"
         android:isIndicator="false"
         android:numStars="5"
         android:rating="0"
-        android:stepSize="1.0"
+        android:stepSize="0.5"
         app:layout_constraintBottom_toTopOf="@+id/rank_dialog_button"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rank_dialog_text1" />
 
     <Button
