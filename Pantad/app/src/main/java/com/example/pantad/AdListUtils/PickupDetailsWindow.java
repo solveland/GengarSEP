@@ -18,6 +18,7 @@ import com.example.pantad.UserModel;
 import com.example.pantad.UserProfileModel;
 
 import java.beans.PropertyChangeEvent;
+import java.math.BigDecimal;
 
 public class PickupDetailsWindow extends ItemDetailsWindow{
 
@@ -84,11 +85,23 @@ public class PickupDetailsWindow extends ItemDetailsWindow{
     //rating.setText returns nullpointerexception for upm.getViewingProfile().getRating() if i dont do this
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-        this.rating.setText("Användarbetyg: " + upm.getViewingProfile().getRating()+"/5.0");
+        this.rating.setText("Användarbetyg: " + round(upm.getViewingProfile().getRating(),1)+"/5.0");
         if (propertyChangeEvent.getPropertyName().equals("viewingProfile")) {
             ImageLoader.loadImageFromUrl(upm.getViewingPhotoUrl(), userAvatar, 250);
             String str = upm.getViewingName() + name.getText();
             name.setText(str);
         }
+    }
+    /**
+     * Round to certain number of decimals
+     *
+     * @param d
+     * @param decimalPlace
+     * @return
+     */
+    public static float round(float d, int decimalPlace) {
+        BigDecimal bd = new BigDecimal(Float.toString(d));
+        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        return bd.floatValue();
     }
 }
