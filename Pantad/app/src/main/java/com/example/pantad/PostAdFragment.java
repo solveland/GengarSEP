@@ -167,11 +167,11 @@ public class PostAdFragment extends DialogFragment {
                 String messageInput=message.getText().toString();
                 Timestamp startTime = Timestamp.now();
                 if(addressInput.equals("") || valueInput.equals("") || !locationUpdated){
-                    Snackbar.make(submit, "You fucked up", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(submit, "Otillåten inmatning", Snackbar.LENGTH_SHORT).show();
                 }
                 else{
                     addAds(nameInput, addressInput, Integer.parseInt(valueInput), messageInput, donatorID, startTime,location);
-                    Snackbar.make(getActivity().findViewById(R.id.navigation), "AD was added", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(getActivity().findViewById(R.id.navigation), "Din annons publicerades", Snackbar.LENGTH_SHORT).show();
                     address.getText().clear();
                     value.getText().clear();
                     message.getText().clear();
