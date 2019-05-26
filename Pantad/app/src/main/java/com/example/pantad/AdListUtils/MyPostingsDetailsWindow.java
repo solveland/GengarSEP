@@ -54,6 +54,28 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
             constraintSet.clone(cLayout);
             constraintSet.connect(address.getId(), ConstraintSet.TOP, R.id.unclaimed_text, ConstraintSet.BOTTOM, 180);
             constraintSet.applyTo(cLayout);
+
+            this.updateBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(ad.isClaimed()) {
+                        Snackbar.make(getContentView(), "En publicerad annons kan inte redigeras!", Snackbar.LENGTH_SHORT).show();
+                    }
+                    else if(description.isEnabled()){
+                        userModel.updateAdMessage(ad,description.getText().toString());
+                        updateBtn.setImageResource(R.drawable.ic_mode_edit_black_24dp);
+                        description.setEnabled(false);
+                    }
+                    else{
+                        description.setEnabled(true);
+                        description.setSelected(true);
+                        description.requestFocus();
+                        InputMethodManager imm = (InputMethodManager) parent.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                        updateBtn.setImageResource(R.drawable.ic_done_black_24dp);
+                    }
+                }
+            });
         }
         else {
             // Set viewing profile to the ad claimer, update load recycler avatar and name
@@ -61,33 +83,14 @@ public class MyPostingsDetailsWindow extends ItemDetailsWindow {
             upm.updateViewingProfile(ad.getRecyclerID());
             setUserAvatarListener(ad.getRecyclerID());
             createConfirmStuff(popupView);
+            updateBtn.hide();
+            updateBtn.setEnabled(false);
         }
         this.address.setText("Adress: " + ad.getAddress());
         this.value.setText("Uppskattat pantvärde: " + ad.getValue() + "kr");
         this.description.setText(ad.getMessage());
         this.description.setEnabled(false);
 
-        this.updateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(ad.isClaimed()) {
-                    Snackbar.make(getContentView(), "En publicerad annons kan inte redigeras!", Snackbar.LENGTH_SHORT).show();
-                }
-                else if(description.isEnabled()){
-                    userModel.updateAdMessage(ad,description.getText().toString());
-                    updateBtn.setImageResource(R.drawable.ic_mode_edit_black_24dp);
-                    description.setEnabled(false);
-                }
-                else{
-                    description.setEnabled(true);
-                    description.setSelected(true);
-                    description.requestFocus();
-                    InputMethodManager imm = (InputMethodManager) parent.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-                    updateBtn.setImageResource(R.drawable.ic_done_black_24dp);
-                }
-            }
-        });
 
         functionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

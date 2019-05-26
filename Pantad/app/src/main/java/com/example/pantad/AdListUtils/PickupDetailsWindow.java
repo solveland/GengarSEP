@@ -61,7 +61,7 @@ public class PickupDetailsWindow extends ItemDetailsWindow{
         //Riktigt ful lösning, måste gå att göra bättre:
         if(ad.isClaimed()){
             functionButton.setBackgroundColor(ResourcesCompat.getColor(popupView.getResources(), R.color.colorRed, null));
-            functionButton.setText("Avbegär");
+            functionButton.setText("Säg upp");
         }
         // Create and connect listener to claim button
         functionButton.setOnClickListener(new View.OnClickListener() {
