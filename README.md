@@ -19,6 +19,10 @@ Repo structure:
 Link to trello:
 https://trello.com/b/OjRddNWp/software-engineering-project
 
+Run application:
+Download the apk from release tab in this repo.
+
+Push-notification:
 The app requires Google play services to be installed in order for the push-notices to work (på svenska: operatörstjänster)
 
 
