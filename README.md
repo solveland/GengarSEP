@@ -1,7 +1,7 @@
 # GengarSEP
 
 Contributors:
-- DaneilAryan             - Daniel Aryan
+- DanielAryan             - Daniel Aryan
 - Hampek                  - Hampus Ekberg
 - solveland               - August Sölveland
 - harrypotterman, Hnqeee  - Henrik Tao
@@ -18,3 +18,7 @@ Repo structure:
 
 Link to trello:
 https://trello.com/b/OjRddNWp/software-engineering-project
+
+The app requires Google play services to be installed in order for the push-notices to work (på svenska: operatörstjänster)
+
+
