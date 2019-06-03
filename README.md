@@ -12,7 +12,7 @@ Repo structure:
 - Source code:                                        Pantad/app/src/main/java/com/example/Pantad
 - Resources:                                          Pantad/app/src/main/res
 - Individual and team reflections:                    GengarSEP/Reflection
-- BSC, mockup, project description, social contract:  GengarSEP/Other_documents
+- BMC, mockup, project description, social contract:  GengarSEP/Other_documents
 - Interaction Protocol for Testing:                   GengarSEP/Other_documents
 - Final reflection:                                   GengarSEP/
 - Gitinspector report:                                GengarSEP/
