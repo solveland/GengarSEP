@@ -22,8 +22,8 @@ https://trello.com/b/OjRddNWp/software-engineering-project
 Run application:
 Download the apk from release tab in this repo.
 
-Push-notification:
-The app requires Google play services to be installed in order for the push-notices to work (på svenska: operatörstjänster).
+Push-notifications and map:
+The app requires Google play services to be installed in order for the push-notices and map to work (på svenska: operatörstjänster).
 This can be found on the play store. 
 
 
