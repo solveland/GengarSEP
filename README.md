@@ -17,7 +17,7 @@ Repo structure:
 - Final reflection:                                   GengarSEP/
 - Gitinspector report:                                GengarSEP/
 
-Link to trello:
+Link to Trello:
 https://trello.com/b/OjRddNWp/software-engineering-project
 
 Run application:
@@ -25,7 +25,7 @@ Download the apk from release tab in this repo.
 
 Push-notifications and map:
 The app requires Google play services to be installed in order for the push-notices and map to work (på svenska: operatörstjänster).
-This can be found on the play store. 
+This can be found on the Play store. 
 
 Gitinspector:
 The gitinspector report history for the first three weeks does not represent reality well. This is because we extended our first sprint and had exams during week 2 and 3. Also some numbers are skewed because of pair programming. 
